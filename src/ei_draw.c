@@ -7,15 +7,9 @@ uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     int *ia = NULL;
     hw_surface_get_channel_indices(surface, ir, ig, ib, ia);
     uint32_t r, g, b, a = 0;
-    if (*ir != -1) {
-        r = color.red << (8 * (*ir));
-    }
-    if (*ig != -1) {
-        g = color.green << (8 * (*ig));
-    }
-    if (*ib != -1) {
-        b = color.blue << (8 * (*ib));
-    }
+    r = color.red << (8 * (*ir));
+    g = color.green << (8 * (*ig));
+    b = color.blue << (8 * (*ib));
     if (*ia != -1) {
         a = color.alpha << (8 * (*ia));
     }
@@ -36,6 +30,7 @@ void ei_draw_polyline(ei_surface_t surface,
         /* Bresenham */
         int dx = current->point.x - prev->point.x;
         int dy = current->point.y - prev->point.y;
+        uint32_t c = ei_map_rgba(surface, color);
 
         int x = prev->point.x;
         int y = prev->point.y;
@@ -43,10 +38,10 @@ void ei_draw_polyline(ei_surface_t surface,
         while (x != current->point.x && y != current->point.y) {
             if (dx > 0) {
                 x++;
-                E += dx;
+                E += dy;
             } else {
                 x--;
-                E -= dx;
+                E -= dy;
             }
             if (2 * E > dx) {
                 if (dy > 0) {
@@ -57,7 +52,6 @@ void ei_draw_polyline(ei_surface_t surface,
                     E += dx;
                 }
             }
-            uint32_t c = ei_map_rgba(surface, color);
             s[x + size.width * y] = c;
         }
         prev = current;
