@@ -37,7 +37,8 @@ void ei_draw_polyline(ei_surface_t surface,
         int dx = current->point.x - prev->point.x;
         int dy = current->point.y - prev->point.y;
 
-        int x, y = 0;
+        int x = prev->point.x;
+        int y = prev->point.y;
         int E = 0;
         while (x != current->point.x && y != current->point.y) {
             if (dx > 0) {
@@ -59,9 +60,9 @@ void ei_draw_polyline(ei_surface_t surface,
             uint32_t c = ei_map_rgba(surface, color);
             s[x + size.width * y] = c;
         }
+        prev = current;
+        current = first_point->next;
     }
-    prev = current;
-    current = first_point->next;
 }
 
 
