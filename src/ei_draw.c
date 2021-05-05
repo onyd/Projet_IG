@@ -1,10 +1,10 @@
 #include "ei_draw.h"
 
 uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
-    int *ir;
-    int *ig;
-    int *ib;
-    int *ia;
+    int *ir = NULL;
+    int *ig = NULL;
+    int *ib = NULL;
+    int *ia = NULL;
     hw_surface_get_channel_indices(surface, ir, ig, ib, ia);
     uint32_t r, g, b, a = 0;
     if (ir != -1) {
