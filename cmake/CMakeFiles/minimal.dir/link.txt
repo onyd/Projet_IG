@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/minimal.dir/tests/minimal.c.o -o minimal  ../_x11/libeibase64.a -L/home/valentinl/ensimag/projetC/projet-c-ig/_x11 -lfreeimage -lSDL2 -lSDL2_ttf -lm 
