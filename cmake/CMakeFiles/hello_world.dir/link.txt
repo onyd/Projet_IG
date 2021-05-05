@@ -1,1 +1,0 @@
-/usr/bin/cc -rdynamic CMakeFiles/hello_world.dir/tests/hello_world.c.o -o hello_world  -lei ../_x11/libeibase64.a -L/home/valentinl/ensimag/projetC/projet-c-ig/_x11 -lfreeimage -lSDL2 -lSDL2_ttf -lm 

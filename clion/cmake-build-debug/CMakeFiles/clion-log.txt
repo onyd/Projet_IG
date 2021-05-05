@@ -1,5 +1,0 @@
-"C:\Program Files\JetBrains\CLion 2021.1.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - NMake Makefiles" C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion
--- Building for Windows with eibase: C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/_win/eibase64.lib
--- Configuring done
--- Generating done
--- Build files have been written to: C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug

@@ -1,1 +1,0 @@
-/usr/bin/cc -rdynamic CMakeFiles/two048.dir/tests/two048.c.o -o two048  -lei ../_x11/libeibase64.a -L/home/valentinl/ensimag/projetC/projet-c-ig/_x11 -lfreeimage -lSDL2 -lSDL2_ttf -lm 
