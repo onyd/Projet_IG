@@ -1,0 +1,10 @@
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/hello_world.dir
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/minimal.dir
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/lines.dir
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/frame.dir
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/button.dir
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/doc.dir
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/puzzle.dir
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/two048.dir
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/rebuild_cache.dir
