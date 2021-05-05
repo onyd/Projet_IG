@@ -37,3 +37,26 @@ int ei_copy_surface(ei_surface_t destination,
                     ei_bool_t alpha) {
 
 }
+
+uint32_t		ei_map_rgba		(ei_surface_t surface, ei_color_t color){
+    int* ir;
+    int* ig;
+    int* ib;
+    int* ia;
+    hw_surface_get_channel_indices(surface, ir, ig, ib, ia);
+    uint32_t r, g, b, a = 0;
+    if (ir != -1) {
+        r = color.red << (8 * ir);
+    }
+    if (ig != -1) {
+        g = color.green << (8 * ig);
+    }
+    if (ib != -1) {
+        b = color.blue << (8 * ib);
+    }
+    if (ia != -1) {
+        a = color.alpha << (8 * ia);
+    }
+    uint32_t color = r || g || b || a;
+    return color;
+}
