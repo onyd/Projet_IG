@@ -1,10 +1,50 @@
 #include "ei_draw.h"
 
+uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
+
+}
+
 
 void ei_draw_polyline(ei_surface_t surface,
                       const ei_linked_point_t *first_point,
                       ei_color_t color,
                       const ei_rect_t *clipper) {
+    prev, current = NULL, first_point;
+    uint32_t *s = (uint32_t *) hw_surface_get_buffer(surface);
+    ei_size_t size = hw_surface_get_size(surface);
+    while (current != NULL) {
+        /* Bresenham */
+        int dx = current.x - prev.x;
+        int dy = current.y - prev.y;
+
+        int x, y = 0;
+        int E = 0;
+        while (x != (current.x && y != current.y) {
+            if dx > 0
+            {
+                x++;
+                E += dx;
+            } else {
+                x--;
+                E -= dx;
+            }
+            if (2 * E > dx) {
+                if dy > 0
+                {
+                    y++;
+                    E -= dx;
+                } else {
+                    y--;
+                    E += dx;
+                }
+            }
+            uint32_t c = ei_map_rgba(surface, color);
+            s[x + size.width * y] = c;
+        }
+    }
+    prev = current;
+    next = first_point++;
+}
 
 }
 
