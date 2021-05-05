@@ -1,21 +1,5 @@
 "C:\Program Files\JetBrains\CLion 2021.1.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - NMake Makefiles" C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion
 -- Building for Windows with eibase: C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/_win/eibase64.lib
 -- Configuring done
-CMake Error at C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/CMakeLists.txt:107 (add_executable):
-  Cannot find source file:
-
-    src/ei_draw.c
-
-  Tried extensions .c .C .c++ .cc .cpp .cxx .cu .m .M .mm .h .hh .h++ .hm
-  .hpp .hxx .in .txx .f .F .for .f77 .f90 .f95 .f03 .ispc
-Call Stack (most recent call first):
-  CMakeLists.txt:6 (include)
-
-
-CMake Error at C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/CMakeLists.txt:107 (add_executable):
-  No SOURCES given to target: button
-Call Stack (most recent call first):
-  CMakeLists.txt:6 (include)
-
-
-CMake Generate step failed.  Build files cannot be regenerated correctly.
+-- Generating done
+-- Build files have been written to: C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug
