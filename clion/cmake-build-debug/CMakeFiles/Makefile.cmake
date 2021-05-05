@@ -7,7 +7,7 @@ set(CMAKE_DEPENDS_GENERATOR "NMake Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
-  "C:/Local_documents/VS/ProjetC/projet_c_v6.0/CMakeLists.txt"
+  "C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/CMakeLists.txt"
   "../CMakeLists.txt"
   "CMakeFiles/3.19.2/CMakeCCompiler.cmake"
   "CMakeFiles/3.19.2/CMakeCXXCompiler.cmake"

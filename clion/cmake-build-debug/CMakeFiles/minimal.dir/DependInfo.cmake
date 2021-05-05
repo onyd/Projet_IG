@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "C:/Local_documents/VS/ProjetC/projet_c_v6.0/tests/minimal.c" "C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/CMakeFiles/minimal.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/minimal.c.obj"
+  "C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/minimal.c" "C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/CMakeFiles/minimal.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/minimal.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "MSVC")
 
@@ -17,8 +17,8 @@ set(CMAKE_TARGET_DEFINITIONS_C
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH
-  "C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"
-  "C:/Local_documents/VS/ProjetC/SDL2_windows/include"
+  "C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"
+  "C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"
   )
 
 # Targets to which this target links.

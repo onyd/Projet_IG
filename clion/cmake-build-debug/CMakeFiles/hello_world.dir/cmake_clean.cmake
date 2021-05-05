@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/hello_world.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/hello_world.c.obj"
+  "CMakeFiles/hello_world.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/hello_world.c.obj"
   "hello_world.exe"
   "hello_world.exe.manifest"
   "hello_world.lib"

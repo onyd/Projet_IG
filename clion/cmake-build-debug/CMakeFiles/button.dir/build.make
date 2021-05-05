@@ -46,10 +46,10 @@ RM = "C:\Program Files\JetBrains\CLion 2021.1.1\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion
+CMAKE_SOURCE_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles\button.dir\depend.make
@@ -60,43 +60,43 @@ include CMakeFiles\button.dir\progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles\button.dir\flags.make
 
-CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.obj: CMakeFiles\button.dir\flags.make
-CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.obj: C:\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/button.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/button.c.obj"
+CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.obj: CMakeFiles\button.dir\flags.make
+CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.obj: C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/button.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/button.c.obj"
 	C:\PROGRA~2\MIB055~1\2019\ENTERP~1\VC\Tools\MSVC\1428~1.293\bin\Hostx64\x64\cl.exe @<<
- /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoCMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.obj /FdCMakeFiles\button.dir\ /FS -c C:\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoCMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.obj /FdCMakeFiles\button.dir\ /FS -c C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c
 <<
 
-CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/button.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/button.c.i"
-	C:\PROGRA~2\MIB055~1\2019\ENTERP~1\VC\Tools\MSVC\1428~1.293\bin\Hostx64\x64\cl.exe > CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.i @<<
- /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c
+CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/button.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/button.c.i"
+	C:\PROGRA~2\MIB055~1\2019\ENTERP~1\VC\Tools\MSVC\1428~1.293\bin\Hostx64\x64\cl.exe > CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.i @<<
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c
 <<
 
-CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/button.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/button.c.s"
+CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/button.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/button.c.s"
 	C:\PROGRA~2\MIB055~1\2019\ENTERP~1\VC\Tools\MSVC\1428~1.293\bin\Hostx64\x64\cl.exe @<<
- /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoNUL /FAs /FaCMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.s /c C:\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c
+ /nologo $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) /FoNUL /FAs /FaCMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.s /c C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c
 <<
 
 # Object files for target button
 button_OBJECTS = \
-"CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.obj"
+"CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.obj"
 
 # External object files for target button
 button_EXTERNAL_OBJECTS =
 
-button.exe: CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.obj
+button.exe: CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.obj
 button.exe: CMakeFiles\button.dir\build.make
-button.exe: C:\Local_documents\VS\ProjetC\projet_c_v6.0\_win\eibase64.lib
-button.exe: C:\Local_documents\VS\ProjetC\SDL2_windows\lib\x64\SDL2.lib
-button.exe: C:\Local_documents\VS\ProjetC\SDL2_windows\lib\x64\SDL2_gfx.lib
-button.exe: C:\Local_documents\VS\ProjetC\SDL2_windows\lib\x64\SDL2_ttf.lib
-button.exe: C:\Local_documents\VS\ProjetC\SDL2_windows\lib\x64\FreeImage.lib
+button.exe: C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\_win\eibase64.lib
+button.exe: C:\Local_documents\VS\ProjetC\projet_c_v6.0\SDL2_windows\lib\x64\SDL2.lib
+button.exe: C:\Local_documents\VS\ProjetC\projet_c_v6.0\SDL2_windows\lib\x64\SDL2_gfx.lib
+button.exe: C:\Local_documents\VS\ProjetC\projet_c_v6.0\SDL2_windows\lib\x64\SDL2_ttf.lib
+button.exe: C:\Local_documents\VS\ProjetC\projet_c_v6.0\SDL2_windows\lib\x64\FreeImage.lib
 button.exe: CMakeFiles\button.dir\objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable button.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable button.exe"
 	"C:\Program Files\JetBrains\CLion 2021.1.1\bin\cmake\win\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\button.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x64\mt.exe --manifests -- C:\PROGRA~2\MIB055~1\2019\ENTERP~1\VC\Tools\MSVC\1428~1.293\bin\Hostx64\x64\link.exe /nologo @CMakeFiles\button.dir\objects1.rsp @<<
- /out:button.exe /implib:button.lib /pdb:C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\button.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console  ei.lib C:\Local_documents\VS\ProjetC\projet_c_v6.0\_win\eibase64.lib C:\Local_documents\VS\ProjetC\SDL2_windows\lib\x64\SDL2.lib C:\Local_documents\VS\ProjetC\SDL2_windows\lib\x64\SDL2_gfx.lib C:\Local_documents\VS\ProjetC\SDL2_windows\lib\x64\SDL2_ttf.lib C:\Local_documents\VS\ProjetC\SDL2_windows\lib\x64\FreeImage.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib 
+ /out:button.exe /implib:button.lib /pdb:C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\button.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console  ei.lib C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\_win\eibase64.lib C:\Local_documents\VS\ProjetC\projet_c_v6.0\SDL2_windows\lib\x64\SDL2.lib C:\Local_documents\VS\ProjetC\projet_c_v6.0\SDL2_windows\lib\x64\SDL2_gfx.lib C:\Local_documents\VS\ProjetC\projet_c_v6.0\SDL2_windows\lib\x64\SDL2_ttf.lib C:\Local_documents\VS\ProjetC\projet_c_v6.0\SDL2_windows\lib\x64\FreeImage.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib 
 <<
 
 # Rule to build all files generated by this target.
@@ -109,6 +109,6 @@ CMakeFiles\button.dir\clean:
 .PHONY : CMakeFiles\button.dir\clean
 
 CMakeFiles\button.dir\depend:
-	$(CMAKE_COMMAND) -E cmake_depends "NMake Makefiles" C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\CMakeFiles\button.dir\DependInfo.cmake --color=$(COLOR)
+	$(CMAKE_COMMAND) -E cmake_depends "NMake Makefiles" C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\CMakeFiles\button.dir\DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles\button.dir\depend
 

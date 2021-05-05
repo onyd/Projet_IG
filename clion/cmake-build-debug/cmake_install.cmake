@@ -1,4 +1,4 @@
-# Install script for directory: C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion
+# Install script for directory: C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/puzzle.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/puzzle.c.obj"
+  "CMakeFiles/puzzle.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/puzzle.c.obj"
   "puzzle.exe"
   "puzzle.exe.manifest"
   "puzzle.lib"

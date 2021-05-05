@@ -48,7 +48,7 @@ elseif(${UNIX})
 
 else()
 
-	set(SDL				"C:/Local_documents/VS/ProjetC/SDL2_windows")
+	set(SDL				"C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows")
 	set(HEADER_PATHS		${HEADER_PATHS}
 					"${SDL}/include")
 	add_definitions(-D__WIN__=1 -D_CRT_SECURE_NO_WARNINGS=1)
@@ -104,7 +104,7 @@ target_link_libraries(frame		ei ${PLATFORM_LIB_FLAGS})
 
 # target button
 
-add_executable(button			${TESTS_SRC}/button.c)
+add_executable(button			${TESTS_SRC}/button.c src/ei_draw.c)
 target_link_libraries(button		ei ${PLATFORM_LIB_FLAGS})
 
 # target hello_world

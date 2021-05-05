@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/two048.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/two048.c.obj"
+  "CMakeFiles/two048.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/two048.c.obj"
   "two048.exe"
   "two048.exe.manifest"
   "two048.lib"

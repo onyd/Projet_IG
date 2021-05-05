@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/lines.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/lines.c.obj"
+  "CMakeFiles/lines.dir/C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/lines.c.obj"
   "lines.exe"
   "lines.exe.manifest"
   "lines.lib"

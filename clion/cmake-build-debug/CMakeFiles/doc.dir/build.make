@@ -46,10 +46,10 @@ RM = "C:\Program Files\JetBrains\CLion 2021.1.1\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion
+CMAKE_SOURCE_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug
 
 # Utility rule file for doc.
 
@@ -57,9 +57,9 @@ CMAKE_BINARY_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build
 include CMakeFiles\doc.dir\progress.make
 
 CMakeFiles\doc:
-	cd C:\Local_documents\VS\ProjetC\projet_c_v6.0
-	doxygen C:/Local_documents/VS/ProjetC/projet_c_v6.0/docs/doxygen.cfg
-	cd C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug
+	cd C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig
+	doxygen C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/docs/doxygen.cfg
+	cd C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug
 
 doc: CMakeFiles\doc
 doc: CMakeFiles\doc.dir\build.make
@@ -76,6 +76,6 @@ CMakeFiles\doc.dir\clean:
 .PHONY : CMakeFiles\doc.dir\clean
 
 CMakeFiles\doc.dir\depend:
-	$(CMAKE_COMMAND) -E cmake_depends "NMake Makefiles" C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\CMakeFiles\doc.dir\DependInfo.cmake --color=$(COLOR)
+	$(CMAKE_COMMAND) -E cmake_depends "NMake Makefiles" C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\CMakeFiles\doc.dir\DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles\doc.dir\depend
 

@@ -8,18 +8,18 @@
 		<Option virtualFolders="CMake Files\;CMake Files\..\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 all"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 all"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="hello_world">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/hello_world.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/hello_world.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -27,8 +27,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -38,15 +38,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 hello_world"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 hello_world"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="hello_world/fast">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/hello_world.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/hello_world.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -54,8 +54,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -65,15 +65,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 hello_world/fast"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 hello_world/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="minimal">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/minimal.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/minimal.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -81,8 +81,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -92,15 +92,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 minimal"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 minimal"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="minimal/fast">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/minimal.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/minimal.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -108,8 +108,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -119,15 +119,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 minimal/fast"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 minimal/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="lines">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/lines.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/lines.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -135,8 +135,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -146,15 +146,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 lines"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 lines"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="lines/fast">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/lines.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/lines.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -162,8 +162,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -173,15 +173,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 lines/fast"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 lines/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="frame">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/frame.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/frame.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -189,8 +189,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -200,15 +200,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 frame"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 frame"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="frame/fast">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/frame.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/frame.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -216,8 +216,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -227,15 +227,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 frame/fast"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 frame/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="button">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/button.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/button.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -243,8 +243,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -254,15 +254,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 button"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 button"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="button/fast">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/button.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/button.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -270,8 +270,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -281,25 +281,25 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 button/fast"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 button/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="doc">
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 doc"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 doc"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="puzzle">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/puzzle.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/puzzle.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -307,8 +307,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -318,15 +318,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 puzzle"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 puzzle"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="puzzle/fast">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/puzzle.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/puzzle.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -334,8 +334,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -345,15 +345,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 puzzle/fast"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 puzzle/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="two048">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/two048.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/two048.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -361,8 +361,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -372,15 +372,15 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 two048"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 two048"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="two048/fast">
-				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug/two048.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option output="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug/two048.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="msvc8"/>
@@ -388,8 +388,8 @@
 					<Add option="-D__WIN__=1"/>
 					<Add option="-D_CRT_SECURE_NO_WARNINGS=1"/>
 					<Add option="-D_AMD64_=1"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/include"/>
-					<Add directory="C:/Local_documents/VS/ProjetC/SDL2_windows/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/include"/>
+					<Add directory="C:/Local_documents/VS/ProjetC/projet_c_v6.0/SDL2_windows/include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\ATLMFC\include"/>
 					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include"/>
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
@@ -399,58 +399,58 @@
 					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 two048/fast"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 two048/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 edit_cache"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 edit_cache"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/cmake-build-debug"/>
+				<Option working_dir="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
-					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<Build command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\Makefile VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/tests/button.c">
+		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/button.c">
 			<Option target="button"/>
 		</Unit>
-		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/tests/frame.c">
+		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/frame.c">
 			<Option target="frame"/>
 		</Unit>
-		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/tests/hello_world.c">
+		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/hello_world.c">
 			<Option target="hello_world"/>
 		</Unit>
-		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/tests/lines.c">
+		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/lines.c">
 			<Option target="lines"/>
 		</Unit>
-		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/tests/minimal.c">
+		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/minimal.c">
 			<Option target="minimal"/>
 		</Unit>
-		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/tests/puzzle.c">
+		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/puzzle.c">
 			<Option target="puzzle"/>
 		</Unit>
-		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/tests/two048.c">
+		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/two048.c">
 			<Option target="two048"/>
 		</Unit>
-		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/CMakeLists.txt">
+		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/clion/../CMakeLists.txt">
+		<Unit filename="C:/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/clion/../CMakeLists.txt">
 			<Option virtualFolder="CMake Files\..\"/>
 		</Unit>
 	</Project>

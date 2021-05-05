@@ -51,10 +51,10 @@ RM = "C:\Program Files\JetBrains\CLion 2021.1.1\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion
+CMAKE_SOURCE_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -83,9 +83,9 @@ rebuild_cache\fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\CMakeFiles C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\CMakeFiles C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Local_documents\VS\ProjetC\projet_c_v6.0\clion\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\clion\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -217,194 +217,194 @@ two048\fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\two048.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\two048.dir\build
 .PHONY : two048\fast
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.obj
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.obj
-
-# target to build an object file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\button.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.obj
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.obj
-
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.i
-
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.i
-
-# target to preprocess a source file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\button.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.i
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.i
-
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.s
-
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.s
-
-# target to generate assembly for a file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\button.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.s
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\button.c.s
-
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.obj
-
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.obj
 
 # target to build an object file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\frame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\frame.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.obj
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\button.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.obj
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.i
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.i
 
 # target to preprocess a source file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\frame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\frame.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.i
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\button.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.i
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.s
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.s
 
 # target to generate assembly for a file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\frame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\frame.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.s
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\frame.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\button.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\button.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\button.c.s
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.obj
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.obj
 
 # target to build an object file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\hello_world.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\hello_world.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.obj
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\frame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\frame.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.obj
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.i
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.i
 
 # target to preprocess a source file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\hello_world.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\hello_world.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.i
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\frame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\frame.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.i
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.s
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.s
 
 # target to generate assembly for a file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\hello_world.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\hello_world.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.s
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\hello_world.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\frame.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\frame.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\frame.c.s
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.obj
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.obj
 
 # target to build an object file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lines.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\lines.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.obj
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\hello_world.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\hello_world.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.obj
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.i
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.i
 
 # target to preprocess a source file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lines.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\lines.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.i
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\hello_world.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\hello_world.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.i
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.s
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.s
 
 # target to generate assembly for a file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lines.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\lines.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.s
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\lines.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\hello_world.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\hello_world.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\hello_world.c.s
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.obj
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.obj
 
 # target to build an object file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\minimal.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\minimal.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.obj
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lines.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\lines.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.obj
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.i
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.i
 
 # target to preprocess a source file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\minimal.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\minimal.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.i
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lines.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\lines.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.i
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.s
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.s
 
 # target to generate assembly for a file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\minimal.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\minimal.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.s
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\minimal.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lines.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\lines.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\lines.c.s
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.obj
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.obj
 
 # target to build an object file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\puzzle.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\puzzle.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.obj
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\minimal.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\minimal.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.obj
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.i
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.i
 
 # target to preprocess a source file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\puzzle.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\puzzle.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.i
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\minimal.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\minimal.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.i
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.s
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.s
 
 # target to generate assembly for a file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\puzzle.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\puzzle.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.s
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\puzzle.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\minimal.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\minimal.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\minimal.c.s
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.obj
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.obj
 
 # target to build an object file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\two048.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\two048.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.obj
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.obj
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\puzzle.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\puzzle.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.obj
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.i
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.i
 
 # target to preprocess a source file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\two048.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\two048.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.i
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.i
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\puzzle.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\puzzle.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.i
 
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.s
 
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.s
 
 # target to generate assembly for a file
-C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\two048.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\two048.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.s
-.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\tests\two048.c.s
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\puzzle.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\puzzle.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\puzzle.c.s
+
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.obj: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.obj
+
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.obj
+
+# target to build an object file
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\two048.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\two048.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.obj
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.obj
+
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.i: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.i
+
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.i
+
+# target to preprocess a source file
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\two048.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\two048.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.i
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.i
+
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.s: C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.s
+
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.s
+
+# target to generate assembly for a file
+C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\two048.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\two048.dir\C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.s
+.PHONY : C_\Local_documents\VS\ProjetC\projet_c_v6.0\projet-c-ig\tests\two048.c.s
 
 # Help Target
 help:
@@ -422,27 +422,27 @@ help:
 	@echo ... minimal
 	@echo ... puzzle
 	@echo ... two048
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/button.obj
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/button.i
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/button.s
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/frame.obj
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/frame.i
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/frame.s
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/hello_world.obj
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/hello_world.i
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/hello_world.s
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/lines.obj
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/lines.i
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/lines.s
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/minimal.obj
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/minimal.i
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/minimal.s
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/puzzle.obj
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/puzzle.i
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/puzzle.s
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/two048.obj
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/two048.i
-	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/tests/two048.s
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/button.obj
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/button.i
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/button.s
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/frame.obj
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/frame.i
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/frame.s
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/hello_world.obj
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/hello_world.i
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/hello_world.s
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/lines.obj
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/lines.i
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/lines.s
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/minimal.obj
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/minimal.i
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/minimal.s
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/puzzle.obj
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/puzzle.i
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/puzzle.s
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/two048.obj
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/two048.i
+	@echo ... C_/Local_documents/VS/ProjetC/projet_c_v6.0/projet-c-ig/tests/two048.s
 .PHONY : help
 
 
