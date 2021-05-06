@@ -21,9 +21,20 @@ struct table_cote_actif {
     struct  table_cote *tete;
 };
 
+/**
+ * \brief	Swap the variable content pointed by a and b
+ *
+ * @param	a 	uint32_t variable.
+ * @param	b   uint32_t variable.
+ */
 void swap(uint32_t *a, uint32_t *b);
 
-// retourne le max de a et b
+/**
+ * \brief	Return max of a and b
+ *
+ * @param	a 	uint32_t variable.
+ * @param	b   uint32_t variable.
+ */
 int max(int a, int b);
 
 #endif //PROJETC_IG_UTILS_H

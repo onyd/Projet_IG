@@ -11,6 +11,7 @@ uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     r = (uint32_t) color.red << (8 * ir);
     g = (uint32_t) color.green << (8 * ig);
     b = (uint32_t) color.blue << (8 * ib);
+
     if (ia != -1) {
         return r | g | b | a;
     } else {
@@ -29,10 +30,7 @@ void ei_draw_polyline(ei_surface_t surface,
     ei_size_t size = hw_surface_get_size(surface);
 
     // Clipper coordinates
-    int top_left_x;
-    int top_right_x;
-    int top_left_y;
-    int bottom_left_y;
+    int top_left_x, top_right_x, top_left_y, bottom_left_y;
     if (clipper != NULL){
         top_left_x = clipper -> top_left.x;
         top_right_x = clipper -> top_left.x + clipper -> size.width;
@@ -84,7 +82,7 @@ void ei_draw_polyline(ei_surface_t surface,
             x += sign_x;
             E += abs(dy);
 
-            if (2 * E > dx) {
+            if (2 * E > abs(dx)) {
                 y += sign_y;
                 E -= abs(dx);
             }
@@ -103,7 +101,7 @@ void ei_draw_polyline(ei_surface_t surface,
 }
 
 
-_Noreturn void ei_draw_polygon(ei_surface_t surface,
+void ei_draw_polygon(ei_surface_t surface,
                      const ei_linked_point_t *first_point,
                      ei_color_t color,
                      const ei_rect_t *clipper) {
@@ -126,11 +124,11 @@ _Noreturn void ei_draw_polygon(ei_surface_t surface,
             int ymax = max(prec->point.y, current->point.y);
             parcourt->ymax = ymax;
             if (prec->point.y == ymax) {
-                parcourt->xymin = current->point.x;
+                parcourt->xpmin = current->point.x;
                 parcourt->ymin = current->point.y;
             }
             else {
-                parcourt->xymin = prec->point.x;
+                parcourt->xpmin = prec->point.x;
                 parcourt->ymin = prec->point.y;
             }
             int dx = current->point.x - prec->point.x;
