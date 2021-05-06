@@ -20,7 +20,7 @@ int main() {
     tc6.next = &tc7;
 
     append_left(&tc1, &tac);
-
+    display(&tac);
     struct table_cote tc8 = {0, 0, 0, 2, 0, 0, 0, NULL};
     sorting_insert(&tc8, &tac);
 
