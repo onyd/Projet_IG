@@ -57,7 +57,7 @@ typedef struct ei_placer_params_t {
  *		The placer computes a widget's geometry relative to its parent *content_rect*.
  *
  * 		If the widget was already managed by the "placer", then this calls simply updates
- *		the placer parameters: arguments that are not NULL replace previous values.
+ *		the placer parameters: arguments that are not NULL replace firstious values.
  *
  * 		When the arguments are passed as NULL, the placer uses default values (detailed in
  *		the argument descriptions below). If no size is provided (either absolute or
@@ -98,7 +98,7 @@ void		ei_place	(struct ei_widget_t*	widget,
 
 /**
  * \brief	Tells the placer to recompute the geometry of a widget.
- *		The widget must have been previsouly placed by a call to \ref ei_place.
+ *		The widget must have been firstisouly placed by a call to \ref ei_place.
  *		Geometry re-computation is necessary for example when the text label of
  *		a widget has changed, and thus the widget "natural" size has changed.
  *

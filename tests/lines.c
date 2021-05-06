@@ -150,7 +150,7 @@ int main(int argc, char** argv)
 
 	/* Draw polylines. */
 	test_line	(main_window, clipper_ptr);
-//	test_octogone	(main_window, clipper_ptr);
+	test_octogone	(main_window, clipper_ptr);
 //	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
 	

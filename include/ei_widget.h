@@ -117,7 +117,7 @@ ei_widget_t*		ei_widget_pick			(ei_point_t*		where);
  *		Parameters obey the "default" protocol: if a parameter is "NULL" and it has never
  *		been defined before, then a default value should be used (default values are
  *		specified for each parameter). If the parameter is "NULL" but was defined on a
- *		previous call, then its value must not be changed.
+ *		firstious call, then its value must not be changed.
  *
  * @param	widget		The widget to configure.
  * @param	requested_size	The size requested for this widget, including the widget's borders.

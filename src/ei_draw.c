@@ -1,13 +1,14 @@
 #include "ei_draw.h"
 #include "stdio.h"
+#include "utils.h"
 
 uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     int ir, ig, ib, ia;
     hw_surface_get_channel_indices(surface, &ir, &ig, &ib, &ia);
     uint32_t r, g, b, a = 0;
-    r = (uint32_t)color.red << (8 * ir);
-    g = (uint32_t)color.green << (8 * ig);
-    b = (uint32_t)color.blue << (8 * ib);
+    r = (uint32_t) color.red << (8 * ir);
+    g = (uint32_t) color.green << (8 * ig);
+    b = (uint32_t) color.blue << (8 * ib);
     if (ia != -1) {
         return r | g | b | a;
     } else {
@@ -19,49 +20,50 @@ void ei_draw_polyline(ei_surface_t surface,
                       const ei_linked_point_t *first_point,
                       ei_color_t color,
                       const ei_rect_t *clipper) {
-    const ei_linked_point_t *prev = first_point;
-    const ei_linked_point_t *current = first_point->next;
+    const ei_linked_point_t *first = first_point;
+    const ei_linked_point_t *second = first_point->next;
 
-    hw_surface_lock(surface);
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
 
     // Draw all lines between points
-    while (current != NULL) {
+    while (first != NULL && second != NULL) {
         /* Bresenham */
-        int dx = current->point.x - prev->point.x;
-        int dy = current->point.y - prev->point.y;
-        uint32_t c = ei_map_rgba(surface, color);
-
-        int x = prev->point.x;
-        int y = prev->point.y;
+        int dx = second->point.x - first->point.x;
+        int dy = second->point.y - first->point.y;
+        int x = first->point.x;
+        int y = first->point.y;
         int E = 0;
-        while (x != current->point.x && y != current->point.y) {
-            if (dx > 0) {
-                x++;
-                E += dy;
-            } else {
-                x--;
-                E -= dy;
-            }
+
+        uint32_t c = ei_map_rgba(surface, color);
+        uint32_t sign_x = (dx > 0) ? 1 : -1;
+        uint32_t sign_y = (dy > 0) ? 1 : -1;
+
+        // Swap variable for y-directed line
+        if (dx < dy) {
+            swap(&x, &y);
+            swap(&dx, &dy);
+            swap(&sign_x, &sign_y);
+        }
+
+        while (x != second->point.x && y != second->point.y) {
+            x += sign_x;
+            E += sign_x * dy;
+
             if (2 * E > dx) {
-                if (dy > 0) {
-                    y++;
-                    E -= dx;
-                } else {
-                    y--;
-                    E += dx;
-                }
+                y += sign_y;
+                E -= sign_y * dx;
             }
             // Draw pixel in the buffer
-            uint32_t c = ei_map_rgba(surface, color);
-            pixels[x + size.width * y] = c;
+            if (dx > dy) {
+                pixels[x + size.width * y] = c;
+            } else {
+                pixels[y + size.width * x] = c;
+            }
         }
-        prev = current;
-        current = current->next;
-
+        first = second;
+        second = second->next;
     }
-    hw_surface_unlock(surface);
 }
 
 
@@ -87,7 +89,7 @@ void ei_fill(ei_surface_t surface,
     hw_surface_lock(surface);
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
-    for (uint32_t i = 0; i< size.width*size.height;i++){
+    for (uint32_t i = 0; i < size.width * size.height; i++) {
         pixels[i] = "0xFFFFFFFF";
     }
     hw_surface_unlock(surface);
