@@ -4,10 +4,10 @@
 void append_left(struct table_cote *e, struct table_cote_actif *tca) {
     if (tca->head == NULL) {
         tca->head = e;
-        tca->tail = e;
         return;
     }
     e->next = tca->head;
+    tca->head = e;
 }
 
 void delete(struct table_cote *e, struct table_cote_actif *tca) {
@@ -100,6 +100,9 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
         }
         previous = current;
         current = current->next;
+    }
+    if (current == NULL) {
+        prec->next = tc;
     }
 }
 

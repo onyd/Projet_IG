@@ -3,7 +3,6 @@
 #include "stdio.h"
 #include "math.h"
 #include "stdbool.h"
-#include "stdlib.h"
 
 uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     int ir, ig, ib, ia;
@@ -52,16 +51,20 @@ void ei_draw_polyline(ei_surface_t surface,
         int sign_y = (dy > 0) ? 1 : -1;
 
         // Vertical and horizontal case
-        if (dx == 0) {
+        if (dx == 0 && (clipper == NULL || x >= top_left_x && x <= top_right_x)) {
             while (y != second->point.y) {
-                pixels[x + size.width * y] = c;
+                if (y >= top_left_y && y <= bottom_left_y) {
+                    pixels[x + size.width * y] = c;
+                }
                 y += sign_y;
             }
             break;
         }
-        if (dy == 0) {
+        if (dy == 0 && (clipper == NULL || y >= top_left_y && y <= bottom_left_y)) {
             while (x != second->point.x) {
-                pixels[x + size.width * y] = c;
+                if (x >= top_left_x && x <= top_right_x) {
+                    pixels[x + size.width * y] = c;
+                }
                 x += sign_x;
             }
             break;
@@ -89,10 +92,9 @@ void ei_draw_polyline(ei_surface_t surface,
                 E -= abs(dx);
             }
             // Draw pixel in the buffer
-            if (clipper == NULL || x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y) {
-                if (!swapped) {
+            if (!swapped && (clipper == NULL || (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y))) {
                     pixels[x + size.width * y] = c;
-                } else {
+            } else if (swapped && (clipper == NULL || (y >= top_left_x && y <= top_right_x && x >= top_left_y && x <= bottom_left_y))){
                     pixels[y + size.width * x] = c;
                 }
             }
