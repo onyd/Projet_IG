@@ -103,7 +103,7 @@ void ei_draw_polyline(ei_surface_t surface,
 }
 
 
-_Noreturn void ei_draw_polygon(ei_surface_t surface,
+/*void ei_draw_polygon(ei_surface_t surface,
                      const ei_linked_point_t *first_point,
                      ei_color_t color,
                      const ei_rect_t *clipper) {
@@ -148,10 +148,10 @@ _Noreturn void ei_draw_polygon(ei_surface_t surface,
     } while(prec != debut);
     parcourt->next = NULL;
 
-    /* On initialise la table des côté actifs en se
+    *//* On initialise la table des côté actifs en se
      * placant à la premiere scanline correspondant à
      * y = ymin avec ymin le côté minimum de tout les points du polygone
-     * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*/
+     * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*//*
     struct table_cote *parcourt_prec;
     while (tab_cote != NULL && tab_cote_actif->tete != NULL) {
         parcourt = tab_cote;
@@ -200,7 +200,7 @@ void ei_fill(ei_surface_t surface,
         pixels[i] = c;
     }
     hw_surface_unlock(surface);
-}
+}*/
 
 int ei_copy_surface(ei_surface_t destination,
                     const ei_rect_t *dst_rect,
