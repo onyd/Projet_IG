@@ -11,6 +11,7 @@ struct table_cote {
     int ymax;
     int ymin;
     int xpmin;
+    int xpmax;
     int E;
     int dx;
     int dy;

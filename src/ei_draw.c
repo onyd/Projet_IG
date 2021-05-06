@@ -110,10 +110,10 @@ void ei_draw_polygon(ei_surface_t surface,
     const ei_linked_point_t *prec = first_point;
     const ei_linked_point_t *current = first_point->next;
     struct table_cote *tab_cote;
-    struct table_cote *parcourt = tab_cote;
+    struct table_cote *parcourt = &tab_cote;
     //initialisation de la table de côté actif
-    struct table_cote_actif *tab_cote_actif;
-    tab_cote_actif->tete = NULL;
+    struct table_cote_actif tab_cote_actif;
+    tab_cote_actif.tete = NULL;
     // Derniere élément de la TCA
     struct table_cote *parcourt_fin = tab_cote_actif->tete;
     // Donne le ymin du polygone et le côté correspondant à ce ymin
