@@ -137,8 +137,6 @@ void ei_draw_polygon(ei_surface_t surface,
             }
             int dx = current->point.x - prec->point.x;
             int dy = current->point.y - prec->point.y;
-            dx = (dx > 0) ? dx : -dx;
-            dy = (dy > 0) ? dy : -dy;
             parcourt->E = 0;
             parcourt->dx = dx;
             parcourt->dy = dy;
@@ -217,6 +215,11 @@ void ei_draw_polygon(ei_surface_t surface,
             int dy = parcourt->dy;
             int sign_x = (dx > 0) ? 1 : -1;
             int sign_y = (dy > 0) ? 1 : -1;
+            parcourt->E += abs(dx);
+            if (2 * parcourt->E > abs(dy)) {
+                parcourt->xpmin += sign_x;
+                parcourt->E -= abs(dy);
+            }
         }
     }
     free(tab_cote);
