@@ -48,16 +48,24 @@ void ei_draw_polyline(ei_surface_t surface,
         int x = first->point.x;
         int y = first->point.y;
 
-        if (dx == 0) {
-            return;
-        }
-        if (dy == 0) {
-            return;
-        }
-
         uint32_t c = ei_map_rgba(surface, color);
         int sign_x = (dx > 0) ? 1 : -1;
         int sign_y = (dy > 0) ? 1 : -1;
+
+        if (dx == 0) {
+            while (x != second->point.x) {
+                pixels[x + size.width * y] = c;
+                x += sign_x;
+            }
+            return;
+        }
+        if (dy == 0) {
+            while (y != second->point.y) {
+                pixels[x + size.width * y] = c;
+                y += sign_y;
+            }
+            return;
+        }
 
         // Swap variable for y-directed line
         bool swapped = abs(dx) < abs(dy);
@@ -70,7 +78,7 @@ void ei_draw_polyline(ei_surface_t surface,
             swap(&sign_x, &sign_y);
             swap(&x2, &y2);
         }
-        int E = 0;
+        int E = dx/2;
 
         while (sign_x * x < sign_x * x2) {
             x += sign_x;
