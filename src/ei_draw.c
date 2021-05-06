@@ -26,6 +26,18 @@ void ei_draw_polyline(ei_surface_t surface,
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
 
+    // Clipper coordinates
+    int top_left_x;
+    int top_right_x;
+    int top_left_y;
+    int bottom_left_y;
+    if (clipper != NULL){
+        top_left_x = clipper -> top_left.x;
+        top_right_x = clipper -> top_left.x + clipper -> size.width;
+        top_left_y = clipper -> top_left.y;
+        bottom_left_y = clipper -> top_left.y + clipper -> size.height;
+    }
+
     // Draw all lines between points
     while (first != NULL && second != NULL) {
         /* Bresenham */
@@ -55,10 +67,12 @@ void ei_draw_polyline(ei_surface_t surface,
                 E -= sign_y * dx;
             }
             // Draw pixel in the buffer
-            if (dx > dy) {
-                pixels[x + size.width * y] = c;
-            } else {
-                pixels[y + size.width * x] = c;
+            if (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y){
+                if (dx > dy) {
+                    pixels[x + size.width * y] = c;
+                } else {
+                    pixels[y + size.width * x] = c;
+                }
             }
         }
         first = second;
@@ -90,7 +104,8 @@ void ei_fill(ei_surface_t surface,
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
     for (uint32_t i = 0; i < size.width * size.height; i++) {
-        pixels[i] = "0xFFFFFFFF";
+        uint32_t c = ei_map_rgba(surface, *color);
+        pixels[i] = c;
     }
     hw_surface_unlock(surface);
 }
