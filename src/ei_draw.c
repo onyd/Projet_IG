@@ -113,9 +113,9 @@ void ei_draw_polygon(ei_surface_t surface,
     struct table_cote *parcourt = tab_cote;
     //initialisation de la table de côté actif
     struct table_cote_actif *tab_cote_actif = malloc(sizeof(struct table_cote_actif));
-    tab_cote_actif->tete = NULL;
+    tab_cote_actif->head = NULL;
     // Derniere élément de la TCA
-    struct table_cote *parcourt_fin = tab_cote_actif->tete;
+    struct table_cote *parcourt_fin = tab_cote_actif->head;
     // Donne le ymin du polygone et le côté correspondant à ce ymin
     int ycur = prec->point.y;
     do {
@@ -153,7 +153,7 @@ void ei_draw_polygon(ei_surface_t surface,
      * y = ymin avec ymin le côté minimum de tout les points du polygone
      * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*/
     struct table_cote *parcourt_prec;
-    while (tab_cote != NULL && tab_cote_actif->tete != NULL) {
+    while (tab_cote != NULL && tab_cote_actif->head != NULL) {
         parcourt = tab_cote;
         parcourt_prec = tab_cote;
         // On rajoute dans TCA les nouveaux points TC
@@ -176,7 +176,7 @@ void ei_draw_polygon(ei_surface_t surface,
         }
 
         // On supprime les coté de TCA tq y = ymax
-        parcourt = tab_cote_actif->tete;
+        parcourt = tab_cote_actif->head;
     }
 }
 
