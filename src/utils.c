@@ -1,17 +1,17 @@
 #include "utils.h"
 #include "stdio.h"
 
-void append_left(struct table_cote *e, struct table_cote_actif *tac) {
-    if (tac->head == NULL) {
-        tac->head = e;
+void append_left(struct table_cote *e, struct table_cote_actif *tca) {
+    if (tca->head == NULL) {
+        tca->head = e;
         return;
     }
-    e->next = tac->head;
-    tac->head = e;
+    e->next = tca->head;
+    tca->head = e;
 }
 
-void display(struct table_cote_actif *tac) {
-    struct table_cote *current = tac->head;
+void display(struct table_cote_actif *tca) {
+    struct table_cote *current = tca->head;
     while (current != NULL) {
         printf("[%i, %i]->", current->xpmax, current->xpmin);
         current = current->next;
@@ -34,33 +34,54 @@ int max(int a, int b) {
     }
 }
 
-void sorting_insert(struct table_cote *tc, struct table_cote_actif *tac) {
-    if (tac->head->xpmin == tc->xpmin) {
-        if (tac->head->xpmax < tc->xpmax) {
-            tac->head->next = tc;
-        } else {
-            append_left(tc, tac);
-        }
-    } else {
-        append_left(tc, tac);
+void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
+    if (tca->head == NULL) {
+        tca->head = tc;
+        return;
     }
-
-    struct table_cote *previous = tac->head;
-    struct table_cote *current = tac->head->next;
-    while (current->next != NULL && current->next->xpmin <= current->xpmin) {
-        if (current->next->xpmin == current->xpmin) {
-            if (current->next->xpmax < current->xpmax) {
-                previous->next = current->next;
-                current->next->next = current;
-                current->next = previous->next->next;
+    struct table_cote *prec = tca->head;
+    struct table_cote *current = prec;
+    while (current != NULL) {
+        // à savoir: il ne peut pas y avoir plus de deux côtés qui ont le même xpmin
+        if (current->xpmin == tc->xpmin) {
+            //si c'est à la tête:
+            if (current == prec) {
+                if (current->xpmax > tc->xpmax) {
+                    append_left(tc, tca);
+                }
+                else {
+                    tc->next = current->next;
+                    current->next = tc;
+                }
             }
-        } else {
-            previous->next = current->next;
-            current->next->next = current;
-            current->next = previous->next->next;
+            else {
+                if (current->xpmax > tc->xpmax) {
+                    prec->next = tc;
+                    tc->next = current;
+                }
+                else {
+                    tc->next = current->next;
+                    current->next = tc;
+                }
+            }
+            return;
         }
-        previous = current;
+        if (current->xpmin > tc->xpmin) {
+            //si c'est la tete
+            if (current == prec) {
+                append_left(tc, tca);
+            }
+            else {
+                prec->next = tc;
+                tc->next = current;
+            }
+            return;
+        }
+        prec = current;
         current = current->next;
+    }
+    if (current == NULL) {
+        prec->next = tc;
     }
 }
 
