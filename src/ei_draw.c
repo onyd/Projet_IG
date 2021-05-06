@@ -81,7 +81,7 @@ void ei_draw_polyline(ei_surface_t surface,
                 E -= abs(dx);
             }
             // Draw pixel in the buffer
-            if (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y){
+            if (clipper == NULL || x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y){
                 if (!swapped) {
                     pixels[x + size.width * y] = c;
                 } else {
