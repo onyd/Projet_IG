@@ -28,6 +28,18 @@ void ei_draw_polyline(ei_surface_t surface,
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
 
+    // Clipper coordinates
+    int top_left_x;
+    int top_right_x;
+    int top_left_y;
+    int bottom_left_y;
+    if (clipper != NULL){
+        top_left_x = clipper -> top_left.x;
+        top_right_x = clipper -> top_left.x + clipper -> size.width;
+        top_left_y = clipper -> top_left.y;
+        bottom_left_y = clipper -> top_left.y + clipper -> size.height;
+    }
+
     // Draw all lines between points
     while (first != NULL && second != NULL) {
         /* Bresenham */
@@ -69,10 +81,12 @@ void ei_draw_polyline(ei_surface_t surface,
                 E -= abs(dx);
             }
             // Draw pixel in the buffer
-            if (!swapped) {
-                pixels[x + size.width * y] = c;
-            } else {
-                pixels[y + size.width * x] = c;
+            if (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y){
+                if (!swapped) {
+                    pixels[x + size.width * y] = c;
+                } else {
+                    pixels[y + size.width * x] = c;
+                }
             }
         }
         first = second;
@@ -85,6 +99,51 @@ void ei_draw_polygon(ei_surface_t surface,
                      const ei_linked_point_t *first_point,
                      ei_color_t color,
                      const ei_rect_t *clipper) {
+    // on crée la table des côtés
+    const ei_linked_point_t *debut = first_point;
+    const ei_linked_point_t *prec = first_point;
+    const ei_linked_point_t *current = first_point->next;
+    struct table_cote *tab_cote;
+    struct table_cote *parcourt = tab_cote;
+    do {
+        //On ignore les côtés horizontaux qui sont inutiles
+        if (prec->point.y == current->point.y) {
+            int ymax = max(prec->point.y, current->point.y);
+            parcourt->ymax = ymax;
+            if (prec->point.y == ymax) {
+                parcourt->xymin = current->point.x;
+            }
+            else {
+                parcourt->xymin = prec->point.x;
+            }
+
+            //Bresenham selon y
+            int x = prec->point.x;
+            int y = prec->point.y;
+            int dx = current->point.x - prec->point.x;
+            int dy = current->point.y - prec->point.y;
+            int sign_x = (dx > 0) ? 1 : -1;
+            int sign_y = (dy > 0) ? 1 : -1;
+            int E = 0;
+            while (x != current->point.x && y != current->point.y) {
+                y += sign_y;
+                E += sign_y * dx;
+
+                if (2 * E > dx) {
+                    x += sign_x;
+                    E -= sign_x * dy;
+                }
+            }
+            dx = (dx > 0) ? dx : -dx;
+            dy = (dy > 0) ? dy : -dy;
+            tab_cote->E = E;
+            tab_cote->dx = dx;
+            tab_cote->dy = dy;
+        }
+        parcourt = parcourt->next;
+        prec = prec->next;
+        current = current->next;
+    } while(prec != debut);
 
 }
 
@@ -103,8 +162,9 @@ void ei_fill(ei_surface_t surface,
     hw_surface_lock(surface);
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
+    uint32_t c = ei_map_rgba(surface, *color);
     for (uint32_t i = 0; i < size.width * size.height; i++) {
-        pixels[i] = "0xFFFFFFFF";
+        pixels[i] = c;
     }
     hw_surface_unlock(surface);
 }
