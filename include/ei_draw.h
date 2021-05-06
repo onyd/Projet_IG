@@ -63,7 +63,7 @@ void			ei_draw_polyline	(ei_surface_t			surface,
  * @param	color		The color used to draw the polygon. The alpha channel is managed.
  * @param	clipper		If not NULL, the drawing is restricted within this rectangle.
  */
-void			ei_draw_polygon		(ei_surface_t			surface,
+_Noreturn void			ei_draw_polygon		(ei_surface_t			surface,
 						 const ei_linked_point_t*	first_point,
 						 ei_color_t			color,
 						 const ei_rect_t*		clipper);
