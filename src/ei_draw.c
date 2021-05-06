@@ -51,16 +51,16 @@ void ei_draw_polyline(ei_surface_t surface,
         int sign_y = (dy > 0) ? 1 : -1;
 
         if (dx == 0) {
-            while (x != second->point.x) {
+            while (y != second->point.y) {
                 pixels[x + size.width * y] = c;
-                x += sign_x;
+                y += sign_y;
             }
             return;
         }
         if (dy == 0) {
-            while (y != second->point.y) {
+            while (x != second->point.x) {
                 pixels[x + size.width * y] = c;
-                y += sign_y;
+                x += sign_x;
             }
             return;
         }
@@ -154,7 +154,7 @@ void ei_draw_polygon(ei_surface_t surface,
      * placant à la premiere scanline correspondant à
      * y = ymin avec ymin le côté minimum de tout les points du polygone
      * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*/
-    struct table_cote *parcourt_prec;
+    struct table_cote *parcourt_prec = tab_cote;
     while (tab_cote != NULL && tab_cote_actif->tete != NULL) {
         parcourt = tab_cote;
         parcourt_prec = tab_cote;
