@@ -38,6 +38,9 @@ void ei_draw_polyline(ei_surface_t surface,
         top_right_x = clipper -> top_left.x + clipper -> size.width;
         top_left_y = clipper -> top_left.y;
         bottom_left_y = clipper -> top_left.y + clipper -> size.height;
+        printf("Point en haut à gauche : %i, %i\n", top_left_x, top_left_y);
+        printf("x en haut à droite : %i\n", top_right_x);
+        printf("y en bas à gauche : %i\n", bottom_left_y);
     }
 
     // Draw all lines between points
@@ -89,7 +92,8 @@ void ei_draw_polyline(ei_surface_t surface,
                 E -= abs(dx);
             }
             // Draw pixel in the buffer
-            if (clipper == NULL || x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y){
+            if (clipper == NULL || (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y)){
+                printf("x : %i\n", x);
                 if (!swapped) {
                     pixels[x + size.width * y] = c;
                 } else {
@@ -148,10 +152,10 @@ void ei_draw_polygon(ei_surface_t surface,
     } while(prec != debut);
     parcourt->next = NULL;
 
-    /* On initialise la table des côté actifs en se
+    *//* On initialise la table des côté actifs en se
      * placant à la premiere scanline correspondant à
      * y = ymin avec ymin le côté minimum de tout les points du polygone
-     * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*/
+     * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*//*
     struct table_cote *parcourt_prec;
     while (tab_cote != NULL && tab_cote_actif->tete != NULL) {
         parcourt = tab_cote;
