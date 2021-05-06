@@ -194,7 +194,7 @@ int main(int argc, char** argv)
 {
 	ei_size_t		win_size	= ei_size(800, 600);
 	ei_surface_t		main_window	= NULL;
-	ei_color_t		white		= { 0xff, 0xff, 0xff, 0xff };
+	ei_color_t		white		= { 0x0f, 0x0f, 0xff, 0xff };
 	ei_rect_t*		clipper_ptr	= NULL;
 
     ei_rect_t* clipper_ptr_test;

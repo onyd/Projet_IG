@@ -9,11 +9,16 @@
 
 struct table_cote {
     int ymax;
-    int xymin;
+    int ymin;
+    int xpmin;
     int E;
     int dx;
     int dy;
     struct table_cote *next;
+};
+
+struct table_cote_actif {
+    struct  table_cote *tete;
 };
 
 void swap(uint32_t *a, uint32_t *b);

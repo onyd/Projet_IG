@@ -1,7 +1,8 @@
 #include "ei_draw.h"
-#include "stdio.h"
 #include "utils.h"
-
+#include "stdio.h"
+#include "math.h"
+#include "stdbool.h"
 
 uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     int ir, ig, ib, ia;
@@ -46,30 +47,50 @@ void ei_draw_polyline(ei_surface_t surface,
         int dy = second->point.y - first->point.y;
         int x = first->point.x;
         int y = first->point.y;
-        int E = 0;
 
         uint32_t c = ei_map_rgba(surface, color);
-        uint32_t sign_x = (dx > 0) ? 1 : -1;
-        uint32_t sign_y = (dy > 0) ? 1 : -1;
+        int sign_x = (dx > 0) ? 1 : -1;
+        int sign_y = (dy > 0) ? 1 : -1;
+
+        if (dx == 0) {
+            while (x != second->point.x) {
+                pixels[x + size.width * y] = c;
+                x += sign_x;
+            }
+            return;
+        }
+        if (dy == 0) {
+            while (y != second->point.y) {
+                pixels[x + size.width * y] = c;
+                y += sign_y;
+            }
+            return;
+        }
 
         // Swap variable for y-directed line
-        if (dx < dy) {
+        bool swapped = abs(dx) < abs(dy);
+        int x2 = second->point.x;
+        int y2 = second->point.y;
+
+        if (swapped) {
             swap(&x, &y);
             swap(&dx, &dy);
             swap(&sign_x, &sign_y);
+            swap(&x2, &y2);
         }
+        int E = dx/2;
 
-        while (x != second->point.x && y != second->point.y) {
+        while (sign_x * x < sign_x * x2) {
             x += sign_x;
-            E += sign_x * dy;
+            E += abs(dy);
 
             if (2 * E > dx) {
                 y += sign_y;
-                E -= sign_y * dx;
+                E -= abs(dx);
             }
             // Draw pixel in the buffer
-            if (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y){
-                if (dx > dy) {
+            if (clipper == NULL || x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y){
+                if (!swapped) {
                     pixels[x + size.width * y] = c;
                 } else {
                     pixels[y + size.width * x] = c;
@@ -82,7 +103,7 @@ void ei_draw_polyline(ei_surface_t surface,
 }
 
 
-void ei_draw_polygon(ei_surface_t surface,
+_Noreturn void ei_draw_polygon(ei_surface_t surface,
                      const ei_linked_point_t *first_point,
                      ei_color_t color,
                      const ei_rect_t *clipper) {
@@ -92,6 +113,13 @@ void ei_draw_polygon(ei_surface_t surface,
     const ei_linked_point_t *current = first_point->next;
     struct table_cote *tab_cote;
     struct table_cote *parcourt = tab_cote;
+    //initialisation de la table de côté actif
+    struct table_cote_actif *tab_cote_actif;
+    tab_cote_actif->tete = NULL;
+    // Derniere élément de la TCA
+    struct table_cote *parcourt_fin = tab_cote_actif->tete;
+    // Donne le ymin du polygone et le côté correspondant à ce ymin
+    int ycur = prec->point.y;
     do {
         //On ignore les côtés horizontaux qui sont inutiles
         if (prec->point.y == current->point.y) {
@@ -99,39 +127,57 @@ void ei_draw_polygon(ei_surface_t surface,
             parcourt->ymax = ymax;
             if (prec->point.y == ymax) {
                 parcourt->xymin = current->point.x;
+                parcourt->ymin = current->point.y;
             }
             else {
                 parcourt->xymin = prec->point.x;
+                parcourt->ymin = prec->point.y;
             }
-
-            //Bresenham selon y
-            int x = prec->point.x;
-            int y = prec->point.y;
             int dx = current->point.x - prec->point.x;
             int dy = current->point.y - prec->point.y;
-            int sign_x = (dx > 0) ? 1 : -1;
-            int sign_y = (dy > 0) ? 1 : -1;
-            int E = 0;
-            while (x != current->point.x && y != current->point.y) {
-                y += sign_y;
-                E += sign_y * dx;
-
-                if (2 * E > dx) {
-                    x += sign_x;
-                    E -= sign_x * dy;
-                }
-            }
             dx = (dx > 0) ? dx : -dx;
             dy = (dy > 0) ? dy : -dy;
-            tab_cote->E = E;
-            tab_cote->dx = dx;
-            tab_cote->dy = dy;
+            parcourt->E = 0;
+            parcourt->dx = dx;
+            parcourt->dy = dy;
         }
         parcourt = parcourt->next;
         prec = prec->next;
         current = current->next;
+        ycur = (ycur > prec->point.y) ? prec->point.y : ycur;
     } while(prec != debut);
+    parcourt->next = NULL;
 
+    /* On initialise la table des côté actifs en se
+     * placant à la premiere scanline correspondant à
+     * y = ymin avec ymin le côté minimum de tout les points du polygone
+     * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*/
+    struct table_cote *parcourt_prec;
+    while (tab_cote != NULL && tab_cote_actif->tete != NULL) {
+        parcourt = tab_cote;
+        parcourt_prec = tab_cote;
+        // On rajoute dans TCA les nouveaux points TC
+        while(parcourt != NULL) {
+            if (parcourt->ymin == ycur) {
+                //On rajoute ce côté à la table des côtés actif
+                parcourt_fin->next = parcourt;
+                parcourt_fin = parcourt_fin-> next;
+                //Puis on supprime ce côté de TC
+                //on regarde si c'est la tête qui est supprimé
+                if (parcourt == parcourt_prec) {
+                    tab_cote = parcourt->next;
+                }
+                else {
+                    parcourt_prec->next = parcourt->next;
+                }
+            }
+            parcourt_prec = parcourt;
+            parcourt = parcourt->next;
+        }
+
+        // On supprime les coté de TCA tq y = ymax
+        parcourt = tab_cote_actif->tete;
+    }
 }
 
 void ei_draw_text(ei_surface_t surface,
@@ -149,8 +195,8 @@ void ei_fill(ei_surface_t surface,
     hw_surface_lock(surface);
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
+    uint32_t c = ei_map_rgba(surface, *color);
     for (uint32_t i = 0; i < size.width * size.height; i++) {
-        uint32_t c = ei_map_rgba(surface, *color);
         pixels[i] = c;
     }
     hw_surface_unlock(surface);
