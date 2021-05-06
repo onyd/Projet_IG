@@ -87,8 +87,9 @@ void ei_fill(ei_surface_t surface,
     hw_surface_lock(surface);
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
+    uint32_t c = ei_map_rgba(surface, *color);
     for (uint32_t i = 0; i< size.width*size.height;i++){
-        pixels[i] = "0xFFFFFFFF";
+        pixels[i] = c;
     }
     hw_surface_unlock(surface);
 }
