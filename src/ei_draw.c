@@ -38,9 +38,6 @@ void ei_draw_polyline(ei_surface_t surface,
         top_right_x = clipper -> top_left.x + clipper -> size.width;
         top_left_y = clipper -> top_left.y;
         bottom_left_y = clipper -> top_left.y + clipper -> size.height;
-        printf("Point en haut à gauche : %i, %i\n", top_left_x, top_left_y);
-        printf("x en haut à droite : %i\n", top_right_x);
-        printf("y en bas à gauche : %i\n", bottom_left_y);
     }
 
     // Draw all lines between points
@@ -54,20 +51,24 @@ void ei_draw_polyline(ei_surface_t surface,
         uint32_t c = ei_map_rgba(surface, color);
         int sign_x = (dx > 0) ? 1 : -1;
         int sign_y = (dy > 0) ? 1 : -1;
-
-        if (dx == 0) {
+        if (dx == 0 && x >= top_left_x && x <= top_right_x) {
             while (y != second->point.y) {
-                pixels[x + size.width * y] = c;
+                if (y >= top_left_y && y <= bottom_left_y) {
+                    pixels[x + size.width * y] = c;
+                }
                 y += sign_y;
+                printf("y : %i\n", y);
             }
-            return;
+            break;
         }
-        if (dy == 0) {
+        if (dy == 0 && y >= top_left_y && y <= bottom_left_y) {
             while (x != second->point.x) {
-                pixels[x + size.width * y] = c;
+                if (x >= top_left_x && x <= top_right_x) {
+                    pixels[x + size.width * y] = c;
+                }
                 x += sign_x;
             }
-            return;
+            break;
         }
 
         // Swap variable for y-directed line
@@ -93,7 +94,6 @@ void ei_draw_polyline(ei_surface_t surface,
             }
             // Draw pixel in the buffer
             if (clipper == NULL || (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y)){
-                printf("x : %i\n", x);
                 if (!swapped) {
                     pixels[x + size.width * y] = c;
                 } else {
@@ -119,11 +119,11 @@ void ei_draw_polygon(ei_surface_t surface,
     const ei_linked_point_t *debut = first_point;
     const ei_linked_point_t *prec = first_point;
     const ei_linked_point_t *current = first_point->next;
-    struct table_cote *tab_cote;
+    struct table_cote *tab_cote = malloc(sizeof(struct table_cote));
     struct table_cote *parcourt = tab_cote;
     //initialisation de la table de côté actif
-    struct table_cote_actif *tab_cote_actif;
-    tab_cote_actif->tete = NULL;
+    struct table_cote_actif *tab_cote_actif = malloc(sizeof(struct table_cote_actif));
+    tab_cote_actif->head = NULL;
     // Donne le ymin du polygone et le côté correspondant à ce ymin
     int ycur = prec->point.y;
     do {
@@ -132,17 +132,17 @@ void ei_draw_polygon(ei_surface_t surface,
             int ymax = max(prec->point.y, current->point.y);
             parcourt->ymax = ymax;
             if (prec->point.y == ymax) {
-                parcourt->xymin = current->point.x;
+                parcourt->xpmin = current->point.x;
+                parcourt->xpmax = prec->point.x;
                 parcourt->ymin = current->point.y;
             }
             else {
-                parcourt->xymin = prec->point.x;
+                parcourt->xpmin = prec->point.x;
+                parcourt->xpmax = current->point.x;
                 parcourt->ymin = prec->point.y;
             }
             int dx = current->point.x - prec->point.x;
             int dy = current->point.y - prec->point.y;
-            dx = (dx > 0) ? dx : -dx;
-            dy = (dy > 0) ? dy : -dy;
             parcourt->E = 0;
             parcourt->dx = dx;
             parcourt->dy = dy;
@@ -154,17 +154,12 @@ void ei_draw_polygon(ei_surface_t surface,
     } while(prec != debut);
     parcourt->next = NULL;
 
-    *//* On initialise la table des côté actifs en se
+    /* On initialise la table des côté actifs en se
      * placant à la premiere scanline correspondant à
      * y = ymin avec ymin le côté minimum de tout les points du polygone
-<<<<<<< HEAD
-     * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*//*
-    struct table_cote *parcourt_prec;
-=======
      * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*/
     struct table_cote *parcourt_prec = tab_cote;
->>>>>>> 559c735277da93f2fa22a8ebed6a118f08ad13fc
-    while (tab_cote != NULL && tab_cote_actif->tete != NULL) {
+    while (tab_cote != NULL && tab_cote_actif->head != NULL) {
         parcourt = tab_cote;
         parcourt_prec = tab_cote;
         // On rajoute dans TCA les nouveaux points TC
@@ -186,13 +181,13 @@ void ei_draw_polygon(ei_surface_t surface,
         }
 
         // On supprime les coté de TCA tq y = ymax
-        parcourt = tab_cote_actif->tete;
+        parcourt = tab_cote_actif->head;
         parcourt_prec = parcourt;
         while (parcourt != NULL) {
             if (parcourt->ymax == ycur) {
                 //si on supprime la tête
                 if (parcourt == parcourt_prec) {
-                    tab_cote_actif->tete = parcourt->next;
+                    tab_cote_actif->head = parcourt->next;
                 }
                 else {
                     parcourt_prec->next = parcourt->next;
@@ -206,7 +201,7 @@ void ei_draw_polygon(ei_surface_t surface,
         }
 
         //on remplit les pixels
-        parcourt = tab_cote_actif->tete;
+        parcourt = tab_cote_actif->head;
         while (parcourt != NULL) {
             int x1 = parcourt->xpmin;
             parcourt = parcourt->next;
@@ -220,12 +215,17 @@ void ei_draw_polygon(ei_surface_t surface,
         ycur += 1;
 
         // On fait Bresenham pour avoir les nouvelles valeurs de x
-        parcourt = tab_cote_actif->tete;
+        parcourt = tab_cote_actif->head;
         while (parcourt != NULL) {
             int dx = parcourt->dx;
             int dy = parcourt->dy;
             int sign_x = (dx > 0) ? 1 : -1;
             int sign_y = (dy > 0) ? 1 : -1;
+            parcourt->E += abs(dx);
+            if (2 * parcourt->E > abs(dy)) {
+                parcourt->xpmin += sign_x;
+                parcourt->E -= abs(dy);
+            }
         }
     }
     free(tab_cote);
