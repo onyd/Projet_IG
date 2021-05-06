@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <stddef.h>
 
 int main() {
     struct table_cote_actif tac;
