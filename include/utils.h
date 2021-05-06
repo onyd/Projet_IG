@@ -19,9 +19,12 @@ struct table_cote {
 };
 
 struct table_cote_actif {
-    struct  table_cote *tete;
+    struct  table_cote *head;
 };
 
+void append_left(struct table_cote* e, struct table_cote_actif* tac);
+
+void display(struct table_cote_actif* tac);
 /**
  * \brief	Swap the variable content pointed by a and b
  *
@@ -37,5 +40,7 @@ void swap(uint32_t *a, uint32_t *b);
  * @param	b   uint32_t variable.
  */
 int max(int a, int b);
+
+void sorting_insert(struct table_cote* tc, struct table_cote_actif* tac);
 
 #endif //PROJETC_IG_UTILS_H
