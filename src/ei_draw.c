@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "math.h"
 #include "stdbool.h"
+#include "stdlib.h"
 
 uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     int ir, ig, ib, ia;
