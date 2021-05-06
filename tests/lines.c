@@ -66,6 +66,37 @@ void test_octogone(ei_surface_t surface, ei_rect_t* clipper)
 	ei_draw_polyline(surface, pts, color, clipper);
 }
 
+void test_octogone_clipping(ei_surface_t surface, ei_rect_t* clipper)
+{
+    ei_color_t		color		= { 0, 255, 0, 255 };
+    ei_linked_point_t	pts[9];
+    int			i, xdiff, ydiff;
+
+    /* Initialisation */
+    pts[0].point.x = 700;
+    pts[0].point.y = 90;
+
+    /* Draw the polygone */
+    for(i = 1; i <= 8; i++) {
+        /*	Add or remove 70/140 pixels for next point
+           The first term of this formula gives the sign + or - of the operation
+           The second term is 2 or 1, according to which coordinate grows faster
+           The third term is simply the amount of pixels to skip */
+        xdiff = pow(-1, (i + 1) / 4) * pow(2, (i / 2) % 2 == 0) * 70;
+        ydiff = pow(-1, (i - 1) / 4) * pow(2, (i / 2) % 2) * 70;
+
+        pts[i].point.x = pts[i-1].point.x + xdiff;
+        pts[i].point.y = pts[i-1].point.y + ydiff;
+        pts[i-1].next = &(pts[i]);
+    }
+
+    /* End the linked list */
+    pts[i-1].next = NULL;
+
+    /* Draw the form with polylines */
+    ei_draw_polygon(surface, pts, color, clipper);
+}
+
 void test_polygone(ei_surface_t surface, ei_rect_t* clipper)
 {
     ei_color_t		color		= { 0, 255, 0, 255 };
@@ -96,7 +127,6 @@ void test_polygone(ei_surface_t surface, ei_rect_t* clipper)
     /* Draw the form with polylines */
     ei_draw_polygon(surface, pts, color, clipper);
 }
-
 
 /* test_square --
  *
@@ -166,6 +196,13 @@ int main(int argc, char** argv)
 	ei_surface_t		main_window	= NULL;
 	ei_color_t		white		= { 0x0f, 0x0f, 0xff, 0xff };
 	ei_rect_t*		clipper_ptr	= NULL;
+
+    ei_rect_t* clipper_ptr_test;
+    clipper_ptr_test -> top_left.x = 0;
+    clipper_ptr_test -> top_left.y = 0;
+    clipper_ptr_test -> size.height = 800;
+    clipper_ptr_test -> size.width = 600;
+
 //	ei_rect_t		clipper		= ei_rect(ei_point(200, 150), ei_size(400, 300));
 //	clipper_ptr		= &clipper;
 	ei_event_t		event;
@@ -181,6 +218,7 @@ int main(int argc, char** argv)
 	/* Draw polylines. */
 	test_line	(main_window, clipper_ptr);
 	test_octogone	(main_window, clipper_ptr);
+    test_octogone_clipping(main_window, clipper_ptr_test);
 //	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
