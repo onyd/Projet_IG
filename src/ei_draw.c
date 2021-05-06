@@ -1,6 +1,8 @@
 #include "ei_draw.h"
-#include "stdio.h"
 #include "utils.h"
+#include "stdio.h"
+#include "math.h"
+#include "stdbool.h"
 
 uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     int ir, ig, ib, ia;
@@ -33,29 +35,41 @@ void ei_draw_polyline(ei_surface_t surface,
         int dy = second->point.y - first->point.y;
         int x = first->point.x;
         int y = first->point.y;
-        int E = 0;
+
+        if (dx == 0) {
+            return;
+        }
+        if (dy == 0) {
+            return;
+        }
 
         uint32_t c = ei_map_rgba(surface, color);
-        uint32_t sign_x = (dx > 0) ? 1 : -1;
-        uint32_t sign_y = (dy > 0) ? 1 : -1;
+        int sign_x = (dx > 0) ? 1 : -1;
+        int sign_y = (dy > 0) ? 1 : -1;
 
         // Swap variable for y-directed line
-        if (dx < dy) {
+        bool swapped = abs(dx) < abs(dy);
+        int x2 = second->point.x;
+        int y2 = second->point.y;
+
+        if (swapped) {
             swap(&x, &y);
             swap(&dx, &dy);
             swap(&sign_x, &sign_y);
+            swap(&x2, &y2);
         }
+        int E = 0;
 
-        while (x != second->point.x && y != second->point.y) {
+        while (sign_x * x < sign_x * x2) {
             x += sign_x;
-            E += sign_x * dy;
+            E += abs(dy);
 
             if (2 * E > dx) {
                 y += sign_y;
-                E -= sign_y * dx;
+                E -= abs(dx);
             }
             // Draw pixel in the buffer
-            if (dx > dy) {
+            if (!swapped) {
                 pixels[x + size.width * y] = c;
             } else {
                 pixels[y + size.width * x] = c;
