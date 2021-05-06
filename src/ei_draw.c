@@ -51,17 +51,16 @@ void ei_draw_polyline(ei_surface_t surface,
         uint32_t c = ei_map_rgba(surface, color);
         int sign_x = (dx > 0) ? 1 : -1;
         int sign_y = (dy > 0) ? 1 : -1;
-        if (dx == 0 && x >= top_left_x && x <= top_right_x) {
+        if (dx == 0 && (clipper == NULL || x >= top_left_x && x <= top_right_x)) {
             while (y != second->point.y) {
                 if (y >= top_left_y && y <= bottom_left_y) {
                     pixels[x + size.width * y] = c;
                 }
                 y += sign_y;
-                printf("y : %i\n", y);
             }
             break;
         }
-        if (dy == 0 && y >= top_left_y && y <= bottom_left_y) {
+        if (dy == 0 && (clipper == NULL || y >= top_left_y && y <= bottom_left_y)) {
             while (x != second->point.x) {
                 if (x >= top_left_x && x <= top_right_x) {
                     pixels[x + size.width * y] = c;
@@ -93,12 +92,10 @@ void ei_draw_polyline(ei_surface_t surface,
                 E -= abs(dx);
             }
             // Draw pixel in the buffer
-            if (clipper == NULL || (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y)){
-                if (!swapped) {
+            if (!swapped && (clipper == NULL || (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y))) {
                     pixels[x + size.width * y] = c;
-                } else {
+            } else if (swapped && (clipper == NULL || (y >= top_left_x && y <= top_right_x && x >= top_left_y && x <= bottom_left_y))){
                     pixels[y + size.width * x] = c;
-                }
             }
         }
         first = second;
@@ -231,6 +228,29 @@ void ei_draw_polygon(ei_surface_t surface,
     free(tab_cote);
     free(tab_cote_actif);
 }
+
+void ei_draw_text(ei_surface_t surface,
+                  const ei_point_t *where,
+                  const char *text,
+                  ei_font_t font,
+                  ei_color_t color,
+                  const ei_rect_t *clipper) {
+
+}
+
+void ei_fill(ei_surface_t surface,
+             const ei_color_t *color,
+             const ei_rect_t *clipper) {
+    hw_surface_lock(surface);
+    uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
+    ei_size_t size = hw_surface_get_size(surface);
+    uint32_t c = ei_map_rgba(surface, *color);
+    for (uint32_t i = 0; i < size.width * size.height; i++) {
+        pixels[i] = c;
+    }
+    hw_surface_unlock(surface);
+}
+
 
 void ei_draw_text(ei_surface_t surface,
                   const ei_point_t *where,

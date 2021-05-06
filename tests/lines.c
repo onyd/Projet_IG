@@ -94,7 +94,7 @@ void test_octogone_clipping(ei_surface_t surface, ei_rect_t* clipper)
     pts[i-1].next = NULL;
 
     /* Draw the form with polylines */
-    ei_draw_polygon(surface, pts, color, clipper);
+    ei_draw_polyline(surface, pts, color, clipper);
 }
 
 void test_polygone(ei_surface_t surface, ei_rect_t* clipper)
@@ -125,7 +125,7 @@ void test_polygone(ei_surface_t surface, ei_rect_t* clipper)
     pts[i-1].next = NULL;
 
     /* Draw the form with polylines */
-    ei_draw_polygon(surface, pts, color, clipper);
+    ei_draw_polyline(surface, pts, color, clipper);
 }
 
 /* test_square --
@@ -194,14 +194,14 @@ int main(int argc, char** argv)
 {
 	ei_size_t		win_size	= ei_size(800, 600);
 	ei_surface_t		main_window	= NULL;
-	ei_color_t		white		= { 0x0f, 0x0f, 0xff, 0xff };
+	ei_color_t		white		= { 0xf0, 0xf0, 0xff, 0xff };
 	ei_rect_t*		clipper_ptr	= NULL;
 
     ei_rect_t clipper_test;
     clipper_test.top_left.x = 0;
     clipper_test.top_left.y = 0;
-    clipper_test.size.height = 800;
-    clipper_test.size.width = 600;
+    clipper_test.size.width = 800;
+    clipper_test.size.height = 600;
 
 //	ei_rect_t		clipper		= ei_rect(ei_point(200, 150), ei_size(400, 300));
 //	clipper_ptr		= &clipper;
@@ -218,7 +218,7 @@ int main(int argc, char** argv)
 	/* Draw polylines. */
 	test_line	(main_window, clipper_ptr);
 	test_octogone	(main_window, clipper_ptr);
-    test_octogone_clipping(main_window, &clipper_test);
+  test_octogone_clipping(main_window, &clipper_test);
 //	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
