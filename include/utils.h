@@ -1,17 +1,12 @@
-//
-// Created by antho on 06/05/2021.
-//
-
 #ifndef PROJETC_IG_UTILS_H
 #define PROJETC_IG_UTILS_H
 
 #include "stdint.h"
+#include "ei_types.h"
 
 struct table_cote {
     int ymax;
-    int ymin;
-    int xpmin;
-    int xpmax;
+    int x_ymin;
     int E;
     int dx;
     int dy;
@@ -19,12 +14,21 @@ struct table_cote {
 };
 
 struct table_cote_actif {
-    struct  table_cote *head;
+    struct table_cote *head;
 };
 
-void append_left(struct table_cote* e, struct table_cote_actif* tac);
+void append_left(struct table_cote *e, struct table_cote_actif *tca);
 
-void display(struct table_cote_actif* tac);
+void delete(struct table_cote *e, struct table_cote_actif *tca);
+
+void display(struct table_cote_actif *tac);
+
+void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca);
+
+void tc_free(struct table_cote *);
+
+void tca_free(struct table_cote *);
+
 /**
  * \brief	Swap the variable content pointed by a and b
  *
@@ -41,6 +45,29 @@ void swap(uint32_t *a, uint32_t *b);
  */
 int max(int a, int b);
 
-void sorting_insert(struct table_cote* tc, struct table_cote_actif* tac);
+/**
+ * \brief	Return min of a and b
+ *
+ * @param	a 	uint32_t variable.
+ * @param	b   uint32_t variable.
+ */
+int min(int a, int b);
+
+/**
+ * \brief	Return the pointer to the point which have the maximum y coordinates
+ *
+ * @param	a 	struct ei_linked_point_t* the first point.
+ * @param	b   struct ei_linked_point_t* the other point.
+ */
+struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked_point_t *b);
+
+/**
+ * \brief	Return the point which have the maximum y coordinates
+ *
+ * @param	a 	struct ei_linked_point_t the first point.
+ * @param	b   struct ei_linked_point_t the other point.
+ */
+struct ei_linked_point_t *y_argmin(struct ei_linked_point_t *a, struct ei_linked_point_t *b);
+
 
 #endif //PROJETC_IG_UTILS_H
