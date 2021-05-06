@@ -216,8 +216,8 @@ int main(int argc, char** argv)
 
 	/* Draw polylines. */
 	test_line	(main_window, clipper_ptr);
-	test_octogone	(main_window, clipper_ptr);
-    test_octogone_clipping(main_window, &clipper_test);
+//	test_octogone	(main_window, clipper_ptr);
+//    test_octogone_clipping(main_window, &clipper_test);
 //	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);

@@ -55,14 +55,14 @@ void ei_draw_polyline(ei_surface_t surface,
                 pixels[x + size.width * y] = c;
                 y += sign_y;
             }
-            return;
+            break;
         }
         if (dy == 0) {
             while (x != second->point.x) {
                 pixels[x + size.width * y] = c;
                 x += sign_x;
             }
-            return;
+            break;
         }
 
         // Swap variable for y-directed line
@@ -117,7 +117,7 @@ void ei_draw_polygon(ei_surface_t surface,
     struct table_cote *parcourt = tab_cote;
     //initialisation de la table de côté actif
     struct table_cote_actif *tab_cote_actif = malloc(sizeof(struct table_cote_actif));
-    tab_cote_actif->tete = NULL;
+    tab_cote_actif->head = NULL;
     // Donne le ymin du polygone et le côté correspondant à ce ymin
     int ycur = prec->point.y;
     do {
@@ -155,7 +155,7 @@ void ei_draw_polygon(ei_surface_t surface,
      * y = ymin avec ymin le côté minimum de tout les points du polygone
      * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*/
     struct table_cote *parcourt_prec = tab_cote;
-    while (tab_cote != NULL && tab_cote_actif->tete != NULL) {
+    while (tab_cote != NULL && tab_cote_actif->head != NULL) {
         parcourt = tab_cote;
         parcourt_prec = tab_cote;
         // On rajoute dans TCA les nouveaux points TC
@@ -177,13 +177,13 @@ void ei_draw_polygon(ei_surface_t surface,
         }
 
         // On supprime les coté de TCA tq y = ymax
-        parcourt = tab_cote_actif->tete;
+        parcourt = tab_cote_actif->head;
         parcourt_prec = parcourt;
         while (parcourt != NULL) {
             if (parcourt->ymax == ycur) {
                 //si on supprime la tête
                 if (parcourt == parcourt_prec) {
-                    tab_cote_actif->tete = parcourt->next;
+                    tab_cote_actif->head = parcourt->next;
                 }
                 else {
                     parcourt_prec->next = parcourt->next;
@@ -197,7 +197,7 @@ void ei_draw_polygon(ei_surface_t surface,
         }
 
         //on remplit les pixels
-        parcourt = tab_cote_actif->tete;
+        parcourt = tab_cote_actif->head;
         while (parcourt != NULL) {
             int x1 = parcourt->xpmin;
             parcourt = parcourt->next;
@@ -211,7 +211,7 @@ void ei_draw_polygon(ei_surface_t surface,
         ycur += 1;
 
         // On fait Bresenham pour avoir les nouvelles valeurs de x
-        parcourt = tab_cote_actif->tete;
+        parcourt = tab_cote_actif->head;
         while (parcourt != NULL) {
             int dx = parcourt->dx;
             int dy = parcourt->dy;

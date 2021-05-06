@@ -1,34 +1,47 @@
 #include "utils.h"
+#include "stdlib.h"
 
 int main() {
-    struct table_cote_actif tac;
+    struct table_cote_actif *tac = malloc(sizeof (struct table_cote_actif));
+    tac->head = NULL;
 
-    struct table_cote tc1 = {0, 0, -1, 4, 0, 0, 0, NULL};
-    struct table_cote tc2 = {0, 0, 1, 4, 0, 0, 0, NULL};
-    struct table_cote tc3 = {0, 0, 2, 3, 0, 0, 0, NULL};
-    struct table_cote tc4 = {0, 0, 3, 1, 0, 0, 0, NULL};
-    struct table_cote tc5 = {0, 0, 4, 4, 0, 0, 0, NULL};
-    struct table_cote tc6 = {0, 0, 5, 2, 0, 0, 0, NULL};
-    struct table_cote tc7 = {0, 0, 6, 9, 0, 0, 0, NULL};
+    struct table_cote *tc1 = malloc(sizeof (struct table_cote));
+    struct table_cote *tc2 = malloc(sizeof (struct table_cote));
+    struct table_cote *tc3 = malloc(sizeof (struct table_cote));
+    struct table_cote *tc4 = malloc(sizeof (struct table_cote));
+    struct table_cote *tc5 = malloc(sizeof (struct table_cote));
+    struct table_cote *tc6 = malloc(sizeof (struct table_cote));
+    struct table_cote *tc7 = malloc(sizeof (struct table_cote));
 
-    tc1.next = &tc2;
-    tc2.next = &tc3;
-    tc3.next = &tc4;
-    tc4.next = &tc5;
-    tc5.next = &tc6;
-    tc6.next = &tc7;
+    tc1->xpmax = -1;
+    tc2->xpmax = 1;
+    tc3->xpmax = 2;
+    tc4->xpmax = 3;
+    tc5->xpmax = 4;
+    tc6->xpmax = 5;
+    tc7->xpmax = 6;
 
-    append_left(&tc1, &tac);
+    tc1->next = tc2;
+    tc2->next = tc3;
+    tc3->next = tc4;
+    tc4->next = tc5;
+    tc5->next = tc6;
+    tc6->next = tc7;
 
-    struct table_cote tc8 = {0, 0, 0, 2, 0, 0, 0, NULL};
-    sorting_insert(&tc8, &tac);
+    append_left(tc1, tac);
+    display(tac);
 
-    display(&tac);
+    struct table_cote *tc8 = malloc(sizeof (struct table_cote));
+    tc8->xpmax = 0;
+    sorting_insert(tc8, tac);
 
-    struct table_cote tc9 = {0, 0, 1, 6, 0, 0, 0, NULL};
-    sorting_insert(&tc9, &tac);
+    display(tac);
 
-    display(&tac);
+    struct table_cote *tc9 = malloc(sizeof (struct table_cote));
+    tc2->xpmax = 2;
+    sorting_insert(tc9, tac);
+
+    display(tac);
 
 }
 
