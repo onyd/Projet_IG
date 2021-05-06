@@ -197,11 +197,11 @@ int main(int argc, char** argv)
 	ei_color_t		white		= { 0x0f, 0x0f, 0xff, 0xff };
 	ei_rect_t*		clipper_ptr	= NULL;
 
-    ei_rect_t* clipper_ptr_test;
-    clipper_ptr_test -> top_left.x = 0;
-    clipper_ptr_test -> top_left.y = 0;
-    clipper_ptr_test -> size.height = 800;
-    clipper_ptr_test -> size.width = 600;
+    ei_rect_t clipper_test;
+    clipper_test.top_left.x = 0;
+    clipper_test.top_left.y = 0;
+    clipper_test.size.height = 800;
+    clipper_test.size.width = 600;
 
 //	ei_rect_t		clipper		= ei_rect(ei_point(200, 150), ei_size(400, 300));
 //	clipper_ptr		= &clipper;
@@ -217,8 +217,13 @@ int main(int argc, char** argv)
 
 	/* Draw polylines. */
 	test_line	(main_window, clipper_ptr);
+<<<<<<< HEAD
 //	test_octogone	(main_window, clipper_ptr);
 //  test_octogone_clipping(main_window, clipper_ptr_test);
+=======
+	test_octogone	(main_window, clipper_ptr);
+    test_octogone_clipping(main_window, &clipper_test);
+>>>>>>> 41988d2756701f157be9cea700bf196af9cafd94
 //	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
