@@ -109,10 +109,10 @@ void ei_draw_polygon(ei_surface_t surface,
     const ei_linked_point_t *debut = first_point;
     const ei_linked_point_t *prec = first_point;
     const ei_linked_point_t *current = first_point->next;
-    struct table_cote *tab_cote;
+    struct table_cote *tab_cote = malloc(sizeof(struct table_cote));
     struct table_cote *parcourt = tab_cote;
     //initialisation de la table de côté actif
-    struct table_cote_actif *tab_cote_actif;
+    struct table_cote_actif *tab_cote_actif = malloc(sizeof(struct table_cote_actif));
     tab_cote_actif->tete = NULL;
     // Derniere élément de la TCA
     struct table_cote *parcourt_fin = tab_cote_actif->tete;
@@ -125,10 +125,12 @@ void ei_draw_polygon(ei_surface_t surface,
             parcourt->ymax = ymax;
             if (prec->point.y == ymax) {
                 parcourt->xpmin = current->point.x;
+                parcourt->xpmax = prec->point.x;
                 parcourt->ymin = current->point.y;
             }
             else {
                 parcourt->xpmin = prec->point.x;
+                parcourt->xpmax = current->point.x;
                 parcourt->ymin = prec->point.y;
             }
             int dx = current->point.x - prec->point.x;
