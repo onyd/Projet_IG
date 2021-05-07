@@ -26,30 +26,30 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, int rayon) {
     int top_left_y = button_rect.top_left.y;
     ei_point_t point;
     point.x = top_left_x + rayon;
-    point.y = top_left_y;
-    ei_linked_point_t *prec, *button, *current = &arc(point, rayon, pi/2, pi);
+    point.y = top_left_y + rayon;
+    ei_linked_point_t *prec, *button, *current = arc(point, rayon, pi/2, pi);
     while (prec->next != NULL) {
         prec = prec->next;
     }
-    point.x = top_left_x;
+    point.x = top_left_x + rayon;
     point.y = top_left_y + button_height - rayon;
-    current = &arc(point, rayon, pi, 3*pi/2);
+    current = arc(point, rayon, pi, 3*pi/2);
     prec->next = current;
     prec = current;
     while (prec->next != NULL) {
         prec = prec->next;
     }
     point.x = top_left_x + button_width - rayon;
-    point.y = top_left_y + button_height;
-    current = &arc(point, rayon, 3*pi/2, 0);
+    point.y = top_left_y + button_height - rayon;
+    current = arc(point, rayon, 3*pi/2, 2*pi);
     prec->next = current;
     prec = current;
     while (prec->next != NULL) {
         prec = prec->next;
     }
-    point.x = top_left_x + button_width;
+    point.x = top_left_x + button_width - rayon;
     point.y = top_left_y + rayon;
-    current = &arc(point, rayon, 0, pi/2);
+    current = arc(point, rayon, 0, pi/2);
     prec->next = current;
     prec = current;
     while (prec->next != NULL) {
