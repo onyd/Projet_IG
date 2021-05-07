@@ -103,7 +103,7 @@ void ei_draw_polyline(ei_surface_t surface,
         first = second;
         second = second->next;
     }
-}
+
 
 
 void ei_draw_polygon(ei_surface_t surface,
