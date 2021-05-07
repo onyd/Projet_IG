@@ -26,8 +26,18 @@ void display(struct table_cote_actif *tac);
 
 void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca);
 
+/**
+ * \brief	free the structure table_cote
+ *
+ * @param	 	struct table_cote*.
+ */
 void tc_free(struct table_cote *);
 
+/**
+ * \brief	free the structure table_cote_actif
+ *
+ * @param	 	struct table_cote_actif*.
+ */
 void tca_free(struct table_cote_actif *);
 
 /**

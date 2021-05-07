@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "stdio.h"
+#include "stdlib.h"
 
 void append_left(struct table_cote *e, struct table_cote_actif *tca) {
     if (tca->head == NULL) {
