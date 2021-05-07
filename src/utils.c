@@ -19,7 +19,10 @@ void delete(struct table_cote *e, struct table_cote_actif *tca) {
     struct table_cote *previous = tca->head;
     struct table_cote *current = tca->head->next;
     while (current != NULL) {
-        if (current == e)
+        if (current == e) {
+            previous->next = current->next;
+            current->next = NULL;
+        }
         previous = current;
         current = current->next;
     }

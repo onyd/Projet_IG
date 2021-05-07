@@ -36,6 +36,7 @@ int main() {
     tc4->next = tc5;
     tc5->next = tc6;
     tc6->next = tc7;
+    tc7->next = NULL;
 
     append_left(tc1, tca);
     display(tca);
@@ -43,12 +44,14 @@ int main() {
     struct table_cote *tc8 = malloc(sizeof (struct table_cote));
     tc8->x_ymax = -2;
     tc8->x_ymin = -1;
+    tc8->next = NULL;
     sorting_insert(tc8, tca);
 
     display(tca);
 
     struct table_cote *tc9 = malloc(sizeof (struct table_cote));
     tc9->x_ymax = 2;
+    tc9->next = NULL;
     sorting_insert(tc9, tca);
 
     display(tca);
