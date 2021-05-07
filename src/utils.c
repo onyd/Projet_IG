@@ -12,6 +12,10 @@ void append_left(struct table_cote *e, struct table_cote_actif *tca) {
 }
 
 void delete(struct table_cote *e, struct table_cote_actif *tca) {
+    if (tca->head == NULL) {
+        return;
+    }
+
     if (e == tca->head) {
         tca->head = NULL;
         return;;
@@ -32,7 +36,7 @@ void delete(struct table_cote *e, struct table_cote_actif *tca) {
 void display(struct table_cote_actif *tca) {
     struct table_cote *current = tca->head;
     while (current != NULL) {
-        printf("[%i, %i]->", current->x_ymax, current->x_ymin);
+        printf("[%i, %i]->", current->ymax, current->x_ymin);
         current = current->next;
     }
     printf("\n");
@@ -47,7 +51,7 @@ void swap(uint32_t *a, uint32_t *b) {
 
 
 struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked_point_t *b) {
-    if (a->point.y < b->point.y) {
+    if (a->point.y > b->point.y) {
         return a;
     } else {
         return b;
@@ -55,7 +59,7 @@ struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked
 }
 
 struct ei_linked_point_t *y_argmin(struct ei_linked_point_t *a, struct ei_linked_point_t *b) {
-    if (a->point.y > b->point.y) {
+    if (a->point.y < b->point.y) {
         return a;
     } else {
         return b;

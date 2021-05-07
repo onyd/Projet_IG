@@ -118,6 +118,14 @@ void ei_draw_polygon(ei_surface_t surface,
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, color);
 
+    int top_left_x, top_right_x, top_left_y, bottom_left_y;
+    if (clipper != NULL) {
+        top_left_x = clipper->top_left.x;
+        top_right_x = clipper->top_left.x + clipper->size.width;
+        top_left_y = clipper->top_left.y;
+        bottom_left_y = clipper->top_left.y + clipper->size.height;
+    }
+
     // Find ymax and ymin to initialize size
     int ymax = first_point->point.y;
     int ymin = first_point->point.y;
@@ -148,28 +156,32 @@ void ei_draw_polygon(ei_surface_t surface,
         int dx = p_max->point.x - p_min->point.x;
         int dy = p_max->point.y - p_min->point.y;
 
-        // Ignore horizontal
+        // Ignore horizontal edges
         if (dy != 0) {
             struct table_cote *edge = malloc(sizeof(struct table_cote));
             edge->ymax = p_max->point.y;
             edge->x_ymin = p_min->point.x;
+            edge->x_ymax = p_max->point.x;
             edge->dx = dx;
             edge->dy = dy;
             edge->E = dx / 2;
+            edge->inv_p = ceil(dx / dy);
 
-            edge->next = TC[p_min->point.y];
-            TC[p_min->point.y] = edge;
+            edge->next = TC[p_min->point.y - ymin];
+            TC[p_min->point.y - ymin] = edge;
         }
         first = second;
         second = second->next;
     }
 
+
     /* On initialise la table des côté actifs en se
      * placant à la premiere scanline correspondant à
      * y = ymin avec ymin le côté minimum de tout les points du polygone
      * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*/
-    for (uint32_t i = 0; i < ymax - ymin; i++) {
-        uint32_t y = i + ymin;
+    uint32_t y = ymin;
+    while (y < ymax) {
+        uint32_t i = y - ymin;
 
         // Delete TCA edges such that y = ymax
         struct table_cote *current_tca = TCA->head;
@@ -177,48 +189,54 @@ void ei_draw_polygon(ei_surface_t surface,
             if (current_tca->ymax == y) {
                 delete(current_tca, TCA);
             }
-            current = current->next;
+            current_tca = current_tca->next;
         }
 
-        // Add current scanline starting edges
-        struct table_cote *previous = TC[y];
-        while (TC[y] != NULL) {
-            struct table_cote *current_tc = TC[y];
-            while (current_tc != NULL) {
-                struct table_cote *tc = TC[y];
-                TC[y] = tc->next;
-                tc->next = NULL;
-                sorting_insert(tc, TCA);
-                current_tc = current_tc->next;
-            }
+        // Add current scanline starting edges while keeping TCA sorted
+        while (TC[i] != NULL) {
+            struct table_cote *tc = TC[i];
+            TC[i] = tc->next;
+            tc->next = NULL;
+            sorting_insert(tc, TCA);
         }
 
         // Draw pixels
         struct table_cote *current = TCA->head;
-        while (current != NULL) {
+        while (current != NULL && current->next != NULL) {
             int x1 = current->x_ymin;
             current = current->next;
             int x2 = current->x_ymin;
-            for (int i = x1; i < x2; i++) {
-                pixels[i + size.width * y] = c;
+            for (int k = x1; k < x2; k++) {
+                if (clipper == NULL || (k >= top_left_x && k <= top_right_x && y >= top_left_y && y <= bottom_left_y)) {
+                    pixels[k + size.width * y] = c;
+                }
             }
+            current = current->next;
+        }
 
-            // Bresenham iterations for next intersections
-            int dx = current->dx;
-            int dy = current->dy;
-            int sign_x = (dx > 0) ? 1 : -1;
-            int sign_y = (dy > 0) ? 1 : -1;
-            current->E += abs(dx);
-            if (2 * current->E > abs(dy)) {
-                current->x_ymin += sign_x;
-                current->E -= abs(dy);
+        y++;
+
+        // Bresenham iterations for next intersections
+        current = TCA->head;
+        while (current != NULL) {
+            int sign_x = (current->dx > 0) ? 1 : -1;
+
+            current->E += abs(current->dx);
+            if (2 * current->E > abs(current->dx)) {
+                if (abs(current->dx) > abs(current->dy)) {
+                    current->x_ymin += current->inv_p;
+                } else {
+                    current->x_ymin += sign_x;
+                }
+                current->E -= abs(current->dy);
             }
+            current = current->next;
         }
     }
 
     // Free resources
-    for (uint32_t i = 0; i < ymax - ymin; i++) {
-        tc_free(TC);
+    for (uint32_t k = 0; k < ymax - ymin; k++) {
+        tc_free(TC[k]);
     }
     tca_free(TCA);
 }

@@ -11,6 +11,7 @@ struct table_cote {
     int E;
     int dx;
     int dy;
+    int inv_p;
     struct table_cote *next;
 };
 
@@ -48,28 +49,6 @@ void tca_free(struct table_cote_actif *);
  */
 void swap(uint32_t *a, uint32_t *b);
 
-/**
- * \brief	Return max of a and b
- *
- * @param	a 	uint32_t variable.
- * @param	b   uint32_t variable.
- */
-int max(int a, int b);
-
-/**
- * \brief	Return min of a and b
- *
- * @param	a 	uint32_t variable.
- * @param	b   uint32_t variable.
- */
-int min(int a, int b);
-
-/**
- * \brief	Return the pointer to the point which have the maximum y coordinates
- *
- * @param	a 	struct ei_linked_point_t* the first point.
- * @param	b   struct ei_linked_point_t* the other point.
- */
 struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked_point_t *b);
 
 /**
