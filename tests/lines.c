@@ -7,7 +7,7 @@
 #include "ei_draw.h"
 #include "ei_types.h"
 #include "ei_event.h"
-
+#include "geometry.h"
 
 
 /* test_line --
@@ -157,6 +157,11 @@ void test_dot(ei_surface_t surface, ei_rect_t *clipper) {
 
     ei_draw_polyline(surface, pts, color, clipper);
 }
+
+/* test_ei_draw_text --
+ *
+ *	Draws text at the center of the window with default font
+ */
 void test_ei_draw_text(ei_surface_t surface, ei_rect_t* clipper){
     ei_point_t where;
     where.x = 400;
@@ -167,6 +172,17 @@ void test_ei_draw_text(ei_surface_t surface, ei_rect_t* clipper){
     ei_draw_text(surface, &where, texte, ei_default_font, color, clipper);
 }
 
+/* test_rounded_frame --
+ *
+ *	Draws text at the center of the window with default font
+ */
+void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
+    ei_color_t color = { 0, 100, 255, 255 };
+    ei_rect_t rect = ei_rect(ei_point(200, 200), ei_size(450, 350));
+    ei_linked_point_t *pts = rounded_frame(rect, 20, 30);
+
+    ei_draw_polygon(surface, pts, color, clipper);
+}
 
 /*
  * ei_main --
@@ -198,14 +214,16 @@ int main(int argc, char **argv) {
     ei_fill(main_window, &white, clipper_ptr);
 
     /* Draw polylines. */
-    test_line(main_window, clipper_ptr);
+//    test_line(main_window, clipper_ptr);
 //	test_octogone	(main_window, clipper_ptr);
 //    test_octogone(main_window, &clipper_test);
 //	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
-    test_polygone(main_window, &clipper_test);
+//    test_polygone(main_window, &clipper_test);
 
+    /* Rounded polygon */
+    test_rounded_frame(main_window, clipper_ptr);
     /* Draw text. */
 //    test_ei_draw_text(main_window, clipper_ptr);
 	/* Unlock and update the surface. */
