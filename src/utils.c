@@ -71,13 +71,13 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
         tca->head = tc;
         return;
     }
-    struct table_cote *prec = tca->head;
-    struct table_cote *current = prec;
+    struct table_cote *previous = tca->head;
+    struct table_cote *current = previous;
     while (current != NULL) {
         // à savoir: il ne peut pas y avoir plus de deux côtés qui ont le même x_ymin
         if (current->x_ymin == tc->x_ymin) {
             //si c'est à la tête:
-            if (current == prec) {
+            if (current == previous) {
                 if (current->x_ymax > tc->x_ymax) {
                     append_left(tc, tca);
                 }
@@ -88,7 +88,7 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
             }
             else {
                 if (current->x_ymax > tc->x_ymax) {
-                    prec->next = tc;
+                    previous->next = tc;
                     tc->next = current;
                 }
                 else {
@@ -100,20 +100,20 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
         }
         if (current->x_ymin > tc->x_ymin) {
             //si c'est la tete
-            if (current == prec) {
+            if (current == previous) {
                 append_left(tc, tca);
             }
             else {
-                prec->next = tc;
+                previous->next = tc;
                 tc->next = current;
             }
             return;
         }
-        prec = current;
+        previous = current;
         current = current->next;
     }
     if (current == NULL) {
-        prec->next = tc;
+        previous->next = tc;
     }
 }
 
