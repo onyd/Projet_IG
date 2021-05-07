@@ -287,7 +287,12 @@ int ei_copy_surface(ei_surface_t destination,
     uint32_t *dst_pixels = (uint32_t *) hw_surface_get_buffer(destination);
     uint32_t *src_pixels = (uint32_t *) hw_surface_get_buffer(source);
     // If it's not the same size between both surfaces then failure
-    if (src_size.width != dst_size.width && src_size.height != dst_size.height) {
+    if ((src_size.width != dst_size.width && src_size.height != dst_size.height) &&
+    (dst_rect == NULL || src_rect == NULL)) {
+        return 1;
+    }
+    if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width == dst_rect->size.width &&
+            src_rect->size.height == dst_rect->size.height)) {
         return 1;
     }
     hw_surface_lock(destination);
