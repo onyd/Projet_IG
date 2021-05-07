@@ -233,11 +233,15 @@ void ei_draw_text(ei_surface_t surface,
                   ei_color_t color,
                   const ei_rect_t *clipper) {
     ei_surface_t new_surface = hw_text_create_surface(text, font, color);
-    ei_size_t size_dst_rect = hw_surface_get_size((const) new_surface);
+
+    ei_size_t size_src_rect = hw_surface_get_size(new_surface);
+    const ei_rect_t	src_rect = ei_rect(ei_point(0, 0), size_src_rect);
+
+    ei_size_t size_dst_rect = hw_surface_get_size(new_surface);
     const ei_rect_t	dst_rect = ei_rect(*where, size_dst_rect);
 
-    ei_copy_surface(new_surface, clipper, surface, clipper, false);
-
+    printf("%i", ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, false));
+    hw_surface_free(new_surface);
 }
 
 void ei_fill(ei_surface_t surface,
