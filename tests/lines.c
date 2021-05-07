@@ -169,7 +169,7 @@ void test_square(ei_surface_t surface, ei_rect_t* clipper)
 
 /* test_dot --
  *
- *	Draws a dot in the middle of the screen. This is meant to test the special 
+ *	Draws a dot in the middle of the screen. This is meant to test the special
  *	case when dx = dy = 0
  */
 void test_dot(ei_surface_t surface, ei_rect_t* clipper)
@@ -208,18 +208,18 @@ int main(int argc, char** argv)
 	ei_event_t		event;
 
 	hw_init();
-		
+
 	main_window = hw_create_window(win_size, EI_FALSE);
-	
+
 	/* Lock the drawing surface, paint it white. */
 	hw_surface_lock	(main_window);
 	ei_fill		(main_window, &white, clipper_ptr);
 
 	/* Draw polylines. */
 	test_line	(main_window, clipper_ptr);
-//	test_octogone	(main_window, clipper_ptr);
-  //test_octogone_clipping(main_window, &clipper_test);
-	test_square	(main_window, clipper_ptr);
+	test_octogone	(main_window, clipper_ptr);
+  test_octogone_clipping(main_window, &clipper_test);
+//	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
 	
