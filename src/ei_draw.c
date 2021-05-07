@@ -256,6 +256,41 @@ int ei_copy_surface(ei_surface_t destination,
                     ei_surface_t source,
                     const ei_rect_t *src_rect,
                     ei_bool_t alpha) {
-
+    hw_surface_lock(destination);
+    hw_surface_lock(source);
+    ei_size_t dst_size = hw_surface_get_size(destination);
+    ei_size_t src_size = hw_surface_get_size(source);
+    uint32_t *dst_pixels = (uint32_t *) hw_surface_get_buffer(destination);
+    uint32_t *src_pixels = (uint32_t *) hw_surface_get_buffer(source);
+    // If it's not the same size between both surfaces then failure
+    if (src_size.width != dst_size.width && src_size.height != dst_size.height) {
+        return 1;
+    }
+    int src_top_left_x, src_top_right_x, src_top_left_y, src_bottom_left_y;
+    int dst_top_left_x, dst_top_right_x, dst_top_left_y, dst_bottom_left_y;
+    if (src_rect != NULL) {
+        src_top_left_x = src_rect->top_left.x;
+        src_top_right_x = src_rect->top_left.x + src_rect->size.width;
+        src_top_left_y = src_rect->top_left.y;
+        src_bottom_left_y = src_rect->top_left.y + src_rect->size.height;
+    }
+    if (dst_rect != NULL) {
+        dst_top_left_x = dst_rect->top_left.x;
+        dst_top_right_x = dst_rect->top_left.x + dst_rect->size.width;
+        dst_top_left_y = dst_rect->top_left.y;
+        dst_bottom_left_y = dst_rect->top_left.y + dst_rect->size.height;
+    }
+    for (int y=0; y<src_size.height; y++) {
+        for (int x=0; x<src_size.width; x++) {
+            // Draw pixel in the buffer
+            if ((src_rect == NULL ||
+            (x >= src_top_left_x && x <= src_top_right_x && y >= src_top_left_y && y <= src_bottom_left_y)) &&
+            (dst_rect == NULL ||
+             (x >= dst_top_left_x && x <= dst_top_right_x && y >= dst_top_left_y && y <= dst_bottom_left_y))) {
+                dst_pixels[x + dst_size.width * y] = src_pixels[x + dst_size.width * y];
+            }
+        }
+    }
+    return 0;
 }
 
