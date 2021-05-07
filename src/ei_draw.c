@@ -233,7 +233,7 @@ void ei_draw_text(ei_surface_t surface,
     ei_size_t size_dst_rect = hw_surface_get_size((const) new_surface);
     const ei_rect_t	dst_rect = ei_rect(*where, size_dst_rect);
 
-    ei_copy_surface(new_surface, clipper, surface, clipper,false);
+    ei_copy_surface(new_surface, clipper, surface, clipper, false);
 
 }
 
