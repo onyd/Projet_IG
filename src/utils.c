@@ -124,4 +124,3 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
     }
 }
 
-
