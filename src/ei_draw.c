@@ -252,8 +252,6 @@ int ei_copy_surface(ei_surface_t destination,
                     ei_surface_t source,
                     const ei_rect_t *src_rect,
                     ei_bool_t alpha) {
-    hw_surface_lock(destination);
-    hw_surface_lock(source);
     ei_size_t dst_size = hw_surface_get_size(destination);
     ei_size_t src_size = hw_surface_get_size(source);
     uint32_t *dst_pixels = (uint32_t *) hw_surface_get_buffer(destination);
@@ -262,6 +260,8 @@ int ei_copy_surface(ei_surface_t destination,
     if (src_size.width != dst_size.width && src_size.height != dst_size.height) {
         return 1;
     }
+    hw_surface_lock(destination);
+    hw_surface_lock(source);
     int src_top_left_x, src_top_right_x, src_top_left_y, src_bottom_left_y;
     int dst_top_left_x, dst_top_right_x, dst_top_left_y, dst_bottom_left_y;
     if (src_rect != NULL) {
@@ -283,10 +283,35 @@ int ei_copy_surface(ei_surface_t destination,
             (x >= src_top_left_x && x <= src_top_right_x && y >= src_top_left_y && y <= src_bottom_left_y)) &&
             (dst_rect == NULL ||
              (x >= dst_top_left_x && x <= dst_top_right_x && y >= dst_top_left_y && y <= dst_bottom_left_y))) {
-                dst_pixels[x + dst_size.width * y] = src_pixels[x + dst_size.width * y];
+                if (!alpha) {
+                    dst_pixels[x + dst_size.width * y] = src_pixels[x + dst_size.width * y];
+                }
+                else {
+                    int ir, ig, ib, ia;
+                    hw_surface_get_channel_indices(destination, &ir, &ig, &ib, &ia);
+                    uint32_t src_r, src_g, src_b, src_a = 0;
+                    uint32_t dst_r, dst_g, dst_b = 0;
+                    uint32_t dst_a = 255 << 8*ia;
+                    //We take the RGB color of the source and the destination
+                    src_r = (uint8_t) src_pixels[x + dst_size.width * y] >> (8 * ir);
+                    src_g = (uint8_t) src_pixels[x + dst_size.width * y] >> (8 * ig);
+                    src_b = (uint8_t) src_pixels[x + dst_size.width * y] >> (8 * ib);
+                    src_a = (uint8_t) src_pixels[x + dst_size.width * y] >> (8 * ia);
+                    dst_r = (uint8_t) dst_pixels[x + dst_size.width * y] >> (8 * ir);
+                    dst_g = (uint8_t) dst_pixels[x + dst_size.width * y] >> (8 * ig);
+                    dst_b = (uint8_t) dst_pixels[x + dst_size.width * y] >> (8 * ib);
+                    // apply the transparancy
+                    dst_r = ((src_a*src_r + (255 - src_a)*dst_r)/255) << (8*ir);
+                    dst_g = ((src_a*src_g + (255 - src_a)*dst_g)/255) << (8*ig);
+                    dst_b = ((src_a*src_b + (255 - src_a)*dst_b)/255) << (8*ib);
+                    uint32_t color = dst_r | dst_g | dst_b | dst_a;
+                    dst_pixels[x + dst_size.width * y] = color;
+                }
             }
         }
     }
+    hw_surface_unlock(destination);
+    hw_surface_unlock(source);
     return 0;
 }
 
