@@ -27,7 +27,7 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca);
 
 void tc_free(struct table_cote *);
 
-void tca_free(struct table_cote *);
+void tca_free(struct table_cote_actif *);
 
 /**
  * \brief	Swap the variable content pointed by a and b

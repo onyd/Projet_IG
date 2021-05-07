@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "stdio.h"
+#include "stdlib.h"
 
 void append_left(struct table_cote *e, struct table_cote_actif *tca) {
     if (tca->head == NULL) {
@@ -106,4 +107,16 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
     }
 }
 
+void tc_free(struct table_cote *tc){
+    struct table_cote *next_tc = tc;
+    while (tc != NULL){
+        next_tc = tc -> next;
+        free(tc);
+        tc = next_tc;
+    }
+}
 
+void tca_free(struct table_cote_actif *tca){
+    tc_free(tca -> head);
+    free(tca);
+}
