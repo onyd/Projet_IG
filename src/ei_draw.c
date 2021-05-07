@@ -13,12 +13,9 @@ uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     r = (uint32_t) color.red << (8 * ir);
     g = (uint32_t) color.green << (8 * ig);
     b = (uint32_t) color.blue << (8 * ib);
-
-    if (ia != -1) {
-        return r | g | b | a;
-    } else {
-        return r | g | b;
-    }
+    ia = 6 - ir - ig - ib;
+    a = (uint32_t) color.alpha << (8 * ia);
+    return r | g | b | a;
 }
 
 void ei_draw_polyline(ei_surface_t surface,
@@ -243,11 +240,22 @@ void ei_draw_text(ei_surface_t surface,
 void ei_fill(ei_surface_t surface,
              const ei_color_t *color,
              const ei_rect_t *clipper) {
+    int top_left_x, top_right_x, top_left_y, bottom_left_y;
+    if (clipper != NULL) {
+        top_left_x = clipper->top_left.x;
+        top_right_x = clipper->top_left.x + clipper->size.width;
+        top_left_y = clipper->top_left.y;
+        bottom_left_y = clipper->top_left.y + clipper->size.height;
+    }
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, *color);
-    for (uint32_t i = 0; i < size.width * size.height; i++) {
-        pixels[i] = c;
+    for (uint32_t y = 0; y < size.height; y++) {
+        for (uint32_t x = 0; x< size.width; x++) {
+            if (clipper == NULL || (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y)) {
+                pixels[x + size.width * y] = c;
+            }
+        }
     }
 }
 
@@ -293,17 +301,18 @@ int ei_copy_surface(ei_surface_t destination,
                 else {
                     int ir, ig, ib, ia;
                     hw_surface_get_channel_indices(destination, &ir, &ig, &ib, &ia);
+                    ia = 6 - (ir + ib + ig);
                     uint32_t src_r, src_g, src_b, src_a = 0;
                     uint32_t dst_r, dst_g, dst_b = 0;
                     uint32_t dst_a = 255 << 8*ia;
                     //We take the RGB color of the source and the destination
-                    src_r = (uint8_t) src_pixels[x + dst_size.width * y] >> (8 * ir);
-                    src_g = (uint8_t) src_pixels[x + dst_size.width * y] >> (8 * ig);
-                    src_b = (uint8_t) src_pixels[x + dst_size.width * y] >> (8 * ib);
-                    src_a = (uint8_t) src_pixels[x + dst_size.width * y] >> (8 * ia);
-                    dst_r = (uint8_t) dst_pixels[x + dst_size.width * y] >> (8 * ir);
-                    dst_g = (uint8_t) dst_pixels[x + dst_size.width * y] >> (8 * ig);
-                    dst_b = (uint8_t) dst_pixels[x + dst_size.width * y] >> (8 * ib);
+                    src_r = (uint8_t) (src_pixels[x + dst_size.width * y] >> (8 * ir));
+                    src_g = (uint8_t) (src_pixels[x + dst_size.width * y] >> (8 * ig));
+                    src_b = (uint8_t) (src_pixels[x + dst_size.width * y] >> (8 * ib));
+                    src_a = (uint8_t) (src_pixels[x + dst_size.width * y] >> (8 * ia));
+                    dst_r = (uint8_t) (dst_pixels[x + dst_size.width * y] >> (8 * ir));
+                    dst_g = (uint8_t) (dst_pixels[x + dst_size.width * y] >> (8 * ig));
+                    dst_b = (uint8_t) (dst_pixels[x + dst_size.width * y] >> (8 * ib));
                     // apply the transparancy
                     dst_r = ((src_a*src_r + (255 - src_a)*dst_r)/255) << (8*ir);
                     dst_g = ((src_a*src_g + (255 - src_a)*dst_g)/255) << (8*ig);
