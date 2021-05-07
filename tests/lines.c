@@ -125,7 +125,7 @@ void test_polygone(ei_surface_t surface, ei_rect_t* clipper)
     pts[i-1].next = NULL;
 
     /* Draw the form with polylines */
-    ei_draw_polyline(surface, pts, color, clipper);
+    ei_draw_polygon(surface, pts, color, clipper);
 }
 
 /* test_square --
@@ -217,11 +217,11 @@ int main(int argc, char** argv)
 
 	/* Draw polylines. */
 	test_line	(main_window, clipper_ptr);
-	test_octogone	(main_window, clipper_ptr);
-  test_octogone_clipping(main_window, &clipper_test);
+//	test_octogone	(main_window, clipper_ptr);
+//  test_octogone_clipping(main_window, &clipper_test);
 //	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
-//  test_polygone(main_window, clipper_ptr);
+    test_polygone(main_window, clipper_ptr);
 	
 	/* Unlock and update the surface. */
 	hw_surface_unlock(main_window);
