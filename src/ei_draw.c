@@ -54,21 +54,25 @@ void ei_draw_polyline(ei_surface_t surface,
         // Vertical and horizontal case
         if (dx == 0 && (clipper == NULL || x >= top_left_x && x <= top_right_x)) {
             while (y != second->point.y) {
-                if (y >= top_left_y && y <= bottom_left_y) {
+                if (clipper == NULL || y >= top_left_y && y <= bottom_left_y) {
                     pixels[x + size.width * y] = c;
                 }
                 y += sign_y;
             }
-            break;
+            first = second;
+            second = second->next;
+            continue;
         }
         if (dy == 0 && (clipper == NULL || y >= top_left_y && y <= bottom_left_y)) {
             while (x != second->point.x) {
-                if (x >= top_left_x && x <= top_right_x) {
+                if (clipper == NULL || x >= top_left_x && x <= top_right_x) {
                     pixels[x + size.width * y] = c;
                 }
                 x += sign_x;
             }
-            break;
+            first = second;
+            second = second->next;
+            continue;
         }
 
         // Swap variable for y-directed line
