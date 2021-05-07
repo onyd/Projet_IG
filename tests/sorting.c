@@ -13,22 +13,22 @@ int main() {
     struct table_cote *tc6 = malloc(sizeof (struct table_cote));
     struct table_cote *tc7 = malloc(sizeof (struct table_cote));
 
-    tc1->xpmax = -1;
-    tc2->xpmax = 1;
-    tc3->xpmax = 2;
-    tc4->xpmax = 3;
-    tc5->xpmax = 4;
-    tc6->xpmax = 5;
-    tc7->xpmax = 6;
+    tc1->x_ymax = -1;
+    tc2->x_ymax = 1;
+    tc3->x_ymax = 2;
+    tc4->x_ymax = 3;
+    tc5->x_ymax = 4;
+    tc6->x_ymax = 5;
+    tc7->x_ymax = 6;
 
-    tc1->xpmin = -1;
-    tc1->xpmin = -1;
-    tc2->xpmin = 1;
-    tc3->xpmin = 2;
-    tc4->xpmin = 3;
-    tc5->xpmin = 4;
-    tc6->xpmin = 5;
-    tc7->xpmin = 6;
+    tc1->x_ymin = -1;
+    tc1->x_ymin = -1;
+    tc2->x_ymin = 1;
+    tc3->x_ymin = 2;
+    tc4->x_ymin = 3;
+    tc5->x_ymin = 4;
+    tc6->x_ymin = 5;
+    tc7->x_ymin = 6;
 
     tc1->next = tc2;
     tc2->next = tc3;
@@ -41,14 +41,14 @@ int main() {
     display(tca);
 
     struct table_cote *tc8 = malloc(sizeof (struct table_cote));
-    tc8->xpmax = -2;
-    tc8->xpmin = -1;
+    tc8->x_ymax = -2;
+    tc8->x_ymin = -1;
     sorting_insert(tc8, tca);
 
     display(tca);
 
     struct table_cote *tc9 = malloc(sizeof (struct table_cote));
-    tc9->xpmax = 2;
+    tc9->x_ymax = 2;
     sorting_insert(tc9, tca);
 
     display(tca);
