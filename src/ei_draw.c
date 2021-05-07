@@ -93,17 +93,19 @@ void ei_draw_polyline(ei_surface_t surface,
                 E -= abs(dx);
             }
             // Draw pixel in the buffer
-            if (!swapped && (clipper == NULL || (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y))) {
-                    pixels[x + size.width * y] = c;
-            } else if (swapped && (clipper == NULL || (y >= top_left_x && y <= top_right_x && x >= top_left_y && x <= bottom_left_y))){
-                    pixels[y + size.width * x] = c;
-                }
+            if (!swapped &&
+                (clipper == NULL || (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y))) {
+                pixels[x + size.width * y] = c;
+            } else if (swapped && (clipper == NULL ||
+                                   (y >= top_left_x && y <= top_right_x && x >= top_left_y && x <= bottom_left_y))) {
+                pixels[y + size.width * x] = c;
             }
         }
+
         first = second;
         second = second->next;
     }
-
+}
 
 
 void ei_draw_polygon(ei_surface_t surface,
@@ -144,8 +146,8 @@ void ei_draw_polygon(ei_surface_t surface,
         int dx = p_max->point.x - p_min->point.x;
         int dy = p_max->point.y - p_min->point.y;
 
-        // Ignore horizontal and vertical edges
-        if (dx != 0 || dy != 0) {
+        // Ignore horizontal
+        if (dy != 0) {
             struct table_cote *edge = malloc(sizeof(struct table_cote));
             edge->ymax = p_max->point.y;
             edge->x_ymin = p_min->point.x;
@@ -177,7 +179,7 @@ void ei_draw_polygon(ei_surface_t surface,
 
         // Add current scanline starting edges
         struct table_cote *previous = TC[y];
-        while (TC[y] != NULL && TCA->head != NULL) {
+        while (TC[y] != NULL) {
             struct table_cote *current_tc = TC[y];
             while (current_tc != NULL) {
                 struct table_cote *tc = TC[y];
