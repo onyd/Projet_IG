@@ -29,6 +29,7 @@ void ei_draw_polyline(ei_surface_t surface,
 
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
+    uint32_t c = ei_map_rgba(surface, color);
 
     // Clipper coordinates
     int top_left_x, top_right_x, top_left_y, bottom_left_y;
@@ -47,7 +48,6 @@ void ei_draw_polyline(ei_surface_t surface,
         int x = first->point.x;
         int y = first->point.y;
 
-        uint32_t c = ei_map_rgba(surface, color);
         int sign_x = (dx > 0) ? 1 : -1;
         int sign_y = (dy > 0) ? 1 : -1;
 
@@ -159,7 +159,8 @@ void ei_draw_polygon(ei_surface_t surface,
             edge->dy = dy;
             edge->E = dx / 2;
 
-            append_left(edge, TC[p_min->point.y]);
+            edge->next = TC[p_min->point.y];
+            TC[p_min->point.y] = edge;
         }
         first = second;
         second = second->next;
@@ -201,7 +202,7 @@ void ei_draw_polygon(ei_surface_t surface,
             current = current->next;
             int x2 = current->x_ymin;
             for (int i = x1; i < x2; i++) {
-                pixels[i + size.width * y];
+                pixels[i + size.width * y] = c;
             }
 
             // Bresenham iterations for next intersections
