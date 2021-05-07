@@ -182,7 +182,15 @@ void test_dot(ei_surface_t surface, ei_rect_t* clipper)
 
 	ei_draw_polyline(surface, pts, color, clipper);
 }
+void test_ei_draw_text(ei_surface_t surface, ei_rect_t* clipper){
+    ei_point_t where;
+    where.x = 400;
+    where.y = 400;
+    char *texte = "Affichage test";
+    ei_color_t color = { 255, 255, 255, 255 };
 
+    ei_draw_text(surface, &where, texte, ei_default_font, color, clipper);
+}
 
 
 /*
@@ -223,7 +231,9 @@ int main(int argc, char** argv)
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
 //  test_polygone_clipping(main_window, &clipper_test);
-	
+
+    /* Draw text. */
+//    test_ei_draw_text(main_window, clipper_ptr);
 	/* Unlock and update the surface. */
 	hw_surface_unlock(main_window);
 	hw_surface_update_rects(main_window, NULL);

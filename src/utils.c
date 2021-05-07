@@ -45,21 +45,6 @@ void swap(uint32_t *a, uint32_t *b) {
     (*b) = tmp;
 }
 
-int max(int a, int b) {
-    if (a > b) {
-        return a;
-    } else {
-        return b;
-    }
-}
-
-int min(int a, int b) {
-    if (a < b) {
-        return a;
-    } else {
-        return b;
-    }
-}
 
 struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked_point_t *b) {
     if (a->point.y < b->point.y) {

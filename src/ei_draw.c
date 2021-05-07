@@ -4,6 +4,7 @@
 #include "math.h"
 #include "stdbool.h"
 #include "stdlib.h"
+#include "ei_utils.h"
 
 uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     int ir, ig, ib, ia;
@@ -231,20 +232,23 @@ void ei_draw_text(ei_surface_t surface,
                   ei_font_t font,
                   ei_color_t color,
                   const ei_rect_t *clipper) {
+    ei_surface_t new_surface = hw_text_create_surface(text, font, color);
+    ei_size_t size_dst_rect = hw_surface_get_size((const) new_surface);
+    const ei_rect_t	dst_rect = ei_rect(*where, size_dst_rect);
+
+    ei_copy_surface(new_surface, clipper, surface, clipper,false);
 
 }
 
 void ei_fill(ei_surface_t surface,
              const ei_color_t *color,
              const ei_rect_t *clipper) {
-    hw_surface_lock(surface);
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, *color);
     for (uint32_t i = 0; i < size.width * size.height; i++) {
         pixels[i] = c;
     }
-    hw_surface_unlock(surface);
 }
 
 int ei_copy_surface(ei_surface_t destination,
