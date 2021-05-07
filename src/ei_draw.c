@@ -164,7 +164,7 @@ void ei_draw_polygon(ei_surface_t surface,
             edge->x_ymax = p_max->point.x;
             edge->dx = dx;
             edge->dy = dy;
-            edge->E = dx / 2;
+            edge->E = 0;
             edge->inv_p = ceil((float) dx / dy);
 
             edge->next = TC[p_min->point.y - ymin];

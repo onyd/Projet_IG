@@ -1,10 +1,22 @@
 #include "geometry.h"
+#include "math.h"
+#include "ei_utils.h"
+#include "stdlib.h"
 
-/*
-ei_linked_point_t arc(const ei_point_t* c, uint16_t start_angle, uint16_t end_angle) {
 
+ei_point_t *arc(const ei_point_t *c, uint32_t r, uint16_t start_angle, uint16_t end_angle, uint32_t N) {
+    float da = (end_angle - start_angle) / N;
+
+    struct ei *points = calloc(N, sizeof(ei_linked_point_t));
+    float angle = start_angle;
+    for (float i = 0; i < N; i++) {
+        points[i] = ei_point(r * cos(angle), r * sin(angle));
+        angle += da;
+    }
+
+    return points;
 }
- */
+
 
 
 ei_linked_point_t *rounded_frame(ei_rect_t button_rect, int rayon) {
