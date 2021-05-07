@@ -4,13 +4,13 @@
 #include "stdlib.h"
 
 
-ei_point_t *arc(const ei_point_t *c, uint32_t r, uint16_t start_angle, uint16_t end_angle, uint32_t N) {
+ei_point_t *arc(const ei_point_t *c, float r, float start_angle, float end_angle, uint32_t N) {
     float da = (end_angle - start_angle) / N;
 
     struct ei *points = calloc(N, sizeof(ei_linked_point_t));
     float angle = start_angle;
     for (float i = 0; i < N; i++) {
-        points[i] = ei_point(r * cos(angle), r * sin(angle));
+        points[i] = ei_point(r * cos(angle*(pi/180)), r * sin(angle*(pi/180)));
         angle += da;
     }
 
@@ -20,7 +20,6 @@ ei_point_t *arc(const ei_point_t *c, uint32_t r, uint16_t start_angle, uint16_t 
 
 
 ei_linked_point_t *rounded_frame(ei_rect_t button_rect, int rayon) {
-    float pi = 3.1415927;
     int button_width = button_rect.size.width;
     int button_height = button_rect.size.height;
     int top_left_x = button_rect.top_left.x;
