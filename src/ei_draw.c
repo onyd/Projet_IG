@@ -59,7 +59,9 @@ void ei_draw_polyline(ei_surface_t surface,
                 }
                 y += sign_y;
             }
-            break;
+            first = second;
+            second = second->next;
+            continue;
         }
         if (dy == 0 && (clipper == NULL || y >= top_left_y && y <= bottom_left_y)) {
             while (x != second->point.x) {
@@ -68,7 +70,9 @@ void ei_draw_polyline(ei_surface_t surface,
                 }
                 x += sign_x;
             }
-            break;
+            first = second;
+            second = second->next;
+            continue;
         }
 
         // Swap variable for y-directed line
