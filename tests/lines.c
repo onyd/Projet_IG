@@ -161,10 +161,11 @@ void test_ei_draw_text(ei_surface_t surface, ei_rect_t* clipper){
     ei_point_t where;
     where.x = 400;
     where.y = 400;
-    char *texte = "Affichage test";
-    ei_color_t color = { 255, 255, 255, 255 };
-
-    ei_draw_text(surface, &where, texte, ei_default_font, color, clipper);
+    char *text = "afflict";
+    ei_color_t color = { 255, 0, 255, 255 };
+    ei_font_t default_font;
+    default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, ei_font_default_size);
+    ei_draw_text(surface, &where, text, default_font, color, clipper);
 }
 
 
@@ -198,16 +199,16 @@ int main(int argc, char **argv) {
     ei_fill(main_window, &white, clipper_ptr);
 
     /* Draw polylines. */
-    test_line(main_window, clipper_ptr);
+//  test_line(main_window, clipper_ptr);
 //	test_octogone	(main_window, clipper_ptr);
 //    test_octogone(main_window, &clipper_test);
 //	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
-    test_polygone(main_window, &clipper_test);
+//    test_polygone(main_window, &clipper_test);
 
     /* Draw text. */
-//    test_ei_draw_text(main_window, clipper_ptr);
+    test_ei_draw_text(main_window, clipper_ptr);
 	/* Unlock and update the surface. */
 	hw_surface_unlock(main_window);
 	hw_surface_update_rects(main_window, NULL);

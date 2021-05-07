@@ -255,7 +255,7 @@ void ei_draw_text(ei_surface_t surface,
     ei_size_t size_dst_rect = hw_surface_get_size(new_surface);
     const ei_rect_t	dst_rect = ei_rect(*where, size_dst_rect);
 
-    printf("%i", ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, false));
+    ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, false);
     hw_surface_free(new_surface);
 }
 
@@ -295,8 +295,8 @@ int ei_copy_surface(ei_surface_t destination,
     (dst_rect == NULL || src_rect == NULL)) {
         return 1;
     }
-    if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width == dst_rect->size.width &&
-            src_rect->size.height == dst_rect->size.height)) {
+    if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width != dst_rect->size.width &&
+            src_rect->size.height != dst_rect->size.height)) {
         return 1;
     }
     hw_surface_lock(destination);
