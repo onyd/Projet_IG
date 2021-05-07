@@ -290,40 +290,69 @@ int ei_copy_surface(ei_surface_t destination,
     ei_size_t src_size = hw_surface_get_size(source);
     uint32_t *dst_pixels = (uint32_t *) hw_surface_get_buffer(destination);
     uint32_t *src_pixels = (uint32_t *) hw_surface_get_buffer(source);
-    // If it's not the same size between both surfaces then failure
+    // If it's not the same size between both surfaces or rect then failure
     if ((src_size.width != dst_size.width && src_size.height != dst_size.height) &&
     (dst_rect == NULL || src_rect == NULL)) {
+        return 1;
+    }
+    if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width == dst_rect->size.width &&
+            src_rect->size.height == dst_rect->size.height)) {
         return 1;
     }
     if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width != dst_rect->size.width &&
             src_rect->size.height != dst_rect->size.height)) {
         return 1;
     }
-    hw_surface_lock(destination);
-    hw_surface_lock(source);
+    // Parameters for the index of the source and the destination and for the clipping
     int src_top_left_x, src_top_right_x, src_top_left_y, src_bottom_left_y;
+    int src_first_x, src_first_y, src_size_x, src_size_y;
     int dst_top_left_x, dst_top_right_x, dst_top_left_y, dst_bottom_left_y;
-    if (src_rect != NULL) {
+    int dst_first_x, dst_first_y, dst_size_x, dst_size_y;
+    if (src_rect == NULL) {
+        src_first_x, src_first_y = 0;
+        src_size_x = src_size.width;
+        src_size_y = src_size.height;
+    }
+    else {
+        src_first_x = src_rect->top_left.x;
+        src_first_y = src_rect->top_left.y;
+        src_size_x = src_rect->size.width;
+        src_size_y = src_rect->size.height;
         src_top_left_x = src_rect->top_left.x;
         src_top_right_x = src_rect->top_left.x + src_rect->size.width;
         src_top_left_y = src_rect->top_left.y;
         src_bottom_left_y = src_rect->top_left.y + src_rect->size.height;
     }
-    if (dst_rect != NULL) {
+    if (dst_rect == NULL) {
+        dst_first_x, dst_first_y = 0;
+        dst_size_x = dst_size.width;
+        dst_size_y = dst_size.height;
+    }
+    else {
+        dst_first_x = dst_rect->top_left.x;
+        dst_first_y = dst_rect->top_left.y;
+        dst_size_x = dst_rect->size.width;
+        dst_size_y = dst_rect->size.height;
         dst_top_left_x = dst_rect->top_left.x;
         dst_top_right_x = dst_rect->top_left.x + dst_rect->size.width;
         dst_top_left_y = dst_rect->top_left.y;
         dst_bottom_left_y = dst_rect->top_left.y + dst_rect->size.height;
     }
-    for (int y=0; y<src_size.height; y++) {
-        for (int x=0; x<src_size.width; x++) {
+    hw_surface_lock(destination);
+    hw_surface_lock(source);
+    int y1=src_first_y;
+    int y2 = dst_first_y;
+    while (y1< src_first_y + src_size_y){
+        int x1 = src_first_x;
+        int x2 = dst_first_x;
+        while (x1< src_first_x + src_size_x) {
             // Draw pixel in the buffer
             if ((src_rect == NULL ||
-            (x >= src_top_left_x && x <= src_top_right_x && y >= src_top_left_y && y <= src_bottom_left_y)) &&
+            (x1 >= src_top_left_x && x1 <= src_top_right_x && y1 >= src_top_left_y && y1 <= src_bottom_left_y)) &&
             (dst_rect == NULL ||
-             (x >= dst_top_left_x && x <= dst_top_right_x && y >= dst_top_left_y && y <= dst_bottom_left_y))) {
+             (x2 >= dst_top_left_x && x2 <= dst_top_right_x && y2 >= dst_top_left_y && y2 <= dst_bottom_left_y))) {
                 if (!alpha) {
-                    dst_pixels[x + dst_size.width * y] = src_pixels[x + dst_size.width * y];
+                    dst_pixels[x2 + dst_size.width * y2] = src_pixels[x1 + src_size.width * y1];
                 }
                 else {
                     int ir, ig, ib, ia;
@@ -333,22 +362,26 @@ int ei_copy_surface(ei_surface_t destination,
                     uint32_t dst_r, dst_g, dst_b = 0;
                     uint32_t dst_a = 255 << 8*ia;
                     //We take the RGB color of the source and the destination
-                    src_r = (uint8_t) (src_pixels[x + dst_size.width * y] >> (8 * ir));
-                    src_g = (uint8_t) (src_pixels[x + dst_size.width * y] >> (8 * ig));
-                    src_b = (uint8_t) (src_pixels[x + dst_size.width * y] >> (8 * ib));
-                    src_a = (uint8_t) (src_pixels[x + dst_size.width * y] >> (8 * ia));
-                    dst_r = (uint8_t) (dst_pixels[x + dst_size.width * y] >> (8 * ir));
-                    dst_g = (uint8_t) (dst_pixels[x + dst_size.width * y] >> (8 * ig));
-                    dst_b = (uint8_t) (dst_pixels[x + dst_size.width * y] >> (8 * ib));
+                    src_r = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ir));
+                    src_g = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ig));
+                    src_b = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ib));
+                    src_a = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ia));
+                    dst_r = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ir));
+                    dst_g = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ig));
+                    dst_b = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ib));
                     // apply the transparancy
                     dst_r = ((src_a*src_r + (255 - src_a)*dst_r)/255) << (8*ir);
                     dst_g = ((src_a*src_g + (255 - src_a)*dst_g)/255) << (8*ig);
                     dst_b = ((src_a*src_b + (255 - src_a)*dst_b)/255) << (8*ib);
                     uint32_t color = dst_r | dst_g | dst_b | dst_a;
-                    dst_pixels[x + dst_size.width * y] = color;
+                    dst_pixels[x2 + dst_size.width * y2] = color;
                 }
             }
+            x1++;
+            x2++;
         }
+        y1++;
+        y2++;
     }
     hw_surface_unlock(destination);
     hw_surface_unlock(source);

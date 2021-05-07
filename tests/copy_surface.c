@@ -17,10 +17,10 @@ int main() {
     hw_surface_lock	(main_window);
     //test clipper for ei_fill
     ei_rect_t clipper;
-    clipper.top_left.x = 20;
-    clipper.top_left.y = 20;
-    clipper.size.width = 760;
-    clipper.size.height = 560;
+    clipper.top_left.x = 500;
+    clipper.top_left.y = 400;
+    clipper.size.width = 200;
+    clipper.size.height = 100;
 
     ei_fill		(main_window, &white, &clipper);
     hw_surface_unlock(main_window);
@@ -30,16 +30,11 @@ int main() {
     ei_surface_t window2 = hw_create_window(win_size, EI_FALSE);
     // creation of the clipper
     ei_rect_t clipper_test;
-    clipper_test.top_left.x = 300;
-    clipper_test.top_left.y = 200;
+    clipper_test.top_left.x = 100;
+    clipper_test.top_left.y = 100;
     clipper_test.size.width = 200;
-    clipper_test.size.height = 200;
-    ei_rect_t clipper_test2;
-    clipper_test2.top_left.x = 300;
-    clipper_test2.top_left.y = 200;
-    clipper_test2.size.width = 200;
-    clipper_test2.size.height = 100;
-    ei_copy_surface(window2, NULL, main_window, &clipper_test2, true);
+    clipper_test.size.height = 100;
+    ei_copy_surface(window2, &clipper_test, main_window, &clipper, true);
     hw_surface_update_rects(window2, NULL);
 
     /* Wait for a character on command line. */
