@@ -2,20 +2,19 @@
 #include "math.h"
 #include "stdlib.h"
 
-
 ei_linked_point_t *arc(const ei_point_t *c, uint32_t r, float start_angle, float end_angle, uint32_t N) {
     float da = (end_angle - start_angle) / N;
 
     ei_linked_point_t *points = calloc(N, sizeof(ei_linked_point_t));
     float angle = start_angle;
-    points[0].point.x = c->x + r * cos(angle * (pi / 180));
-    points[0].point.y = c->y - r * sin(angle * (pi / 180));
+    points[0].point.x = c->x + r * cos(angle * (pi / 180.0f));
+    points[0].point.y = c->y - r * sin(angle * (pi / 180.0f));
 
     uint32_t i;
     for (i = 1; i < N; i++) {
         angle += da;
-        points[i].point.x = c->x + r * cos(angle * (pi / 180));
-        points[i].point.y = c->y - r * sin(angle * (pi / 180));
+        points[i].point.x = c->x + r * cos(angle * (pi / 180.0f));
+        points[i].point.y = c->y - r * sin(angle * (pi / 180.0f));
 
         points[i-1].next = &points[i];
     }
@@ -32,6 +31,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     int top_left_y = button_rect.top_left.y;
     ei_point_t point;
 
+    // Top left
     point.x = top_left_x + radius;
     point.y = top_left_y + radius;
     ei_linked_point_t  *current = arc(&point, radius, 90, 180, N);
@@ -43,34 +43,38 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         previous = previous->next;
     }
 
+    // Bot left
     point.x = top_left_x + radius;
     point.y = top_left_y + button_height - radius;
     current = arc(&point, radius, 180, 270, N);
     previous->next = current;
-    previous = current;
     while (previous->next != NULL) {
         previous = previous->next;
     }
 
+    // Bot right
     point.x = top_left_x + button_width - radius;
     point.y = top_left_y + button_height - radius;
     current = arc(&point, radius, 270, 360, N);
     previous->next = current;
-    previous = current;
     while (previous->next != NULL) {
         previous = previous->next;
     }
 
+    // Top right
     point.x = top_left_x + button_width - radius;
     point.y = top_left_y + radius;
     current = arc(&point, radius, 0, 90, N);
     previous->next = current;
-    previous = current;
     while (previous->next != NULL) {
         previous = previous->next;
     }
 
-    //previous->next = button;
+    ei_linked_point_t *end = malloc(sizeof(ei_linked_point_t));
+    end->point.x = button->point.x;
+    end->point.y = button->point.y;
+    previous->next = end;
+    end->next = NULL;
     return button;
 }
 

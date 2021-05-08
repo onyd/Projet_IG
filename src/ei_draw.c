@@ -175,10 +175,7 @@ void ei_draw_polygon(ei_surface_t surface,
     }
 
 
-    /* On initialise la table des côté actifs en se
-     * placant à la premiere scanline correspondant à
-     * y = ymin avec ymin le côté minimum de tout les points du polygone
-     * puis on parcourt les lignes jusqu'à ce que la TCA et la TC soient vides*/
+    /* Fill polygon for every scanline */
     uint32_t y = ymin;
     while (y < ymax) {
         uint32_t i = y - ymin;
@@ -223,12 +220,12 @@ void ei_draw_polygon(ei_surface_t surface,
 
             current->E += abs(current->dx);
             if (2 * current->E > abs(current->dx)) {
-                if (abs(current->dx) > abs(current->dy)) {
+                if (abs(current->dx) > current->dy) {
                     current->x_ymin += current->inv_p;
                 } else {
                     current->x_ymin += sign_x;
                 }
-                current->E -= abs(current->dy);
+                current->E -= current->dy;
             }
             current = current->next;
         }
@@ -250,10 +247,10 @@ void ei_draw_text(ei_surface_t surface,
     ei_surface_t new_surface = hw_text_create_surface(text, font, color);
 
     ei_size_t size_src_rect = hw_surface_get_size(new_surface);
-    const ei_rect_t	src_rect = ei_rect(ei_point(0, 0), size_src_rect);
+    const ei_rect_t src_rect = ei_rect(ei_point(0, 0), size_src_rect);
 
     ei_size_t size_dst_rect = hw_surface_get_size(new_surface);
-    const ei_rect_t	dst_rect = ei_rect(*where, size_dst_rect);
+    const ei_rect_t dst_rect = ei_rect(*where, size_dst_rect);
 
     ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, false);
     hw_surface_free(new_surface);
@@ -273,7 +270,7 @@ void ei_fill(ei_surface_t surface,
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, *color);
     for (uint32_t y = 0; y < size.height; y++) {
-        for (uint32_t x = 0; x< size.width; x++) {
+        for (uint32_t x = 0; x < size.width; x++) {
             if (clipper == NULL || (x >= top_left_x && x <= top_right_x && y >= top_left_y && y <= bottom_left_y)) {
                 pixels[x + size.width * y] = c;
             }
@@ -292,7 +289,7 @@ int ei_copy_surface(ei_surface_t destination,
     uint32_t *src_pixels = (uint32_t *) hw_surface_get_buffer(source);
     // If it's not the same size between both surfaces or rect then failure
     if ((src_size.width != dst_size.width && src_size.height != dst_size.height) &&
-    (dst_rect == NULL || src_rect == NULL)) {
+        (dst_rect == NULL || src_rect == NULL)) {
         return 1;
     }
     if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width == dst_rect->size.width &&
@@ -300,7 +297,7 @@ int ei_copy_surface(ei_surface_t destination,
         return 1;
     }
     if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width != dst_rect->size.width &&
-            src_rect->size.height != dst_rect->size.height)) {
+                                                   src_rect->size.height != dst_rect->size.height)) {
         return 1;
     }
     // Parameters for the index of the source and the destination and for the clipping
@@ -312,8 +309,7 @@ int ei_copy_surface(ei_surface_t destination,
         src_first_x, src_first_y = 0;
         src_size_x = src_size.width;
         src_size_y = src_size.height;
-    }
-    else {
+    } else {
         src_first_x = src_rect->top_left.x;
         src_first_y = src_rect->top_left.y;
         src_size_x = src_rect->size.width;
@@ -327,8 +323,7 @@ int ei_copy_surface(ei_surface_t destination,
         dst_first_x, dst_first_y = 0;
         dst_size_x = dst_size.width;
         dst_size_y = dst_size.height;
-    }
-    else {
+    } else {
         dst_first_x = dst_rect->top_left.x;
         dst_first_y = dst_rect->top_left.y;
         dst_size_x = dst_rect->size.width;
@@ -340,27 +335,26 @@ int ei_copy_surface(ei_surface_t destination,
     }
     hw_surface_lock(destination);
     hw_surface_lock(source);
-    int y1=src_first_y;
+    int y1 = src_first_y;
     int y2 = dst_first_y;
-    while (y1< src_first_y + src_size_y){
+    while (y1 < src_first_y + src_size_y) {
         int x1 = src_first_x;
         int x2 = dst_first_x;
-        while (x1< src_first_x + src_size_x) {
+        while (x1 < src_first_x + src_size_x) {
             // Draw pixel in the buffer
             if ((src_rect == NULL ||
-            (x1 >= src_top_left_x && x1 <= src_top_right_x && y1 >= src_top_left_y && y1 <= src_bottom_left_y)) &&
-            (dst_rect == NULL ||
-             (x2 >= dst_top_left_x && x2 <= dst_top_right_x && y2 >= dst_top_left_y && y2 <= dst_bottom_left_y))) {
+                 (x1 >= src_top_left_x && x1 <= src_top_right_x && y1 >= src_top_left_y && y1 <= src_bottom_left_y)) &&
+                (dst_rect == NULL ||
+                 (x2 >= dst_top_left_x && x2 <= dst_top_right_x && y2 >= dst_top_left_y && y2 <= dst_bottom_left_y))) {
                 if (!alpha) {
                     dst_pixels[x2 + dst_size.width * y2] = src_pixels[x1 + src_size.width * y1];
-                }
-                else {
+                } else {
                     int ir, ig, ib, ia;
                     hw_surface_get_channel_indices(destination, &ir, &ig, &ib, &ia);
                     ia = 6 - (ir + ib + ig);
                     uint32_t src_r, src_g, src_b, src_a = 0;
                     uint32_t dst_r, dst_g, dst_b = 0;
-                    uint32_t dst_a = 255 << 8*ia;
+                    uint32_t dst_a = 255 << 8 * ia;
                     //We take the RGB color of the source and the destination
                     src_r = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ir));
                     src_g = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ig));
@@ -370,9 +364,9 @@ int ei_copy_surface(ei_surface_t destination,
                     dst_g = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ig));
                     dst_b = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ib));
                     // apply the transparancy
-                    dst_r = ((src_a*src_r + (255 - src_a)*dst_r)/255) << (8*ir);
-                    dst_g = ((src_a*src_g + (255 - src_a)*dst_g)/255) << (8*ig);
-                    dst_b = ((src_a*src_b + (255 - src_a)*dst_b)/255) << (8*ib);
+                    dst_r = ((src_a * src_r + (255 - src_a) * dst_r) / 255) << (8 * ir);
+                    dst_g = ((src_a * src_g + (255 - src_a) * dst_g) / 255) << (8 * ig);
+                    dst_b = ((src_a * src_b + (255 - src_a) * dst_b) / 255) << (8 * ib);
                     uint32_t color = dst_r | dst_g | dst_b | dst_a;
                     dst_pixels[x2 + dst_size.width * y2] = color;
                 }
