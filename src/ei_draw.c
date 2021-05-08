@@ -84,7 +84,7 @@ void ei_draw_polyline(ei_surface_t surface,
             swap(&sign_x, &sign_y);
             swap(&x2, &y2);
         }
-        int E = dy / 2;
+        int E = 0;
 
         while (sign_x * x < sign_x * x2) {
             x += sign_x;
@@ -212,6 +212,9 @@ void ei_draw_polygon(ei_surface_t surface,
         }
 
         y++;
+//        printf("------------y=%u\n", y);
+//        display(TCA);
+//        printf("------------\n");
 
         // Bresenham iterations for next intersections
         current = TCA->head;
@@ -245,14 +248,12 @@ void ei_draw_text(ei_surface_t surface,
                   ei_color_t color,
                   const ei_rect_t *clipper) {
     ei_surface_t new_surface = hw_text_create_surface(text, font, color);
-
-    ei_size_t size_src_rect = hw_surface_get_size(new_surface);
-    const ei_rect_t src_rect = ei_rect(ei_point(0, 0), size_src_rect);
+    const ei_rect_t src_rect = hw_surface_get_rect(new_surface);
 
     ei_size_t size_dst_rect = hw_surface_get_size(new_surface);
     const ei_rect_t dst_rect = ei_rect(*where, size_dst_rect);
 
-    ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, false);
+    ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, true);
     hw_surface_free(new_surface);
 }
 
@@ -285,28 +286,27 @@ int ei_copy_surface(ei_surface_t destination,
                     ei_bool_t alpha) {
     ei_size_t dst_size = hw_surface_get_size(destination);
     ei_size_t src_size = hw_surface_get_size(source);
-    uint32_t *dst_pixels = (uint32_t *) hw_surface_get_buffer(destination);
-    uint32_t *src_pixels = (uint32_t *) hw_surface_get_buffer(source);
+
     // If it's not the same size between both surfaces or rect then failure
-    if ((src_size.width != dst_size.width && src_size.height != dst_size.height) &&
-        (dst_rect == NULL || src_rect == NULL)) {
-        return 1;
-    }
-    if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width == dst_rect->size.width &&
-            src_rect->size.height == dst_rect->size.height)) {
+    if ((dst_rect == NULL || src_rect == NULL) &&
+        (src_size.width != dst_size.width && src_size.height != dst_size.height)) {
         return 1;
     }
     if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width != dst_rect->size.width &&
                                                    src_rect->size.height != dst_rect->size.height)) {
         return 1;
     }
+
+    uint32_t *dst_pixels = (uint32_t *) hw_surface_get_buffer(destination);
+    uint32_t *src_pixels = (uint32_t *) hw_surface_get_buffer(source);
     // Parameters for the index of the source and the destination and for the clipping
     int src_top_left_x, src_top_right_x, src_top_left_y, src_bottom_left_y;
     int src_first_x, src_first_y, src_size_x, src_size_y;
     int dst_top_left_x, dst_top_right_x, dst_top_left_y, dst_bottom_left_y;
     int dst_first_x, dst_first_y, dst_size_x, dst_size_y;
     if (src_rect == NULL) {
-        src_first_x, src_first_y = 0;
+        src_first_x = 0;
+        src_first_y = 0;
         src_size_x = src_size.width;
         src_size_y = src_size.height;
     } else {
@@ -320,7 +320,8 @@ int ei_copy_surface(ei_surface_t destination,
         src_bottom_left_y = src_rect->top_left.y + src_rect->size.height;
     }
     if (dst_rect == NULL) {
-        dst_first_x, dst_first_y = 0;
+        dst_first_x = 0;
+        dst_first_y = 0;
         dst_size_x = dst_size.width;
         dst_size_y = dst_size.height;
     } else {
@@ -345,9 +346,11 @@ int ei_copy_surface(ei_surface_t destination,
             if ((src_rect == NULL ||
                  (x1 >= src_top_left_x && x1 <= src_top_right_x && y1 >= src_top_left_y && y1 <= src_bottom_left_y)) &&
                 (dst_rect == NULL ||
-                 (x2 >= dst_top_left_x && x2 <= dst_top_right_x && y2 >= dst_top_left_y && y2 <= dst_bottom_left_y))) {
+                 (x2 >= dst_top_left_x && x2 <= dst_top_right_x && y2 >= dst_top_left_y && y2 <= dst_bottom_left_y)))
+            {
                 if (!alpha) {
                     dst_pixels[x2 + dst_size.width * y2] = src_pixels[x1 + src_size.width * y1];
+                    printf("%i, %i | %x\n", x1, y1, src_pixels[x1 + src_size.width * y1]);
                 } else {
                     int ir, ig, ib, ia;
                     hw_surface_get_channel_indices(destination, &ir, &ig, &ib, &ia);

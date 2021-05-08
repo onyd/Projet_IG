@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 
 #include "hw_interface.h"
@@ -8,6 +7,7 @@
 #include "ei_types.h"
 #include "ei_event.h"
 #include "geometry.h"
+#include <time.h>
 
 
 /* test_line --
@@ -134,7 +134,7 @@ void test_square(ei_surface_t surface, ei_rect_t *clipper) {
     /* End the linked list */
     pts[i - 1].next = NULL;
 
-    /* Draw the form with polylines */
+    /* Draw the form with polygon */
     ei_draw_polygon(surface, pts, color, clipper);
 }
 
@@ -187,12 +187,47 @@ void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
     ei_draw_polyline(surface, pts, color2, clipper);
 }
 
+/* test_rounded_frame --
+ *
+ *	Draws random polygon with N points
+ */
+void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t* clipper) {
+    ei_color_t color = {0, 255, 0, 255};
+    ei_color_t color2 = { 0, 0, 255, 255 };
+    ei_size_t size = hw_surface_get_size(surface);
+    ei_linked_point_t *pts = calloc(N, sizeof(ei_linked_point_t));
+    int i;
+
+    /* Initialisation */
+    pts[0].point.x = rand() % size.width;
+    pts[0].point.y = rand() % size.height;
+
+    /* Draw the square */
+    for (i = 1; i < N; i++) {
+        pts[i].point.x = rand() % size.width;
+        pts[i].point.y = rand() % size.height;
+        pts[i - 1].next = &(pts[i]);
+    }
+
+    /* End the linked list */
+    ei_linked_point_t end;
+    end.point = ei_point(pts[0].point.x, pts[0].point.y);
+    end.next = NULL;
+    pts[i - 1].next = &end;
+
+    ei_draw_polygon(surface, pts, color, clipper);
+    ei_draw_polyline(surface, pts, color2, clipper);
+    free(pts);
+}
+
 /*
  * ei_main --
  *
  *	Main function of the application.
  */
 int main(int argc, char **argv) {
+    srand(time(NULL));
+
     ei_size_t win_size = ei_size(800, 600);
     ei_surface_t main_window = NULL;
     ei_color_t white = {0xf0, 0xf0, 0xff, 0xff};
@@ -217,16 +252,17 @@ int main(int argc, char **argv) {
     ei_fill(main_window, &white, clipper_ptr);
 
     /* Draw polylines. */
-    test_line(main_window, clipper_ptr);
+//    test_line(main_window, clipper_ptr);
 //	test_octogone	(main_window, clipper_ptr);
 //    test_octogone(main_window, &clipper_test);
 //	test_square	(main_window, clipper_ptr);
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
 //    test_polygone(main_window, &clipper_test);
+//    test_random_polygon(main_window, 5, clipper_ptr);
 
     /* Rounded polygon */
-    test_rounded_frame(main_window, clipper_ptr);
+//    test_rounded_frame(main_window, clipper_ptr);
     /* Draw text. */
     test_ei_draw_text(main_window, clipper_ptr);
 	/* Unlock and update the surface. */
