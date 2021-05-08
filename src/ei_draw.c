@@ -5,6 +5,7 @@
 #include "stdbool.h"
 #include "stdlib.h"
 #include "ei_utils.h"
+#include "geometry.h"
 
 uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     int ir, ig, ib, ia;
@@ -253,7 +254,19 @@ void ei_draw_text(ei_surface_t surface,
     ei_size_t size_dst_rect = hw_surface_get_size(new_surface);
     const ei_rect_t dst_rect = ei_rect(*where, size_dst_rect);
 
-    ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, true);
+    if (clipper != NULL){
+        ei_rect_t intersection_rect;
+        if (intersection(&dst_rect, clipper, &intersection_rect)){
+            const ei_rect_t dst_rect_clipped = ei_rect(ei_point(intersection_rect.top_left.x, intersection_rect.top_left.y), ei_size(intersection_rect.size.width, intersection_rect.size.height));
+            intersection_rect.top_left.x = intersection_rect.top_left.x - (where -> x);
+            intersection_rect.top_left.y = intersection_rect.top_left.y - (where -> y);
+
+            ei_copy_surface(surface, &dst_rect_clipped, new_surface, &intersection_rect, true);
+        }
+    }
+    else{
+        ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, true);
+    }
     hw_surface_free(new_surface);
 }
 

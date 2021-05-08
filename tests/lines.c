@@ -164,12 +164,12 @@ void test_dot(ei_surface_t surface, ei_rect_t *clipper) {
  */
 void test_ei_draw_text(ei_surface_t surface, ei_rect_t* clipper){
     ei_point_t where;
-    where.x = 400;
-    where.y = 400;
-    char *text = "afflict";
+    where.x = 250;
+    where.y = 250;
+    char *text = "Affichage test";
     ei_color_t color = { 255, 0, 255, 255 };
     ei_font_t default_font;
-    default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, ei_font_default_size);
+    default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, 50);
     ei_draw_text(surface, &where, text, default_font, color, clipper);
 }
 
@@ -236,7 +236,7 @@ int main(int argc, char **argv) {
     ei_rect_t clipper_test;
     clipper_test.top_left.x = 0;
     clipper_test.top_left.y = 0;
-    clipper_test.size.width = 400;
+    clipper_test.size.width = 800;
     clipper_test.size.height = 600;
 
 //	ei_rect_t		clipper		= ei_rect(ei_point(200, 150), ei_size(400, 300));
@@ -264,7 +264,7 @@ int main(int argc, char **argv) {
     /* Rounded polygon */
 //    test_rounded_frame(main_window, clipper_ptr);
     /* Draw text. */
-    test_ei_draw_text(main_window, clipper_ptr);
+    test_ei_draw_text(main_window, &clipper_test);
 	/* Unlock and update the surface. */
 	hw_surface_unlock(main_window);
 	hw_surface_update_rects(main_window, NULL);
