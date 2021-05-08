@@ -255,7 +255,7 @@ void ei_draw_text(ei_surface_t surface,
     ei_size_t size_dst_rect = hw_surface_get_size(new_surface);
     const ei_rect_t	dst_rect = ei_rect(*where, size_dst_rect);
 
-    ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, false);
+    ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, true);
     hw_surface_free(new_surface);
 }
 
@@ -295,10 +295,6 @@ int ei_copy_surface(ei_surface_t destination,
     (dst_rect == NULL || src_rect == NULL)) {
         return 1;
     }
-    if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width == dst_rect->size.width &&
-            src_rect->size.height == dst_rect->size.height)) {
-        return 1;
-    }
     if ((src_rect != NULL && dst_rect != NULL) && (src_rect->size.width != dst_rect->size.width &&
             src_rect->size.height != dst_rect->size.height)) {
         return 1;
@@ -309,7 +305,8 @@ int ei_copy_surface(ei_surface_t destination,
     int dst_top_left_x, dst_top_right_x, dst_top_left_y, dst_bottom_left_y;
     int dst_first_x, dst_first_y, dst_size_x, dst_size_y;
     if (src_rect == NULL) {
-        src_first_x, src_first_y = 0;
+        src_first_x = 0;
+        src_first_y = 0;
         src_size_x = src_size.width;
         src_size_y = src_size.height;
     }
@@ -324,7 +321,8 @@ int ei_copy_surface(ei_surface_t destination,
         src_bottom_left_y = src_rect->top_left.y + src_rect->size.height;
     }
     if (dst_rect == NULL) {
-        dst_first_x, dst_first_y = 0;
+        dst_first_x = 0;
+        dst_first_y = 0;
         dst_size_x = dst_size.width;
         dst_size_y = dst_size.height;
     }
