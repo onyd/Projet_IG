@@ -47,27 +47,27 @@ void ei_draw_polyline(ei_surface_t surface,
         int x = first->point.x;
         int y = first->point.y;
 
-        int sign_x = (dx > 0) ? 1 : -1;
-        int sign_y = (dy > 0) ? 1 : -1;
+        int sign_dx = (dx > 0) ? 1 : -1;
+        int sign_dy = (dy > 0) ? 1 : -1;
 
         // Vertical and horizontal case
         if (dx == 0 && (clipper == NULL || x >= top_left_x && x <= top_right_x)) {
-            while (y != second->point.y) {
+            while (sign_dy * y <= sign_dy * second->point.y) {
                 if (clipper == NULL || y >= top_left_y && y <= bottom_left_y) {
                     pixels[x + size.width * y] = c;
                 }
-                y += sign_y;
+                y += sign_dy;
             }
             first = second;
             second = second->next;
             continue;
         }
         if (dy == 0 && (clipper == NULL || y >= top_left_y && y <= bottom_left_y)) {
-            while (x != second->point.x) {
+            while (sign_dx * x <= sign_dx * second->point.x) {
                 if (clipper == NULL || x >= top_left_x && x <= top_right_x) {
                     pixels[x + size.width * y] = c;
                 }
-                x += sign_x;
+                x += sign_dx;
             }
             first = second;
             second = second->next;
@@ -82,17 +82,17 @@ void ei_draw_polyline(ei_surface_t surface,
         if (swapped) {
             swap(&x, &y);
             swap(&dx, &dy);
-            swap(&sign_x, &sign_y);
+            swap(&sign_dx, &sign_dy);
             swap(&x2, &y2);
         }
         int E = 0;
 
-        while (sign_x * x < sign_x * x2) {
-            x += sign_x;
+        while (sign_dx * x < sign_dx * x2) {
+            x += sign_dx;
             E += abs(dy);
 
             if (2 * E > abs(dx)) {
-                y += sign_y;
+                y += sign_dy;
                 E -= abs(dx);
             }
             // Draw pixel in the buffer
@@ -166,8 +166,8 @@ void ei_draw_polygon(ei_surface_t surface,
             edge->dx = dx;
             edge->dy = dy;
             edge->E = 0;
-            edge->inv_p = ceil((float) dx / dy);
-
+            edge->inv_p = (float) dx / dy;
+            edge->sign_dx = (dx > 0) ? 1 : -1;
             edge->next = TC[p_min->point.y - ymin];
             TC[p_min->point.y - ymin] = edge;
         }
@@ -175,20 +175,13 @@ void ei_draw_polygon(ei_surface_t surface,
         second = second->next;
     }
 
-
     /* Fill polygon for every scanline */
     uint32_t y = ymin;
     while (y < ymax) {
         uint32_t i = y - ymin;
 
         // Delete TCA edges such that y = ymax
-        struct table_cote *current_tca = TCA->head;
-        while (current_tca != NULL) {
-            if (current_tca->ymax == y) {
-                delete(current_tca, TCA);
-            }
-            current_tca = current_tca->next;
-        }
+        delete_y(y, TCA);
 
         // Add current scanline starting edges while keeping TCA sorted
         while (TC[i] != NULL) {
@@ -204,7 +197,7 @@ void ei_draw_polygon(ei_surface_t surface,
             int x1 = current->x_ymin;
             current = current->next;
             int x2 = current->x_ymin;
-            for (int k = x1; k < x2; k++) {
+            for (uint32_t k = x1; k < x2; k++) {
                 if (clipper == NULL || (k >= top_left_x && k <= top_right_x && y >= top_left_y && y <= bottom_left_y)) {
                     pixels[k + size.width * y] = c;
                 }
@@ -213,32 +206,24 @@ void ei_draw_polygon(ei_surface_t surface,
         }
 
         y++;
-//        printf("------------y=%u\n", y);
-//        display(TCA);
-//        printf("------------\n");
 
         // Bresenham iterations for next intersections
         current = TCA->head;
         while (current != NULL) {
-            int sign_x = (current->dx > 0) ? 1 : -1;
-
             current->E += abs(current->dx);
             if (2 * current->E > abs(current->dx)) {
-                if (abs(current->dx) > current->dy) {
-                    current->x_ymin += current->inv_p;
+                if (abs(current->dx) < current->dy) {
+                    current->x_ymin += current->sign_dx;
+                    current->E -= current->dy;
                 } else {
-                    current->x_ymin += sign_x;
+                    current->x_ymin = current->x_ymin + current->inv_p;
+                    current->E -= abs(current->inv_p);
                 }
-                current->E -= current->dy;
             }
             current = current->next;
         }
     }
 
-    // Free resources
-    for (uint32_t k = 0; k < ymax - ymin; k++) {
-        tc_free(TC[k]);
-    }
     tca_free(TCA);
 }
 
@@ -254,17 +239,18 @@ void ei_draw_text(ei_surface_t surface,
     ei_size_t size_dst_rect = hw_surface_get_size(new_surface);
     const ei_rect_t dst_rect = ei_rect(*where, size_dst_rect);
 
-    if (clipper != NULL){
+    if (clipper != NULL) {
         ei_rect_t intersection_rect;
-        if (intersection(&dst_rect, clipper, &intersection_rect)){
-            const ei_rect_t dst_rect_clipped = ei_rect(ei_point(intersection_rect.top_left.x, intersection_rect.top_left.y), ei_size(intersection_rect.size.width, intersection_rect.size.height));
-            intersection_rect.top_left.x = intersection_rect.top_left.x - (where -> x);
-            intersection_rect.top_left.y = intersection_rect.top_left.y - (where -> y);
+        if (intersection(&dst_rect, clipper, &intersection_rect)) {
+            const ei_rect_t dst_rect_clipped = ei_rect(
+                    ei_point(intersection_rect.top_left.x, intersection_rect.top_left.y),
+                    ei_size(intersection_rect.size.width, intersection_rect.size.height));
+            intersection_rect.top_left.x = intersection_rect.top_left.x - (where->x);
+            intersection_rect.top_left.y = intersection_rect.top_left.y - (where->y);
 
             ei_copy_surface(surface, &dst_rect_clipped, new_surface, &intersection_rect, true);
         }
-    }
-    else{
+    } else {
         ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, true);
     }
     hw_surface_free(new_surface);
@@ -359,8 +345,7 @@ int ei_copy_surface(ei_surface_t destination,
             if ((src_rect == NULL ||
                  (x1 >= src_top_left_x && x1 <= src_top_right_x && y1 >= src_top_left_y && y1 <= src_bottom_left_y)) &&
                 (dst_rect == NULL ||
-                 (x2 >= dst_top_left_x && x2 <= dst_top_right_x && y2 >= dst_top_left_y && y2 <= dst_bottom_left_y)))
-            {
+                 (x2 >= dst_top_left_x && x2 <= dst_top_right_x && y2 >= dst_top_left_y && y2 <= dst_bottom_left_y))) {
                 if (!alpha) {
                     dst_pixels[x2 + dst_size.width * y2] = src_pixels[x1 + src_size.width * y1];
                     printf("%i, %i | %x\n", x1, y1, src_pixels[x1 + src_size.width * y1]);

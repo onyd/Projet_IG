@@ -6,12 +6,13 @@
 
 struct table_cote {
     int ymax;
-    int x_ymin;
+    float x_ymin;
     int x_ymax;
     int E;
     int dx;
     int dy;
-    int inv_p;
+    float inv_p;
+    int sign_dx;
     struct table_cote *next;
 };
 
@@ -21,7 +22,7 @@ struct table_cote_actif {
 
 void append_left(struct table_cote *e, struct table_cote_actif *tca);
 
-void delete(struct table_cote *e, struct table_cote_actif *tca);
+void delete_y(int y, struct table_cote_actif *tca);
 
 void display(struct table_cote_actif *tac);
 

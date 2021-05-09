@@ -11,22 +11,29 @@ void append_left(struct table_cote *e, struct table_cote_actif *tca) {
     tca->head = e;
 }
 
-void delete(struct table_cote *e, struct table_cote_actif *tca) {
+void delete_y(int y, struct table_cote_actif *tca) {
     if (tca->head == NULL) {
         return;
     }
 
-    if (e == tca->head) {
-        tca->head = NULL;
-        return;;
+    struct table_cote *previous = tca->head;
+    while (previous != NULL && previous->ymax == y) {
+        struct table_cote *tmp = previous;
+        previous = previous->next;
+        free(tmp);
+    }
+    tca->head = previous;
+    if (tca->head == NULL) {
+        return;
     }
 
-    struct table_cote *previous = tca->head;
     struct table_cote *current = tca->head->next;
     while (current != NULL) {
-        if (current == e) {
+        if (current->ymax == y) {
             previous->next = current->next;
-            current->next = NULL;
+            free(current);
+            current = previous->next;
+            continue;
         }
         previous = current;
         current = current->next;
