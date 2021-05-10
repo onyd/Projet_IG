@@ -294,6 +294,9 @@ int main(int argc, char **argv) {
     test_draw_button(main_window, clipper_ptr, etat);
     hw_surface_update_rects(main_window, NULL);
     while (event.type != ei_ev_mouse_buttondown)
+
+    event.type = ei_ev_none;
+    while (event.type != ei_ev_keydown)
         hw_event_wait_next(&event);
     etat = !etat;
     hw_surface_lock(main_window);
