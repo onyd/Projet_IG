@@ -9,6 +9,9 @@
 #include "geometry.h"
 #include <time.h>
 
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) < (b)) ? (a) : (b))
+
 
 /* test_line --
  *
@@ -181,7 +184,7 @@ void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
     ei_color_t color = { 0, 100, 255, 255 };
     ei_color_t color2 = { 0, 100, 0, 255 };
     ei_rect_t rect = ei_rect(ei_point(200, 200), ei_size(450, 350));
-    ei_linked_point_t *pts = rounded_frame(rect, 50, 10);
+    ei_linked_point_t *pts = rounded_frame(rect, 50, 10, 0);
 
     ei_draw_polygon(surface, pts, color, clipper);
     ei_draw_polyline(surface, pts, color2, clipper);
@@ -191,6 +194,7 @@ void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
  *
  *	Draws random polygon with N points
  */
+
 void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
     ei_color_t color = {0, 255, 0, 255};
     ei_color_t color2 = {0, 0, 255, 255};
@@ -198,7 +202,9 @@ void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
     ei_linked_point_t *pts = calloc(N, sizeof(ei_linked_point_t));
     int i;
 
+
     /* Initialisation */
+
     int max_r = min(size.width, size.height) / 2 ;
     int da = 360 / N;
     float a = 0;
@@ -208,6 +214,7 @@ void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
     pts[0].point.y = size.height / 2 - r * sin(angle * (3.14f / 180.0f));
 
     /* Draw the square */
+
     for (i = 1; i < N; i++) {
         a += da;
 
@@ -220,6 +227,7 @@ void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
     }
 
     /* End the linked list */
+
     ei_linked_point_t end;
     end.point = ei_point(pts[0].point.x, pts[0].point.y);
     end.next = NULL;
@@ -269,10 +277,10 @@ int main(int argc, char **argv) {
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
 //    test_polygone(main_window, &clipper_test);
-    test_random_polygon(main_window, 10, clipper_ptr);
+//    test_random_polygon(main_window, 10, clipper_ptr);
 
     /* Rounded polygon */
-//    test_rounded_frame(main_window, clipper_ptr);
+    test_rounded_frame(main_window, clipper_ptr);
     /* Draw text. */
 //    test_ei_draw_text(main_window, clipper_ptr);
     /* Unlock and update the surface. */

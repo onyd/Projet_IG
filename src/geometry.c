@@ -44,6 +44,8 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     ei_linked_point_t *previous;
     ei_linked_point_t *button1;
     ei_linked_point_t *button2;
+    ei_linked_point_t * end = malloc(sizeof(ei_linked_point_t));
+    end->next = NULL;
 
     if (param <= 1) {
         // Top right first part
@@ -89,10 +91,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         current = arc(&point1, radius, 225, 270, N);
         // si on doit construire tout le boutton on récupère les paramètres précédent
         if (param == 0) {
-            previous = current;
-            current = current->next;
             button2->next = current;
-            free(previous);
             previous = current;
         } else {
             button2 = current;
@@ -120,7 +119,8 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
             previous = previous->next;
         }
         if (param == 0) {
-            previous->next = NULL;
+            previous->next = end;
+            end->point = button1->point;
             return button1;
         } else {
             button1 = previous;
@@ -138,21 +138,18 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     cut_bot_left->point = point1;
     ei_linked_point_t *cut_top_right = malloc(sizeof(ei_linked_point_t));
     cut_top_right->point = point2;
-    ei_linked_point_t *end = malloc(sizeof(ei_linked_point_t));
     if (param == 1) {
         button2->next = cut_bot_left;
         cut_bot_left->next = cut_top_right;
         cut_top_right->next = end;
         end->point = button1->point;
-        end->next = NULL;
+        return button1;
     } else {
         button1->next = cut_top_right;
         cut_top_right->next = cut_bot_left;
-        cut_bot_left->next = end;
-        end->point = button2->point;
-        end->next = NULL;
+        cut_bot_left->next = button2;
+        return button2;
     }
-    return end;
 }
 
 int draw_button(ei_surface_t surface, ei_rect_t button_rect, ei_color_t color, int radius, bool etat) {
