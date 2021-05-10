@@ -4,6 +4,7 @@
 #include "widgets.h"
 #include "ei_widgetclass.h"
 #include "ei_widget.h"
+#include "geometry.h"
 
 
 typedef struct ei_button_t {
@@ -77,5 +78,14 @@ void button_releasefunc(struct ei_widget_t *widget);
  * @param	widget		The widget which resources are to be freed.
  */
 void frmae_releasefunc(struct ei_widget_t *widget);
+
+/**
+ * \brief	Allow to draw a widget of type \ref ei_button_t to zero.
+ *
+ */
+void draw_button(ei_widget_t*	widget,
+                 ei_surface_t		surface,
+                 ei_surface_t		pick_surface,
+                 ei_rect_t*		clipper);
 
 #endif //PROJETC_IG_WIDGETS_H
