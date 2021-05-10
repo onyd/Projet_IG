@@ -44,7 +44,7 @@ void button_drawfunc(ei_widget_t *widget,
                      ei_rect_t *clipper) {
     ei_button_t *button = (ei_button_t *) widget;
     ei_rect_t button_rect = widget->screen_location;
-    ei_color_t color = button->color;
+    ei_color_t color = *button->color;
     int radius = button->corner_radius;
     // If etat is true the button is up else he is down
     ei_color_t darker = {0.1 * 255 + 0.9 * color.red, 0.1 * 255 + 0.9 * color.green, 0.1 * 255 + 0.9 * color.blue,
@@ -97,3 +97,33 @@ void button_setdefaultsfunc(ei_widget_t *widget) {
 void frame_setdefaultsfunc(ei_widget_t *widget) {
 
 }
+
+/* geomnotifyfunc */
+
+void    widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+
+}
+
+void    button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+
+}
+
+void    frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+
+}
+
+/* handlefunc */
+
+ei_bool_t widget_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
+
+}
+
+ei_bool_t button_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
+
+}
+
+ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
+
+}
+
+

@@ -47,15 +47,11 @@ ei_widgetclass_t *widget_class;
 // Default declaration
 ei_frame_t *root;
 
-ei_co
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
  */
-ei_widget_t
-*
-
-widget_allocfunc();
+ei_widget_t *widget_allocfunc();
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_button_t to zero.
@@ -147,5 +143,21 @@ void button_setdefaultsfunc(ei_widget_t *widget);
  * @param	widget		The widget which we want to set.
  */
 void frame_setdefaultsfunc(ei_widget_t *widget);
+
+/* geomnotifyfunc */
+
+void    widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
+
+void    button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
+
+void    frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
+
+/* handlefunc */
+
+ei_bool_t widget_handlefunc(ei_widget_t *widget, ei_event_t *event);
+
+ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event);
+
+ei_bool_t frame_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
 #endif //PROJETC_IG_WIDGETS_H
