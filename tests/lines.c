@@ -193,7 +193,7 @@ void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
 void test_draw_button(ei_surface_t surface, ei_rect_t* clipper, bool etat) {
     ei_color_t color = {83, 200, 150, 255};
     ei_rect_t rect = ei_rect(ei_point(100, 100), ei_size(200, 100));
-    draw_button(surface, clipper, rect, color, 25, etat);
+//    draw_button(surface, clipper, rect, color, 25, etat);
 }
 
 /* test_rounded_frame --

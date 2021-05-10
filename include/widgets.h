@@ -43,6 +43,8 @@ ei_widgetclass_t *frame_class;
 ei_widgetclass_t *button_class;
 ei_widgetclass_t *widget_class;
 
+ei_frame_t *root;
+
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
  */
@@ -77,15 +79,25 @@ void button_releasefunc(struct ei_widget_t *widget);
  *
  * @param	widget		The widget which resources are to be freed.
  */
-void frmae_releasefunc(struct ei_widget_t *widget);
+void frame_releasefunc(struct ei_widget_t *widget);
+
+void widget_drawfunc(ei_widget_t *widget,
+                     ei_surface_t surface,
+                     ei_surface_t pick_surface,
+                     ei_rect_t *clipper);
 
 /**
  * \brief	Allow to draw a widget of type \ref ei_button_t to zero.
  *
  */
-void draw_button(ei_widget_t*	widget,
-                 ei_surface_t		surface,
-                 ei_surface_t		pick_surface,
-                 ei_rect_t*		clipper);
+void button_drawfunc(ei_widget_t *widget,
+                     ei_surface_t surface,
+                     ei_surface_t pick_surface,
+                     ei_rect_t *clipper);
+
+void frame_drawfunc(ei_widget_t *widget,
+                     ei_surface_t surface,
+                     ei_surface_t pick_surface,
+                     ei_rect_t *clipper);
 
 #endif //PROJETC_IG_WIDGETS_H
