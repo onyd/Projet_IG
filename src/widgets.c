@@ -1,5 +1,6 @@
 #include "widgets.h"
 #include "stdlib.h"
+#include "ei_widget.h"
 
 /* allocfunc */
 ei_widget_t *widget_allocfunc() {
@@ -78,8 +79,21 @@ void button_drawfunc(ei_widget_t *widget,
 }
 
 void frame_drawfunc(ei_widget_t *widget,
-                     ei_surface_t surface,
-                     ei_surface_t pick_surface,
-                     ei_rect_t *clipper) {}
+                    ei_surface_t surface,
+                    ei_surface_t pick_surface,
+                    ei_rect_t *clipper) {}
 
 /* setdefaultsfunc */
+
+void widget_setdefaultsfunc(ei_widget_t *widget) {
+}
+
+void button_setdefaultsfunc(ei_widget_t *widget) {
+    ei_button_configure(widget, ei_size(100, 100), default_color, k_default_button_border_width,
+                        k_default_button_corner_radius, ei_relief_none, "", ei_default_font, default_text_color, NULL,
+                        NULL, NULL, NULL, NULL, NULL);
+}
+
+void frame_setdefaultsfunc(ei_widget_t *widget) {
+
+}

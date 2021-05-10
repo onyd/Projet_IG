@@ -5,12 +5,12 @@
 #include "ei_widgetclass.h"
 #include "ei_widget.h"
 #include "geometry.h"
-
+#include "ei_types.h"
 
 typedef struct ei_button_t {
-    struct ei_widget_t widget;
+    ei_widget_t widget;
     // Specific field
-    ei_color_t color;
+    const ei_color_t *color;
     int *border_width;
     int *corner_radius;
     ei_relief_t *relief;
@@ -25,7 +25,7 @@ typedef struct ei_button_t {
 } ei_button_t;
 
 typedef struct ei_frame_t {
-    struct ei_widget_t widget;
+    ei_widget_t widget;
     // Specific field
     const ei_color_t *color;
     int *border_width;
@@ -39,16 +39,23 @@ typedef struct ei_frame_t {
     ei_anchor_t *img_anchor;
 } ei_frame_t;
 
+// Class declarations
 ei_widgetclass_t *frame_class;
 ei_widgetclass_t *button_class;
 ei_widgetclass_t *widget_class;
 
+// Default declaration
 ei_frame_t *root;
+
+ei_co
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
  */
-ei_widget_t *widget_allocfunc();
+ei_widget_t
+*
+
+widget_allocfunc();
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_button_t to zero.
@@ -68,14 +75,14 @@ ei_widget_t *frame_allocfunc();
 void widget_releasefunc(struct ei_widget_t *widget);
 
 /**
- * \brief	Allow to free a widget of type \ref ei_widget_t to zero.
+ * \brief	Allow to free a widget of type \ref ei_button_t to zero.
  *
  * @param	widget		The widget which resources are to be freed.
  */
 void button_releasefunc(struct ei_widget_t *widget);
 
 /**
- * \brief	Allow to free a widget of type \ref ei_widget_t to zero.
+ * \brief	Allow to free a widget of type \ref ei_frame_t to zero.
  *
  * @param	widget		The widget which resources are to be freed.
  */
@@ -116,8 +123,29 @@ void button_drawfunc(ei_widget_t *widget,
  * @param	clipper		The clipper that restrain the drawing.
  */
 void frame_drawfunc(ei_widget_t *widget,
-                     ei_surface_t surface,
-                     ei_surface_t pick_surface,
-                     ei_rect_t *clipper);
+                    ei_surface_t surface,
+                    ei_surface_t pick_surface,
+                    ei_rect_t *clipper);
+
+/**
+ * \brief	Allow to apply defaults values to a widget of type \ref ei_widget_t.
+ *
+ * @param	widget		The widget which we want to set.
+ */
+void widget_setdefaultsfunc(ei_widget_t *widget);
+
+/**
+ * \brief	Allow to apply defaults values to a widget of type \ref ei_button_t.
+ *
+ * @param	widget		The widget which we want to set.
+ */
+void button_setdefaultsfunc(ei_widget_t *widget);
+
+/**
+ * \brief	Allow to apply defaults values to a widget of type \ref ei_frame_t.
+ *
+ * @param	widget		The widget which we want to set.
+ */
+void frame_setdefaultsfunc(ei_widget_t *widget);
 
 #endif //PROJETC_IG_WIDGETS_H
