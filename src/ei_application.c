@@ -4,11 +4,17 @@
 #include "stdbool.h"
 #include "string.h"
 #include "ei_application.h"
+#include "stdlib.h"
+#include "stdio.h"
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen){
     hw_init();
-    strcpy(button_class -> name, "button");
+    widget_class = malloc(sizeof (ei_widgetclass_t));
+    button_class = malloc(sizeof (ei_widgetclass_t));
+    frame_class = malloc(sizeof (ei_widgetclass_t));
+
     strcpy(widget_class -> name, "widget");
+    strcpy(button_class -> name, "button");
     strcpy(frame_class -> name, "frame");
     ei_widgetclass_register(button_class);
     ei_widgetclass_register(widget_class);
@@ -27,7 +33,7 @@ void ei_app_free(void){
 }
 
 void ei_app_run(void){
-
+    getchar();
 }
 
 void ei_app_invalidate_rect(ei_rect_t* rect){
