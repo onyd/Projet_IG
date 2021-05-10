@@ -2,7 +2,24 @@
 #include "math.h"
 #include "stdlib.h"
 #include "ei_utils.h"
-#include "stdbool.h"
+#include <stdbool.h>
+#include "stdio.h"
+#include "ei_draw.h"
+
+int min(int a, int b) {
+    if (a<b) {
+        return a;
+    }
+    return b;
+}
+
+int max(int a, int b) {
+    if (a>b) {
+        return a;
+    }
+    return b;
+}
+
 
 ei_linked_point_t *arc(const ei_point_t *c, uint32_t r, float start_angle, float end_angle, uint32_t N) {
     float da = (end_angle - start_angle) / (N - 1);
@@ -41,9 +58,9 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
 
     if (param <= 1) {
         // Top right first part
-        point.x = top_left_x + button_width - radius;
-        point.y = top_left_y + radius;
-        current = arc(&point, radius, 45, 90, N);
+        point1.x = top_left_x + button_width - radius;
+        point1.y = top_left_y + radius;
+        current = arc(&point1, radius, 45, 90, N);
         //Button1 is at top right
         button1 = current;
         previous = current;
@@ -54,11 +71,10 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         }
 
         // Top left
-        point.x = top_left_x + radius;
-        point.y = top_left_y + radius;
-        current = arc(&point, radius, 90, 180, N);
+        point1.x = top_left_x + radius;
+        point1.y = top_left_y + radius;
+        current = arc(&point1, radius, 90, 180, N);
         previous->next = current;
-        button = current;
 
         // Find last arc point
         while (previous->next != NULL) {
@@ -66,9 +82,9 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         }
 
         // Bot left first part
-        point.x = top_left_x + radius;
-        point.y = top_left_y + button_height - radius;
-        current = arc(&point, radius, 180, 225, N);
+        point1.x = top_left_x + radius;
+        point1.y = top_left_y + button_height - radius;
+        current = arc(&point1, radius, 180, 225, N);
         previous->next = current;
         while (previous->next != NULL) {
             previous = previous->next;
@@ -79,9 +95,9 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
 
     if (param != 1) {
         // Bot left second part
-        point.x = top_left_x + radius;
-        point.y = top_left_y + button_height - radius;
-        current = arc(&point, radius, 225, 270, N);
+        point1.x = top_left_x + radius;
+        point1.y = top_left_y + button_height - radius;
+        current = arc(&point1, radius, 225, 270, N);
         // si on doit construire tout le boutton on récupère les paramètres précédent
         if (param == 0) {
             previous = current;
@@ -99,18 +115,18 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         }
 
         // Bot right
-        point.x = top_left_x + button_width - radius;
-        point.y = top_left_y + button_height - radius;
-        current = arc(&point, radius, 270, 360, N);
+        point1.x = top_left_x + button_width - radius;
+        point1.y = top_left_y + button_height - radius;
+        current = arc(&point1, radius, 270, 360, N);
         previous->next = current;
         while (previous->next != NULL) {
             previous = previous->next;
         }
 
         // Top right
-        point.x = top_left_x + button_width - radius;
-        point.y = top_left_y + radius;
-        current = arc(&point, radius, 0, 45, N);
+        point1.x = top_left_x + button_width - radius;
+        point1.y = top_left_y + radius;
+        current = arc(&point1, radius, 0, 45, N);
         previous->next = current;
         while (previous->next != NULL) {
             previous = previous->next;
@@ -132,7 +148,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     point2.x = top_left_x + button_width - h;
     point2.y = top_left_y + h;
     ei_linked_point_t *cut_bot_left = malloc(sizeof(ei_linked_point_t));
-    cut_bot_left->point = point1
+    cut_bot_left->point = point1;
     ei_linked_point_t *cut_top_right = malloc(sizeof(ei_linked_point_t));
     cut_top_right->point = point2;
     ei_linked_point_t *end = malloc(sizeof(ei_linked_point_t));
@@ -142,7 +158,6 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         cut_top_right->next = end;
         end->point = button1->point;
         end->next = NULL;
-        return end;
     }
     else {
         button1->next = cut_top_right;
@@ -150,9 +165,40 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         cut_bot_left->next = end;
         end->point = button2->point;
         end->next = NULL;
-        return end;
     }
+    return end;
+}
 
+int draw_button(ei_surface_t  surface, ei_rect_t button_rect, ei_color_t color, int radius, bool etat) {
+    int button_width = button_rect.size.width;
+    int button_height = button_rect.size.height;
+
+    // Si etat est à true le boutton est relevé, sinon il est enfoncé
+    ei_color_t darker;
+    ei_color_t  lighter;
+
+    // The two part of the button
+    ei_linked_point_t *top = rounded_frame(button_rect, radius, 10, 1);
+    ei_linked_point_t  *bot = rounded_frame(button_rect, radius, 10, 2);
+    // The button
+    ei_rect_t inside_button;
+    int border_size = min(button_rect.size.width/20, button_rect.size.height/20);
+    inside_button.top_left.x = button_rect.top_left.x + border_size;
+    inside_button.top_left.y = button_rect.top_left.y + border_size;
+    inside_button.size.width = button_rect.size.width - 2*border_size;
+    inside_button.size.height = button_rect.size.height - 2*border_size;
+    radius = radius - border_size;
+    ei_linked_point_t *button = rounded_frame(inside_button, radius, 10, 0);
+
+    if (etat) {
+        ei_draw_polygon(surface, top, lighter, NULL);
+        ei_draw_polygon(surface, bot, darker, NULL);
+    }
+    else {
+        ei_draw_polygon(surface, top, darker, NULL);
+        ei_draw_polygon(surface, bot, lighter, NULL);
+    }
+    ei_draw_polygon(surface, button, color, NULL);
 }
 
 ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {

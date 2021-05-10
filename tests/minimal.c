@@ -5,6 +5,7 @@
 #include "ei_utils.h"
 #include "hw_interface.h"
 
+
 int main(int argc, char* argv[])
 {
 	ei_surface_t			main_window		= NULL;
