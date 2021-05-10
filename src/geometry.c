@@ -5,7 +5,7 @@
 #include "stdbool.h"
 
 ei_linked_point_t *arc(const ei_point_t *c, uint32_t r, float start_angle, float end_angle, uint32_t N) {
-    float da = (end_angle - start_angle) / N;
+    float da = (end_angle - start_angle) / (N - 1);
 
     ei_linked_point_t *points = calloc(N, sizeof(ei_linked_point_t));
     float angle = start_angle;

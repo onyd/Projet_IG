@@ -161,12 +161,12 @@ void test_dot(ei_surface_t surface, ei_rect_t *clipper) {
  *
  *	Draws text at the center of the window with default font
  */
-void test_ei_draw_text(ei_surface_t surface, ei_rect_t* clipper){
+void test_ei_draw_text(ei_surface_t surface, ei_rect_t *clipper) {
     ei_point_t where;
     where.x = 400;
     where.y = 400;
     char *text = "afflict";
-    ei_color_t color = { 255, 0, 255, 255 };
+    ei_color_t color = {255, 0, 255, 255};
     ei_font_t default_font;
     default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, ei_font_default_size);
     ei_draw_text(surface, &where, text, default_font, color, clipper);
@@ -174,11 +174,11 @@ void test_ei_draw_text(ei_surface_t surface, ei_rect_t* clipper){
 
 /* test_rounded_frame --
  *
- *	Draws text at the center of the window with default font
+ *	Draws square with rounded corners at the center of the window
  */
-void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
-    ei_color_t color = { 0, 100, 255, 255 };
-    ei_color_t color2 = { 0, 100, 0, 255 };
+void test_rounded_frame(ei_surface_t surface, ei_rect_t *clipper) {
+    ei_color_t color = {0, 100, 255, 255};
+    ei_color_t color2 = {0, 100, 0, 255};
     ei_rect_t rect = ei_rect(ei_point(200, 200), ei_size(450, 350));
     ei_linked_point_t *pts = rounded_frame(rect, 50, 10);
 
@@ -190,21 +190,31 @@ void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
  *
  *	Draws random polygon with N points
  */
-void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t* clipper) {
+void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
     ei_color_t color = {0, 255, 0, 255};
-    ei_color_t color2 = { 0, 0, 255, 255 };
+    ei_color_t color2 = {0, 0, 255, 255};
     ei_size_t size = hw_surface_get_size(surface);
     ei_linked_point_t *pts = calloc(N, sizeof(ei_linked_point_t));
     int i;
 
     /* Initialisation */
-    pts[0].point.x = rand() % size.width;
-    pts[0].point.y = rand() % size.height;
+    int max_r = min(size.width, size.height) / 2 ;
+    int da = 360 / N;
+    float a = 0;
+    float angle = a + rand() % da;
+    int r = rand() % max_r;
+    pts[0].point.x = size.width / 2 + r * cos(angle * (3.14f / 180.0f));
+    pts[0].point.y = size.height / 2 - r * sin(angle * (3.14f / 180.0f));
 
     /* Draw the square */
     for (i = 1; i < N; i++) {
-        pts[i].point.x = rand() % size.width;
-        pts[i].point.y = rand() % size.height;
+        a += da;
+
+        angle = a + rand() % da;
+        r = rand() % max_r;
+        pts[i].point.x = size.width / 2 + r * cos(angle * (3.14f / 180.0f));
+        pts[i].point.y = size.height / 2 - r * sin(angle * (3.14f / 180.0f));
+
         pts[i - 1].next = &(pts[i]);
     }
 
@@ -258,7 +268,7 @@ int main(int argc, char **argv) {
 //	test_dot	(main_window, clipper_ptr);
 //  test_polygone(main_window, clipper_ptr);
 //    test_polygone(main_window, &clipper_test);
-    test_random_polygon(main_window, 5, clipper_ptr);
+    test_random_polygon(main_window, 10, clipper_ptr);
 
     /* Rounded polygon */
 //    test_rounded_frame(main_window, clipper_ptr);
