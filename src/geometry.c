@@ -149,8 +149,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
 }
 
 void draw_button(ei_surface_t surface, ei_rect_t *clipper, ei_rect_t button_rect, ei_color_t color, int radius, bool etat) {
-    int button_width = button_rect.size.width;
-    int button_height = button_rect.size.height;
+
 
     // If etat is true the button is up else he is down
     ei_color_t darker = {0.1*255 + 0.9*color.red, 0.1*255 + 0.9*color.green, 0.1*255 + 0.9*color.blue, color.alpha};
@@ -177,6 +176,18 @@ void draw_button(ei_surface_t surface, ei_rect_t *clipper, ei_rect_t button_rect
         ei_draw_polygon(surface, bot, lighter, clipper);
     }
     ei_draw_polygon(surface, button, color, clipper);
+
+    //free_rounded_frame(top);
+    //free_rounded_frame(bot);
+    //free_rounded_frame(button);
+}
+
+void free_rounded_frame(ei_linked_point_t *points) {
+    while(points != NULL) {
+        ei_linked_point_t *tmp = points;
+        points = points->next;
+        free(tmp);
+    }
 }
 
 ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {

@@ -288,25 +288,24 @@ int main(int argc, char **argv) {
     /* Rounded polygon */
 //    test_rounded_frame(main_window, clipper_ptr);
     // test button
-
+    /*
     hw_surface_unlock(main_window);
     bool etat = true;
     test_draw_button(main_window, clipper_ptr, etat);
     hw_surface_update_rects(main_window, NULL);
-    while (event.type != ei_ev_mouse_buttondown)
-
     event.type = ei_ev_none;
-    while (event.type != ei_ev_keydown)
+    while (event.type != ei_ev_mouse_buttondown)
         hw_event_wait_next(&event);
     etat = !etat;
     hw_surface_lock(main_window);
     test_draw_button(main_window, clipper_ptr, etat);
     hw_surface_unlock(main_window);
     hw_surface_update_rects(main_window, NULL);
+     */
     /* Draw text. */
 //    test_ei_draw_text(main_window, clipper_ptr);
     /* Unlock and update the surface. */
-    //hw_surface_unlock(main_window);
+    hw_surface_unlock(main_window);
     hw_surface_update_rects(main_window, NULL);
 
     /* Wait for a character on command line. */
