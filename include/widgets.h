@@ -4,6 +4,7 @@
 #include "widgets.h"
 #include "ei_widgetclass.h"
 #include "ei_widget.h"
+#include "geometry.h"
 
 
 typedef struct ei_button_t {
@@ -41,6 +42,20 @@ typedef struct ei_frame_t {
 ei_widgetclass_t *frame_class;
 ei_widgetclass_t *button_class;
 ei_widgetclass_t *widget_class;
+
+/* allocfunc */
+
+/* releasefunc */
+
+/* drawfunc */
+
+// For the button
+void draw_button(ei_widget_t*	widget,
+                 ei_surface_t		surface,
+                 ei_surface_t		pick_surface,
+                 ei_rect_t*		clipper);
+
+/* setdefaultsfunc */
 
 
 #endif //PROJETC_IG_WIDGETS_H
