@@ -156,7 +156,7 @@ void ei_draw_polygon(ei_surface_t surface,
 
         int dx = p_max->point.x - p_min->point.x;
         int dy = p_max->point.y - p_min->point.y;
-
+        float inv_p = (float) dx / dy;
         // Ignore horizontal edges
         if (dy != 0) {
             struct table_cote *edge = malloc(sizeof(struct table_cote));
@@ -166,7 +166,6 @@ void ei_draw_polygon(ei_surface_t surface,
             edge->dx = dx;
             edge->dy = dy;
             edge->E = 0;
-            edge->inv_p = (float) dx / dy;
             edge->sign_dx = (dx > 0) ? 1 : -1;
             edge->next = TC[p_min->point.y - ymin];
             TC[p_min->point.y - ymin] = edge;
@@ -210,15 +209,24 @@ void ei_draw_polygon(ei_surface_t surface,
         // Bresenham iterations for next intersections
         current = TCA->head;
         while (current != NULL) {
-            current->E += abs(current->dx);
-            if (2 * current->E > abs(current->dx)) {
-                if (abs(current->dx) < current->dy) {
+            // y-directed
+            if (abs(current->dx) <= current->dy) {
+                current->E += abs(current->dx);
+                if (2 * current->E > current->dy) {
                     current->x_ymin += current->sign_dx;
                     current->E -= current->dy;
-                } else {
-                    current->x_ymin = current->x_ymin + current->inv_p;
-                    current->E -= abs(current->inv_p);
                 }
+            } else {                 // x-directed
+                int current_dx = 0;
+                while (true) {
+                    current->E += current->dy;
+                    current_dx += current->sign_dx;
+                    if (2 * current->E > abs(current->dx)) {
+                        current->E -= abs(current->dx);
+                        break;
+                    }
+                }
+                current->x_ymin += current_dx;
             }
             current = current->next;
         }

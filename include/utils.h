@@ -6,12 +6,11 @@
 
 struct table_cote {
     int ymax;
-    float x_ymin;
+    int x_ymin;
     int x_ymax;
     int E;
     int dx;
     int dy;
-    float inv_p;
     int sign_dx;
     struct table_cote *next;
 };
