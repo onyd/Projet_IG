@@ -60,6 +60,7 @@ void			ei_button_configure		(ei_widget_t*		widget,
     button->img_rect = img_rect;
     button->img_anchor = img_anchor;
     button->callback = callback;
+    button->widget.user_data = *user_param;
 }
 
 
