@@ -81,6 +81,14 @@ void button_releasefunc(struct ei_widget_t *widget);
  */
 void frame_releasefunc(struct ei_widget_t *widget);
 
+/**
+ * \brief	Allow to draw a widget of type \ref ei_widget_t to zero.
+ *
+ * @param	widget		The widget we want to draw.
+ * @param	surface		The surface on which we want to draw.
+ * @param	pick_surface		The picking surface.
+ * @param	clipper		The clipper that restrain the drawing.
+ */
 void widget_drawfunc(ei_widget_t *widget,
                      ei_surface_t surface,
                      ei_surface_t pick_surface,
@@ -89,12 +97,24 @@ void widget_drawfunc(ei_widget_t *widget,
 /**
  * \brief	Allow to draw a widget of type \ref ei_button_t to zero.
  *
+ * @param	widget		The widget we want to draw.
+ * @param	surface		The surface on which we want to draw.
+ * @param	pick_surface		The picking surface.
+ * @param	clipper		The clipper that restrain the drawing.
  */
 void button_drawfunc(ei_widget_t *widget,
                      ei_surface_t surface,
                      ei_surface_t pick_surface,
                      ei_rect_t *clipper);
 
+/**
+ * \brief	Allow to draw a widget of type \ref ei_frame_t to zero.
+ *
+ * @param	widget		The widget we want to draw.
+ * @param	surface		The surface on which we want to draw.
+ * @param	pick_surface		The picking surface.
+ * @param	clipper		The clipper that restrain the drawing.
+ */
 void frame_drawfunc(ei_widget_t *widget,
                      ei_surface_t surface,
                      ei_surface_t pick_surface,
