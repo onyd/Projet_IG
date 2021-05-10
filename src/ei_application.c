@@ -10,9 +10,9 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen){
     strcpy(button_class -> name, "button");
     strcpy(widget_class -> name, "widget");
     strcpy(frame_class -> name, "frame");
-    ei_widgetclass_register(&button_class);
-    ei_widgetclass_register(&widget_class);
-    ei_widgetclass_register(&frame_class);
+    ei_widgetclass_register(button_class);
+    ei_widgetclass_register(widget_class);
+    ei_widgetclass_register(frame_class);
 
     if (fullscreen == false){
         hw_create_window(main_window_size, EI_FALSE);
