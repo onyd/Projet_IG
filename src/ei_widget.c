@@ -1,4 +1,5 @@
 #include "ei_widget.h"
+#include "widgets.h"
 
 ei_widget_t*		ei_widget_create		(ei_widgetclass_name_t	class_name,
                                              ei_widget_t*		parent,
@@ -45,7 +46,20 @@ void			ei_button_configure		(ei_widget_t*		widget,
                                             ei_anchor_t*		img_anchor,
                                             ei_callback_t*		callback,
                                             void**			user_param){
-
+    ei_button_t *button = (ei_button_t *) widget;
+    button->widget.requested_size = *requested_size;
+    button->color = *color;
+    button->border_width = border_width;
+    button->corner_radius = corner_radius;
+    button->relief = relief;
+    button->text = text;
+    button->text_font = text_font;
+    button->text_color = text_color;
+    button->text_anchor = text_anchor;
+    button->img = img;
+    button->img_rect = img_rect;
+    button->img_anchor = img_anchor;
+    button->callback = callback;
 }
 
 
