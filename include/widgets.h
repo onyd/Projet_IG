@@ -42,5 +42,40 @@ ei_widgetclass_t *frame_class;
 ei_widgetclass_t *button_class;
 ei_widgetclass_t *widget_class;
 
+/**
+ * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
+ */
+ei_widget_t *widget_allocfunc();
+
+/**
+ * \brief	Allows to allocate a widget of type \ref ei_button_t to zero.
+ */
+ei_widget_t *button_allocfunc();
+
+/**
+ * \brief	Allows to allocate a widget of type \ref ei_frame_t to zero.
+ */
+ei_widget_t *frame_allocfunc();
+
+/**
+ * \brief	Allow to free a widget of type \ref ei_widget_t to zero.
+ *
+ * @param	widget		The widget which resources are to be freed.
+ */
+void widget_releasefunc(struct ei_widget_t *widget);
+
+/**
+ * \brief	Allow to free a widget of type \ref ei_widget_t to zero.
+ *
+ * @param	widget		The widget which resources are to be freed.
+ */
+void button_releasefunc(struct ei_widget_t *widget);
+
+/**
+ * \brief	Allow to free a widget of type \ref ei_widget_t to zero.
+ *
+ * @param	widget		The widget which resources are to be freed.
+ */
+void frmae_releasefunc(struct ei_widget_t *widget);
 
 #endif //PROJETC_IG_WIDGETS_H
