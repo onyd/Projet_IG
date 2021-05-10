@@ -184,10 +184,16 @@ void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
     ei_color_t color = { 0, 100, 255, 255 };
     ei_color_t color2 = { 0, 100, 0, 255 };
     ei_rect_t rect = ei_rect(ei_point(200, 200), ei_size(450, 350));
-    ei_linked_point_t *pts = rounded_frame(rect, 50, 10, 2);
+    ei_linked_point_t *pts = rounded_frame(rect, 50, 30, 0);
 
     ei_draw_polygon(surface, pts, color, clipper);
     ei_draw_polyline(surface, pts, color2, clipper);
+}
+
+void test_draw_button(ei_surface_t surface, ei_rect_t* clipper, bool etat) {
+    ei_color_t color = {83, 200, 150, 255};
+    ei_rect_t rect = ei_rect(ei_point(100, 100), ei_size(200, 100));
+    draw_button(surface, clipper, rect, color, 50, etat);
 }
 
 /* test_rounded_frame --
@@ -280,11 +286,23 @@ int main(int argc, char **argv) {
 //    test_random_polygon(main_window, 10, clipper_ptr);
 
     /* Rounded polygon */
-    test_rounded_frame(main_window, clipper_ptr);
+//    test_rounded_frame(main_window, clipper_ptr);
+    // test button
+
+    hw_surface_unlock(main_window);
+    bool etat = true;
+    test_draw_button(main_window, clipper_ptr, etat);
+    hw_surface_update_rects(main_window, NULL);
+    while (event.type != ei_ev_keydown)
+        hw_event_wait_next(&event);
+    etat = !etat;
+    test_draw_button(main_window, clipper_ptr, etat);
+    hw_surface_unlock(main_window);
+    hw_surface_update_rects(main_window, NULL);
     /* Draw text. */
 //    test_ei_draw_text(main_window, clipper_ptr);
     /* Unlock and update the surface. */
-    hw_surface_unlock(main_window);
+    //hw_surface_unlock(main_window);
     hw_surface_update_rects(main_window, NULL);
 
     /* Wait for a character on command line. */
