@@ -193,7 +193,7 @@ void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
 void test_draw_button(ei_surface_t surface, ei_rect_t* clipper, bool etat) {
     ei_color_t color = {83, 200, 150, 255};
     ei_rect_t rect = ei_rect(ei_point(100, 100), ei_size(200, 100));
-    draw_button(surface, clipper, rect, color, 50, etat);
+    draw_button(surface, clipper, rect, color, 25, etat);
 }
 
 /* test_rounded_frame --
@@ -293,9 +293,10 @@ int main(int argc, char **argv) {
     bool etat = true;
     test_draw_button(main_window, clipper_ptr, etat);
     hw_surface_update_rects(main_window, NULL);
-    while (event.type != ei_ev_keydown)
+    while (event.type != ei_ev_mouse_buttondown)
         hw_event_wait_next(&event);
     etat = !etat;
+    hw_surface_lock(main_window);
     test_draw_button(main_window, clipper_ptr, etat);
     hw_surface_unlock(main_window);
     hw_surface_update_rects(main_window, NULL);
