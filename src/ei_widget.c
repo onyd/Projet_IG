@@ -29,7 +29,18 @@ void			ei_frame_configure		(ei_widget_t*		widget,
                                            ei_surface_t*		img,
                                            ei_rect_t**		img_rect,
                                            ei_anchor_t*		img_anchor){
-
+    ei_frame_t *frame = (ei_frame_t *) widget;
+    frame->widget.requested_size = *requested_size;
+    frame->color = color;
+    frame->border_width = border_width;
+    frame->relief = relief;
+    frame->text = text;
+    frame->text_font = text_font;
+    frame->text_color = text_color;
+    frame->text_anchor;
+    frame->img = img;
+    frame->img_rect = img_rect;
+    frame->img_anchor = img_anchor;
 }
 void			ei_button_configure		(ei_widget_t*		widget,
                                             ei_size_t*		requested_size,
@@ -48,7 +59,7 @@ void			ei_button_configure		(ei_widget_t*		widget,
                                             void**			user_param){
     ei_button_t *button = (ei_button_t *) widget;
     button->widget.requested_size = *requested_size;
-    button->color = *color;
+    button->color = color;
     button->border_width = border_width;
     button->corner_radius = corner_radius;
     button->relief = relief;
