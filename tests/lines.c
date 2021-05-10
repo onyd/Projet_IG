@@ -184,7 +184,7 @@ void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
     ei_color_t color = { 0, 100, 255, 255 };
     ei_color_t color2 = { 0, 100, 0, 255 };
     ei_rect_t rect = ei_rect(ei_point(200, 200), ei_size(450, 350));
-    ei_linked_point_t *pts = rounded_frame(rect, 50, 10, 0);
+    ei_linked_point_t *pts = rounded_frame(rect, 50, 10, 2);
 
     ei_draw_polygon(surface, pts, color, clipper);
     ei_draw_polyline(surface, pts, color2, clipper);

@@ -33,7 +33,7 @@ ei_linked_point_t *arc(const ei_point_t *c, uint32_t r, float start_angle, float
 
 
 ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_t N, int param) {
-    // si param = 0, on génère tout le boutton, s'il est égale à 1 on génère la parie haute et sinon la partie basse
+    // if param = 0, generate all the boutton, if param = 1 generate the top else the bottom
     int button_width = button_rect.size.width;
     int button_height = button_rect.size.height;
     int top_left_x = button_rect.top_left.x;
@@ -129,7 +129,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     //Construction of the cut
     // point at the bot left
     point1.x = top_left_x + h;
-    point2.y = top_left_y + button_height - h;
+    point1.y = top_left_y + button_height - h;
 
     //point at the top right
     point2.x = top_left_x + button_width - h;
@@ -147,7 +147,8 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     } else {
         button1->next = cut_top_right;
         cut_top_right->next = cut_bot_left;
-        cut_bot_left->next = button2;
+        cut_bot_left->next = end;
+        end->point = button2->point;
         return button2;
     }
 }
@@ -156,7 +157,7 @@ int draw_button(ei_surface_t surface, ei_rect_t button_rect, ei_color_t color, i
     int button_width = button_rect.size.width;
     int button_height = button_rect.size.height;
 
-    // Si etat est à true le boutton est relevé, sinon il est enfoncé
+    // If etat is true the button is up else he is down
     ei_color_t darker;
     ei_color_t lighter;
 
