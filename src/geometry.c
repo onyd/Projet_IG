@@ -6,19 +6,8 @@
 #include "stdio.h"
 #include "ei_draw.h"
 
-int min(int a, int b) {
-    if (a<b) {
-        return a;
-    }
-    return b;
-}
-
-int max(int a, int b) {
-    if (a>b) {
-        return a;
-    }
-    return b;
-}
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) < (b)) ? (a) : (b))
 
 
 ei_linked_point_t *arc(const ei_point_t *c, uint32_t r, float start_angle, float end_angle, uint32_t N) {
@@ -49,7 +38,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     int button_height = button_rect.size.height;
     int top_left_x = button_rect.top_left.x;
     int top_left_y = button_rect.top_left.y;
-    int h = min(button_width/2, button_height/2);
+    int h = min(button_width / 2, button_height / 2);
     ei_point_t point1, point2;
     ei_linked_point_t *current;
     ei_linked_point_t *previous;
@@ -105,8 +94,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
             button2->next = current;
             free(previous);
             previous = current;
-        }
-        else {
+        } else {
             button2 = current;
             previous = current;
         }
@@ -134,8 +122,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         if (param == 0) {
             previous->next = NULL;
             return button1;
-        }
-        else {
+        } else {
             button1 = previous;
         }
     }
@@ -158,8 +145,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         cut_top_right->next = end;
         end->point = button1->point;
         end->next = NULL;
-    }
-    else {
+    } else {
         button1->next = cut_top_right;
         cut_top_right->next = cut_bot_left;
         cut_bot_left->next = end;
@@ -169,32 +155,31 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     return end;
 }
 
-int draw_button(ei_surface_t  surface, ei_rect_t button_rect, ei_color_t color, int radius, bool etat) {
+int draw_button(ei_surface_t surface, ei_rect_t button_rect, ei_color_t color, int radius, bool etat) {
     int button_width = button_rect.size.width;
     int button_height = button_rect.size.height;
 
     // Si etat est à true le boutton est relevé, sinon il est enfoncé
     ei_color_t darker;
-    ei_color_t  lighter;
+    ei_color_t lighter;
 
     // The two part of the button
     ei_linked_point_t *top = rounded_frame(button_rect, radius, 10, 1);
-    ei_linked_point_t  *bot = rounded_frame(button_rect, radius, 10, 2);
+    ei_linked_point_t *bot = rounded_frame(button_rect, radius, 10, 2);
     // The button
     ei_rect_t inside_button;
-    int border_size = min(button_rect.size.width/20, button_rect.size.height/20);
+    int border_size = min(button_rect.size.width / 20, button_rect.size.height / 20);
     inside_button.top_left.x = button_rect.top_left.x + border_size;
     inside_button.top_left.y = button_rect.top_left.y + border_size;
-    inside_button.size.width = button_rect.size.width - 2*border_size;
-    inside_button.size.height = button_rect.size.height - 2*border_size;
+    inside_button.size.width = button_rect.size.width - 2 * border_size;
+    inside_button.size.height = button_rect.size.height - 2 * border_size;
     radius = radius - border_size;
     ei_linked_point_t *button = rounded_frame(inside_button, radius, 10, 0);
 
     if (etat) {
         ei_draw_polygon(surface, top, lighter, NULL);
         ei_draw_polygon(surface, bot, darker, NULL);
-    }
-    else {
+    } else {
         ei_draw_polygon(surface, top, darker, NULL);
         ei_draw_polygon(surface, bot, lighter, NULL);
     }
