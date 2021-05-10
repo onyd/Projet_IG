@@ -47,15 +47,14 @@ ei_widgetclass_t *widget_class;
 // Default declaration
 ei_frame_t *root;
 
-ei_co
+ei_color_t *default_color;
+ei_color_t *default_text_color;
+ei_size_t *default_size;
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
  */
-ei_widget_t
-*
-
-widget_allocfunc();
+ei_widget_t *widget_allocfunc();
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_button_t to zero.
