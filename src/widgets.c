@@ -89,13 +89,34 @@ void widget_setdefaultsfunc(ei_widget_t *widget) {
 }
 
 void button_setdefaultsfunc(ei_widget_t *widget) {
-    ei_button_configure(widget, ei_size(100, 100), default_color, k_default_button_border_width,
-                        k_default_button_corner_radius, ei_relief_none, "", ei_default_font, default_text_color, NULL,
-                        NULL, NULL, NULL, NULL, NULL);
+    ei_button_configure(widget, default_size, default_color,
+                        k_default_button_border_width,
+                        k_default_button_corner_radius,
+                        ei_relief_none,
+                        "",
+                        ei_default_font,
+                        default_text_color,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL);
 }
 
 void frame_setdefaultsfunc(ei_widget_t *widget) {
-
+    ei_frame_configure(widget,
+                       default_size,
+                       default_color,
+                       k_default_button_border_width,
+                       ei_relief_none,
+                       "",
+                       ei_default_font,
+                       default_text_color,
+                       NULL,
+                       NULL,
+                       NULL,
+                       NULL);
 }
 
 /* geomnotifyfunc */

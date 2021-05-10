@@ -47,6 +47,9 @@ ei_widgetclass_t *widget_class;
 // Default declaration
 ei_frame_t *root;
 
+ei_color_t *default_color;
+ei_color_t *default_text_color;
+ei_size_t *default_size;
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
