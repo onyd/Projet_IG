@@ -72,7 +72,16 @@ ei_linked_widget_t *pop(ei_widget_list_t *l) {
     return popped;
 }
 
-void widget_deep_list(ei_widget_t *start, ei_widget_list_t *result) {
+void free_linked_widget(ei_linked_widget_t *start) {
+    ei_linked_widget_t *current = start;
+    while (current != NULL) {
+        ei_linked_widget_t *tmp = current;
+        current = current->next;
+        free(tmp);
+    }
+}
+
+void widget_breadth_list(ei_widget_t *start, ei_widget_list_t *result) {
     ei_widget_list_t to_see;
     to_see.tail = NULL;
     to_see.head = NULL;
@@ -216,7 +225,7 @@ void button_setdefaultsfunc(ei_widget_t *widget) {
                         default_color,
                         &k_default_button_border_width,
                         &k_default_button_corner_radius,
-                        ei_relief_none,
+                        default_relief,
                         NULL,
                         &ei_default_font,
                         default_text_color,
@@ -234,7 +243,7 @@ void frame_setdefaultsfunc(ei_widget_t *widget) {
                        default_size,
                        default_color,
                        &k_default_button_border_width,
-                       ei_relief_none,
+                       default_relief,
                        NULL,
                        &ei_default_font,
                        default_text_color,
