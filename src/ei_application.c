@@ -29,7 +29,13 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen){
 }
 
 void ei_app_free(void){
+    ei_widget_t *current = root->widget.children_head;
+    while(current != NULL){
+        current->wclass->releasefunc(current);
+        current = current->next_sibling;
+    }
 
+    hw_quit();
 }
 
 void ei_app_run(void){
