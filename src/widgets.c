@@ -10,6 +10,7 @@ void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
     // Empty
     if (l->head == NULL) {
         l->head = linked_widget;
+        l->tail = linked_widget;
         return;
     }
 
@@ -34,7 +35,7 @@ void append(ei_widget_t *widget, ei_widget_list_t *l) {
         return;
     }
 
-    // More than 1 elements
+    // More than 1 element
     if (l->tail != l->head) {
         l->pre_tail = l->tail;
     }
