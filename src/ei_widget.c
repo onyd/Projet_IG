@@ -9,7 +9,15 @@ ei_widget_t*		ei_widget_create		(ei_widgetclass_name_t	class_name,
 }
 
 void			ei_widget_destroy		(ei_widget_t*		widget){
-
+    ei_widget_list_t children;
+    widget_deep_list(widget, &children);
+    ei_linked_widget_t *current;
+    current = children.head;
+    while (current != children.tail) {
+        ei_widget_t *tmp = current->widget;
+        current = current->next;
+        tmp->wclass->releasefunc(tmp);
+    }
 }
 
 
