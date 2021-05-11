@@ -49,7 +49,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
 
 void ei_app_free(void) {
     ei_widget_list_t *to_delete;
-    widget_deep_list(&(root->widget), to_delete);
+    widget_breadth_list(&(root->widget), to_delete);
     ei_linked_widget_t *current = to_delete->head;
     while(current != NULL){
         current->widget->wclass->releasefunc(current);
