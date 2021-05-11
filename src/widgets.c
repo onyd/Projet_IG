@@ -1,6 +1,21 @@
 #include "widgets.h"
 #include "stdlib.h"
 
+// Class declarations
+ei_widgetclass_t *frame_class;
+ei_widgetclass_t *button_class;
+ei_widgetclass_t *widget_class;
+
+// Default declaration
+ei_surface_t main_window;
+ei_frame_t *root;
+
+ei_color_t *default_color;
+ei_color_t *default_text_color;
+ei_size_t *default_size;
+ei_relief_t *default_relief;
+
+
 void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
     ei_linked_widget_t *linked_widget = malloc(sizeof(ei_linked_widget_t));
     linked_widget->widget = widget;
