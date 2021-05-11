@@ -81,7 +81,9 @@ void button_drawfunc(ei_widget_t *widget,
 void frame_drawfunc(ei_widget_t *widget,
                     ei_surface_t surface,
                     ei_surface_t pick_surface,
-                    ei_rect_t *clipper) {}
+                    ei_rect_t *clipper) {
+
+}
 
 /* setdefaultsfunc */
 
