@@ -48,20 +48,20 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
 }
 
 void ei_app_free(void) {
-    ei_widget_list_t *to_delete;
-    widget_breadth_list(&(root->widget), to_delete);
-    ei_linked_widget_t *current = to_delete->head;
-    while(current != NULL){
+    ei_widget_list_t to_delete = {NULL, NULL, NULL};
+    widget_breadth_list(&(root->widget), &to_delete);
+    ei_linked_widget_t *current = to_delete.head;
+    while (current != NULL) {
         current->widget->wclass->releasefunc(current);
         current = current->next;
     }
     frame_releasefunc(&(root->widget));
+
     free(frame_class);
     free(button_class);
     free(widget_class);
     free(default_color);
     free(default_text_color);
-    free(widget_class);
     hw_quit();
 }
 
@@ -69,7 +69,7 @@ void ei_app_run(void) {
     ei_rect_t root_clipper = hw_surface_get_rect(main_window);
     root->widget.wclass->drawfunc(root, main_window, NULL, &root_clipper);
 
-    ei_widget_list_t children;
+    ei_widget_list_t children = {NULL, NULL, NULL};
     widget_breadth_list(root, &children);
     ei_linked_widget_t *current = children.head;
     while (current != NULL) {

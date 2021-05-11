@@ -82,27 +82,25 @@ void free_linked_widget(ei_linked_widget_t *start) {
 }
 
 void widget_breadth_list(ei_widget_t *start, ei_widget_list_t *result) {
-    ei_widget_list_t to_see;
-    to_see.tail = NULL;
-    to_see.head = NULL;
-    to_see.pre_tail = NULL;
-
-    append_left(start, &to_see);
+    ei_linked_widget_t *linked_start = malloc(sizeof(ei_linked_widget_t));
+    linked_start->widget = start;
+    linked_start->next = NULL;
+    ei_widget_list_t to_see = {linked_start, NULL, linked_start};
 
     ei_linked_widget_t *current;
     while (to_see.head != NULL) {
-        current = pop(&to_see);
+        ei_linked_widget_t *popped = pop(&to_see);
+        current = popped;
         append(current, result);
+        free(popped);
 
         // Add children for next children stage
         ei_widget_t *children = current->widget->children_head;
-        while (children->next_sibling != NULL) {
-            ei_linked_widget_t *linked = malloc(sizeof(ei_linked_widget_t));
-            linked->widget = children;
-            linked->next = NULL;
-            append_left(linked, &to_see);
-
-            children = children->next_sibling;
+        if (children != NULL) {
+            while (children->next_sibling != NULL) {
+                append_left(children, &to_see);
+                children = children->next_sibling;
+            }
         }
     }
 }
