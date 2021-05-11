@@ -20,7 +20,7 @@ struct table_cote_actif {
 };
 
 
-void append_left(struct table_cote *e, struct table_cote_actif *tca);
+void append_left_tca(struct table_cote *e, struct table_cote_actif *tca);
 
 void delete_y(int y, struct table_cote_actif *tca);
 

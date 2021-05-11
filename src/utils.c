@@ -2,7 +2,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-void append_left(struct table_cote *e, struct table_cote_actif *tca) {
+void append_left_tca(struct table_cote *e, struct table_cote_actif *tca) {
     if (tca->head == NULL) {
         tca->head = e;
         return;
@@ -86,7 +86,7 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
             //si c'est à la tête:
             if (current == previous) {
                 if (current->x_ymax > tc->x_ymax) {
-                    append_left(tc, tca);
+                    append_left_tca(tc, tca);
                 }
                 else {
                     tc->next = current->next;
@@ -108,7 +108,7 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
         if (current->x_ymin > tc->x_ymin) {
             //si c'est la tete
             if (current == previous) {
-                append_left(tc, tca);
+                append_left_tca(tc, tca);
             }
             else {
                 previous->next = tc;
