@@ -31,6 +31,8 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     *default_text_color = (ei_color_t) {0, 0, 0, 255};
     default_size = malloc(sizeof(ei_size_t));
     *default_size = ei_size(100, 100);
+    default_relief = malloc(sizeof(ei_relief_t));
+    *default_relief = ei_relief_raised;
 
     // root init
     root = frame_allocfunc();
@@ -46,14 +48,15 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
 }
 
 void ei_app_free(void) {
-    ei_widget_list_t *to_delete;
-    widget_deep_list(&(root->widget), to_delete);
-    ei_linked_widget_t *current = to_delete->head;
-    while(current != NULL){
+    ei_widget_list_t to_delete = {NULL, NULL, NULL};
+    widget_breadth_list(&(root->widget), &to_delete);
+    ei_linked_widget_t *current = to_delete.head;
+    while (current != NULL) {
         current->widget->wclass->releasefunc(current);
         current = current->next;
     }
     frame_releasefunc(&(root->widget));
+
     free(frame_class);
     free(button_class);
     free(widget_class);
@@ -68,10 +71,13 @@ void ei_app_run(void) {
     ei_rect_t root_clipper = hw_surface_get_rect(main_window);
     root->widget.wclass->drawfunc(root, main_window, NULL, &root_clipper);
 
-    ei_widget_list_t children;
-    widget_deep_list(root, &children);
-
-
+    ei_widget_list_t children = {NULL, NULL, NULL};
+    widget_breadth_list(root, &children);
+    ei_linked_widget_t *current = children.head;
+    while (current != NULL) {
+        current->widget->wclass->drawfunc(current->widget, main_window, NULL, current->widget->parent->content_rect);
+    }
+    free_linked_widget(children.head);
     getchar();
 }
 

@@ -65,6 +65,7 @@ ei_frame_t *root;
 ei_color_t *default_color;
 ei_color_t *default_text_color;
 ei_size_t *default_size;
+ei_relief_t *default_relief;
 
 void append_left(ei_widget_t *widget, ei_widget_list_t *l);
 
@@ -72,7 +73,9 @@ void append(ei_widget_t *widget, ei_widget_list_t *l);
 
 ei_linked_widget_t *pop(ei_widget_list_t *l);
 
-void widget_deep_list(ei_widget_t *start, ei_widget_list_t *result);
+void free_linked_widget(ei_linked_widget_t *start);
+
+void widget_breadth_list(ei_widget_t *start, ei_widget_list_t *result);
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
