@@ -13,7 +13,6 @@
 
 #include "hw_interface.h"
 #include "ei_draw.h"
-#include "widgets.h"
 
 
 /**

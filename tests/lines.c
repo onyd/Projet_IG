@@ -8,6 +8,7 @@
 #include "ei_event.h"
 #include "geometry.h"
 #include <time.h>
+#include "draw.h"
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) < (b)) ? (a) : (b))
@@ -245,6 +246,12 @@ void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
     free(pts);
 }
 
+void test_draw_rect(ei_surface_t surface, ei_rect_t *clipper) {
+    ei_color_t color = {83, 200, 150, 255};
+    ei_rect_t rect = ei_rect(ei_point(100, 100), ei_size(200, 100));
+    rect_to_triangle(surface, rect, color, clipper, 0);
+}
+
 /*
  * ei_main --
  *
@@ -305,6 +312,8 @@ int main(int argc, char **argv) {
      */
     /* Draw text. */
 //    test_ei_draw_text(main_window, clipper_ptr);
+    /* Draw rectangle */
+    test_draw_rect(main_window, clipper_ptr);
     /* Unlock and update the surface. */
     hw_surface_unlock(main_window);
     hw_surface_update_rects(main_window, NULL);
