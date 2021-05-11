@@ -1,6 +1,21 @@
 #include "widgets.h"
 #include "stdlib.h"
 
+// Class declarations
+ei_widgetclass_t *frame_class;
+ei_widgetclass_t *button_class;
+ei_widgetclass_t *widget_class;
+
+// Default declaration
+ei_surface_t main_window;
+ei_frame_t *root;
+
+ei_color_t *default_color;
+ei_color_t *default_text_color;
+ei_size_t *default_size;
+ei_relief_t *default_relief;
+
+
 void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
     ei_linked_widget_t *linked_widget = malloc(sizeof(ei_linked_widget_t));
     linked_widget->widget = widget;
@@ -113,11 +128,35 @@ ei_widget_t *widget_allocfunc() {
 
 ei_widget_t *button_allocfunc() {
     ei_widget_t *widget = (ei_button_t *) calloc(1, sizeof(ei_button_t));
+    ei_button_t *button = (ei_button_t *) widget;
+    button->color = calloc(1, sizeof(ei_color_t *));
+    button->border_width =calloc(1, sizeof(int *));
+    button->corner_radius = calloc(1, sizeof(int *));
+    button->relief = calloc(1, sizeof(ei_relief_t *));
+    button->text = calloc(1, sizeof(char **));
+    button->text_font = calloc(1, sizeof(ei_font_t *));
+    button->text_color = calloc(1, sizeof(ei_color_t *));
+    button->text_anchor = calloc(1, sizeof(ei_anchor_t *));
+    button->img = calloc(1, sizeof(ei_surface_t *));
+    button->img_rect = calloc(1, sizeof(ei_rect_t *));
+    button->img_anchor = calloc(1, sizeof(ei_anchor_t *));
+    button->callback = calloc(1, sizeof(ei_callback_t *));
     return widget;
 }
 
 ei_widget_t *frame_allocfunc() {
     ei_widget_t *widget = (ei_frame_t *) calloc(1, sizeof(ei_frame_t));
+    ei_frame_t *frame = (ei_frame_t *) widget;
+    frame->color = calloc(1, sizeof(ei_color_t *));
+    frame->border_width =calloc(1, sizeof(int *));
+    frame->relief = calloc(1, sizeof(ei_relief_t *));
+    frame->text = calloc(1, sizeof(char **));
+    frame->text_font = calloc(1, sizeof(ei_font_t *));
+    frame->text_color = calloc(1, sizeof(ei_color_t *));
+    frame->text_anchor = calloc(1, sizeof(ei_anchor_t *));
+    frame->img = calloc(1, sizeof(ei_surface_t *));
+    frame->img_rect = calloc(1, sizeof(ei_rect_t *));
+    frame->img_anchor = calloc(1, sizeof(ei_anchor_t *));
     return widget;
 }
 

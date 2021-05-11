@@ -54,18 +54,18 @@ typedef struct ei_widget_list_t {
 } ei_widget_list_t;
 
 // Class declarations
-ei_widgetclass_t *frame_class;
-ei_widgetclass_t *button_class;
-ei_widgetclass_t *widget_class;
+extern ei_widgetclass_t *frame_class;
+extern ei_widgetclass_t *button_class;
+extern ei_widgetclass_t *widget_class;
 
 // Default declaration
-ei_surface_t main_window;
-ei_frame_t *root;
+extern ei_surface_t main_window;
+extern ei_frame_t *root;
 
-ei_color_t *default_color;
-ei_color_t *default_text_color;
-ei_size_t *default_size;
-ei_relief_t *default_relief;
+extern ei_color_t *default_color;
+extern ei_color_t *default_text_color;
+extern ei_size_t *default_size;
+extern ei_relief_t *default_relief;
 
 void append_left(ei_widget_t *widget, ei_widget_list_t *l);
 
