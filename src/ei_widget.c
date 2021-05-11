@@ -5,6 +5,15 @@ ei_widget_t*		ei_widget_create		(ei_widgetclass_name_t	class_name,
                                              ei_widget_t*		parent,
                                              void*			user_data,
                                              ei_widget_destructor_t destructor){
+    if (class_name == "frame_class"){
+        frame_allocfunc();
+    }
+    else if (class_name == "button_class"){
+        button_allocfunc()
+    }
+    else if (class_name == "widget_class"){
+
+    }
     return NULL;
 }
 
