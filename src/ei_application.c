@@ -36,6 +36,10 @@ void ei_app_free(void) {
 }
 
 void ei_app_run(void) {
+    ei_rect_t root_clipper = hw_surface_get_rect(main_window);
+    root->widget.wclass->drawfunc(root, main_window, NULL, &root_clipper);
+
+
     getchar();
 }
 

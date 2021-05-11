@@ -6,6 +6,7 @@
 #include "ei_widget.h"
 #include "geometry.h"
 #include "ei_types.h"
+#include "ei_application.h"
 
 typedef struct ei_button_t {
     ei_widget_t widget;
@@ -39,6 +40,17 @@ typedef struct ei_frame_t {
     ei_anchor_t *img_anchor;
 } ei_frame_t;
 
+typedef struct ei_linked_widget_t {
+    ei_widget_t *widget;
+    struct ei_linked_widget_t *next;
+} ei_linked_widget_t;
+
+typedef struct ei_widget_list_t {
+    ei_linked_widget_t *head;
+    ei_linked_widget_t *pre_tail;
+    ei_linked_widget_t *tail;
+} ei_widget_list_t;
+
 // Class declarations
 ei_widgetclass_t *frame_class;
 ei_widgetclass_t *button_class;
@@ -51,6 +63,14 @@ ei_frame_t *root;
 ei_color_t *default_color;
 ei_color_t *default_text_color;
 ei_size_t *default_size;
+
+void append_left(ei_widget_t *widget, ei_widget_list_t *l);
+
+void append(ei_widget_t *widget, ei_widget_list_t *l);
+
+ei_linked_widget_t *pop_left(ei_widget_list_t *l);
+
+void widget_deep_list(ei_widget_t *start, ei_widget_list_t *result);
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
@@ -150,11 +170,11 @@ void frame_setdefaultsfunc(ei_widget_t *widget);
 
 /* geomnotifyfunc */
 
-void    widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
+void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
-void    button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
+void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
-void    frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
+void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
 /* handlefunc */
 

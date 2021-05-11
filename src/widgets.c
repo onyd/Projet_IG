@@ -2,6 +2,98 @@
 #include "stdlib.h"
 #include "ei_widget.h"
 
+void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
+    ei_linked_widget_t *linked_widget = malloc(sizeof(ei_linked_widget_t));
+    linked_widget->widget = widget;
+    linked_widget->next = NULL;
+
+    // Empty
+    if (l->head == NULL) {
+        l->head = linked_widget;
+        return;
+    }
+
+    // More than 1 elements
+    if (l->tail != l->head) {
+        l->pre_tail = l->head;
+    }
+
+    linked_widget->next = l->head;
+    l->head = linked_widget;
+}
+
+void append(ei_widget_t *widget, ei_widget_list_t *l) {
+    ei_linked_widget_t *linked_widget = malloc(sizeof(ei_linked_widget_t));
+    linked_widget->widget = widget;
+    linked_widget->next = NULL;
+
+    // Empty
+    if (l->head == NULL) {
+        l->head = linked_widget;
+        l->tail = linked_widget;
+        return;
+    }
+
+    // More than 1 elements
+    if (l->tail != l->head) {
+        l->pre_tail = l->tail;
+    }
+
+    l->tail->next = linked_widget;
+    l->tail = linked_widget;
+}
+
+ei_linked_widget_t *pop(ei_widget_list_t *l) {
+    // Empty
+    if (l->head == NULL) {
+        return NULL;
+    }
+
+    // 1 or 2 elements
+    if (l->pre_tail == NULL) {
+        // 1
+        if (l->tail == l->head) {
+            ei_linked_widget_t *popped = l->tail;
+            l->head = NULL;
+            l->tail = NULL;
+            return popped;
+        } else {
+            ei_linked_widget_t *popped = l->tail;
+            l->tail = l->head;
+            return popped;
+        }
+    }
+
+    // More
+    ei_linked_widget_t *popped = l->tail;
+    l->tail = l->pre_tail;
+    l->tail->next = NULL;
+
+    return popped;
+}
+
+void widget_deep_list(ei_widget_t *start, ei_widget_list_t *result) {
+    ei_widget_list_t to_see;
+    append_left(start, &to_see);
+
+    ei_linked_widget_t *current;
+    while (to_see.head != NULL) {
+        current = pop(&to_see);
+        append(current, result);
+
+        // Add children for next children stage
+        ei_widget_t *children = current->widget->children_head;
+        while (children->next_sibling != NULL) {
+            ei_linked_widget_t *linked = malloc(sizeof(ei_linked_widget_t));
+            linked->widget = children;
+            linked->next = NULL;
+            append_left(linked, &to_see);
+
+            children = children->next_sibling;
+        }
+    }
+}
+
 /* allocfunc */
 ei_widget_t *widget_allocfunc() {
     ei_widget_t *widget = calloc(1, sizeof(ei_widget_t));
@@ -123,15 +215,15 @@ void frame_setdefaultsfunc(ei_widget_t *widget) {
 
 /* geomnotifyfunc */
 
-void    widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
 }
 
-void    button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
 }
 
-void    frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
 }
 
