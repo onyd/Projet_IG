@@ -63,7 +63,7 @@ void ei_app_free(void) {
     free(default_color);
     free(default_text_color);
     free(default_size);
-    free(defaul_relief);
+    free(default_relief);
     hw_quit();
 }
 

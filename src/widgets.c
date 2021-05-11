@@ -127,11 +127,77 @@ void widget_releasefunc(struct ei_widget_t *widget) {
 }
 
 void button_releasefunc(struct ei_widget_t *widget) {
-    free((ei_button_t *) widget);
+    ei_button_t *to_release = (ei_button_t *) widget;
+    if (to_release->color != NULL){
+        free(to_release->color);
+    }
+    if (to_release->border_width != NULL){
+        free(to_release->border_width);
+    }
+    if (to_release->corner_radius != NULL){
+        free(to_release->corner_radius);
+    }
+    if (to_release->relief != NULL){
+        free(to_release->relief);
+    }
+    if (to_release->text != NULL){
+        free(to_release->text);
+    }
+    if (to_release->text_font != NULL){
+        free(to_release->text_font);
+    }
+    if (to_release->text_color != NULL){
+        free(to_release->text_color);
+    }
+    if (to_release->text_anchor != NULL){
+        free(to_release->text_anchor);
+    }
+    if (to_release->img!= NULL){
+        free(to_release->img);
+    }
+    if (to_release->img_rect != NULL){
+        free(to_release->img_rect);
+    }
+    if (to_release->img_anchor != NULL){
+        free(to_release->img_anchor);
+    }
+    if (to_release->callback != NULL){
+        free(to_release->callback);
+    }
 }
 
 void frame_releasefunc(struct ei_widget_t *widget) {
-    free((ei_frame_t *) widget);
+    ei_frame_t *to_release = (ei_frame_t *) widget;
+    if (to_release->color != NULL){
+        free(to_release->color);
+    }
+    if (to_release->border_width != NULL){
+        free(to_release->border_width);
+    }
+    if (to_release->relief != NULL){
+        free(to_release-> relief);
+    }
+    if (to_release->text != NULL){
+        free(to_release->text);
+    }
+    if (to_release->text_font!= NULL){
+        free(to_release->text_font);
+    }
+    if (to_release->text_color != NULL){
+        free(to_release->text_color);
+    }
+    if (to_release->text_anchor != NULL){
+        free(to_release->text_anchor);
+    }
+    if (to_release->img != NULL){
+        free(to_release->img);
+    }
+    if (to_release->img_rect != NULL){
+        free(to_release->img_rect);
+    }
+    if (to_release->img_anchor != NULL){
+        free(to_release->img_anchor);
+    }
 }
 
 /* drawfunc */

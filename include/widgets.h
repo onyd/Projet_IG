@@ -13,7 +13,7 @@
 typedef struct ei_button_t {
     ei_widget_t widget;
     // Specific field
-    const ei_color_t *color;
+    ei_color_t *color;
     int *border_width;
     int *corner_radius;
     ei_relief_t *relief;
@@ -30,7 +30,7 @@ typedef struct ei_button_t {
 typedef struct ei_frame_t {
     ei_widget_t widget;
     // Specific field
-    const ei_color_t *color;
+    ei_color_t *color;
     int *border_width;
     ei_relief_t *relief;
     char **text;
