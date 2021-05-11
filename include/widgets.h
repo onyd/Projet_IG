@@ -45,6 +45,7 @@ ei_widgetclass_t *button_class;
 ei_widgetclass_t *widget_class;
 
 // Default declaration
+ei_surface_t main_window;
 ei_frame_t *root;
 
 ei_color_t *default_color;

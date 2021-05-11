@@ -1,5 +1,4 @@
 #include "ei_widgetclass.h"
-#include "string.h"
 
 
 void ei_widgetclass_register(ei_widgetclass_t *widgetclass) {
