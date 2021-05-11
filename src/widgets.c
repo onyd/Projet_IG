@@ -34,7 +34,7 @@ void append(ei_widget_t *widget, ei_widget_list_t *l) {
         return;
     }
 
-    // More than 1 elements
+    // More than 1 element
     if (l->tail != l->head) {
         l->pre_tail = l->tail;
     }

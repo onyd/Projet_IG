@@ -5,11 +5,28 @@ ei_widget_t*		ei_widget_create		(ei_widgetclass_name_t	class_name,
                                              ei_widget_t*		parent,
                                              void*			user_data,
                                              ei_widget_destructor_t destructor){
+    if (class_name == "frame_class"){
+        frame_allocfunc();
+    }
+    else if (class_name == "button_class"){
+        button_allocfunc()
+    }
+    else if (class_name == "widget_class"){
+
+    }
     return NULL;
 }
 
 void			ei_widget_destroy		(ei_widget_t*		widget){
-
+    ei_widget_list_t children;
+    widget_deep_list(widget, &children);
+    ei_linked_widget_t *current;
+    current = children.head;
+    while (current != children.tail) {
+        ei_widget_t *tmp = current->widget;
+        current = current->next;
+        tmp->wclass->releasefunc(tmp);
+    }
 }
 
 
