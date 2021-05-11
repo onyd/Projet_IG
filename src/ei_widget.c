@@ -5,14 +5,33 @@ ei_widget_t*		ei_widget_create		(ei_widgetclass_name_t	class_name,
                                              ei_widget_t*		parent,
                                              void*			user_data,
                                              ei_widget_destructor_t destructor){
-    if (class_name == "frame_class"){
-        frame_allocfunc();
-    }
-    else if (class_name == "button_class"){
-        button_allocfunc()
-    }
-    else if (class_name == "widget_class"){
+    if (class_name == "frame_class" || class_name == "button_class" || class_name == "widget_class"){
+        ei_widgetclass_t *class = ei_widgetclass_from_name(class_name);
+        ei_widget_t *new_widget = class->allocfunc();
 
+        new_widget->wclass = class;
+        new_widget->pick_id = 0;
+        new_widget->pick_color = NULL;
+        new_widget->user_data = NULL;
+        new_widget->parent = parent;
+        new_widget->children_head = NULL;
+        new_widget->children_tail = NULL;
+        new_widget->next_sibling = NULL;
+        new_widget->placer_params = NULL;
+        class->setdefaultsfunc(new_widget);
+        ei_rect_t screen_location = ei_rect(parent->screen_location.top_left, new_widget->requested_size);
+        intersection(&(parent->screen_location), &screen_location, &screen_location);
+        new_widget->screen_location = screen_location;
+        new_widget->content_rect = &screen_location;
+
+        if (parent->children_head == NULL){
+            parent->children_head = new_widget;
+            parent->children_tail = new_widget;
+        }
+        else{
+            parent->children_tail->next_sibling = new_widget;
+            parent->children_tail = new_widget;
+        }
     }
     return NULL;
 }

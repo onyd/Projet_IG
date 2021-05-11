@@ -59,7 +59,8 @@ void ei_app_free(void) {
     free(widget_class);
     free(default_color);
     free(default_text_color);
-    free(widget_class);
+    free(default_size);
+    free(defaul_relief);
     hw_quit();
 }
 
