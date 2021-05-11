@@ -17,8 +17,6 @@
 #include "ei_widget.h"
 
 
-
-
 /**
  * \brief	Creates an application.
  *		<ul>

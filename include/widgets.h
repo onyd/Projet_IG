@@ -5,7 +5,6 @@
 #include "ei_widgetclass.h"
 #include "geometry.h"
 #include "ei_types.h"
-#include "ei_application.h"
 #include "ei_event.h"
 #include "draw.h"
 
@@ -71,7 +70,7 @@ void append_left(ei_widget_t *widget, ei_widget_list_t *l);
 
 void append(ei_widget_t *widget, ei_widget_list_t *l);
 
-ei_linked_widget_t *pop(ei_widget_list_t *l);
+ei_widget_t *pop(ei_widget_list_t *l);
 
 void free_linked_widget(ei_linked_widget_t *start);
 

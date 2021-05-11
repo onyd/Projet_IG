@@ -1,11 +1,11 @@
 #include "hw_interface.h"
-#include "widgets.h"
 #include "ei_widgetclass.h"
 #include "stdbool.h"
 #include "string.h"
 #include "ei_application.h"
 #include "stdlib.h"
 #include "stdio.h"
+#include "widgets.h"
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     hw_init();
@@ -68,17 +68,24 @@ void ei_app_free(void) {
 }
 
 void ei_app_run(void) {
-    ei_rect_t root_clipper = hw_surface_get_rect(main_window);
-    root->widget.wclass->drawfunc(root, main_window, NULL, &root_clipper);
+    ei_event_t event;
 
-    ei_widget_list_t children = {NULL, NULL, NULL};
-    widget_breadth_list(root, &children);
-    ei_linked_widget_t *current = children.head;
-    while (current != NULL) {
-        current->widget->wclass->drawfunc(current->widget, main_window, NULL, current->widget->parent->content_rect);
+    event.type = ei_ev_none;
+    while (event.type != ei_ev_keydown) {
+        hw_event_wait_next(&event);
+
+        ei_rect_t root_clipper = hw_surface_get_rect(main_window);
+        root->widget.wclass->drawfunc(root, main_window, NULL, &root_clipper);
+
+        ei_widget_list_t children = {NULL, NULL, NULL};
+        widget_breadth_list(root, &children);
+        ei_linked_widget_t *current = children.head;
+        while (current != NULL) {
+            current->widget->wclass->drawfunc(current->widget, main_window, NULL, NULL);
+            current = current->next;
+        }
+        free_linked_widget(children.head);
     }
-    free_linked_widget(children.head);
-    getchar();
 }
 
 void ei_app_invalidate_rect(ei_rect_t *rect) {

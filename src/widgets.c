@@ -58,32 +58,32 @@ void append(ei_widget_t *widget, ei_widget_list_t *l) {
     l->tail = linked_widget;
 }
 
-ei_linked_widget_t *pop(ei_widget_list_t *l) {
+ei_widget_t *pop(ei_widget_list_t *l) {
     // Empty
     if (l->head == NULL) {
         return NULL;
     }
 
+    //ei_linked_widget_t *tmp = l->tail;
+    ei_widget_t *popped = l->tail->widget;
     // 1 or 2 elements
     if (l->pre_tail == NULL) {
         // 1
         if (l->tail == l->head) {
-            ei_linked_widget_t *popped = l->tail;
             l->head = NULL;
             l->tail = NULL;
             return popped;
         } else {
-            ei_linked_widget_t *popped = l->tail;
             l->tail = l->head;
             return popped;
         }
     }
 
     // More
-    ei_linked_widget_t *popped = l->tail;
     l->tail = l->pre_tail;
     l->tail->next = NULL;
 
+    //free(tmp);
     return popped;
 }
 
@@ -104,13 +104,11 @@ void widget_breadth_list(ei_widget_t *start, ei_widget_list_t *result) {
 
     ei_linked_widget_t *current;
     while (to_see.head != NULL) {
-        ei_linked_widget_t *popped = pop(&to_see);
-        current = popped;
+        ei_widget_t *current = pop(&to_see);
         append(current, result);
-        free(popped);
 
         // Add children for next children stage
-        ei_widget_t *children = current->widget->children_head;
+        ei_widget_t *children = current->children_head;
         if (children != NULL) {
             while (children->next_sibling != NULL) {
                 append_left(children, &to_see);
