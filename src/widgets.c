@@ -1,6 +1,5 @@
 #include "widgets.h"
 #include "stdlib.h"
-#include "ei_widget.h"
 
 void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
     ei_linked_widget_t *linked_widget = malloc(sizeof(ei_linked_widget_t));
@@ -14,8 +13,8 @@ void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
         return;
     }
 
-    // More than 1 elements
-    if (l->tail != l->head) {
+    // 2 elements
+    if (l->pre_tail == NULL && l->head != l->tail) {
         l->pre_tail = l->head;
     }
 
@@ -75,6 +74,10 @@ ei_linked_widget_t *pop(ei_widget_list_t *l) {
 
 void widget_deep_list(ei_widget_t *start, ei_widget_list_t *result) {
     ei_widget_list_t to_see;
+    to_see.tail = NULL;
+    to_see.head = NULL;
+    to_see.pre_tail = NULL;
+
     append_left(start, &to_see);
 
     ei_linked_widget_t *current;
@@ -138,7 +141,7 @@ void button_drawfunc(ei_widget_t *widget,
     ei_button_t *button = (ei_button_t *) widget;
     ei_rect_t button_rect = widget->screen_location;
     ei_color_t color = *button->color;
-    int radius = button->corner_radius;
+    int radius = *button->corner_radius;
     // If etat is true the button is up else he is down
     ei_color_t darker = {0.1 * 255 + 0.9 * color.red, 0.1 * 255 + 0.9 * color.green, 0.1 * 255 + 0.9 * color.blue,
                          color.alpha};
@@ -149,7 +152,7 @@ void button_drawfunc(ei_widget_t *widget,
     ei_linked_point_t *bot = rounded_frame(button_rect, radius, 10, 2);
     // The button
     ei_rect_t inside_button;
-    int border_size = button->border_width;
+    int border_size = *button->border_width;
     inside_button.top_left.x = button_rect.top_left.x + border_size;
     inside_button.top_left.y = button_rect.top_left.y + border_size;
     inside_button.size.width = button_rect.size.width - 2 * border_size;
@@ -157,7 +160,7 @@ void button_drawfunc(ei_widget_t *widget,
     radius = radius - border_size;
     ei_linked_point_t *points_button = rounded_frame(inside_button, radius, 10, 0);
 
-    if (button->relief == ei_relief_raised) {
+    if (*button->relief == ei_relief_raised) {
         ei_draw_polygon(surface, top, lighter, clipper);
         ei_draw_polygon(surface, bot, darker, clipper);
     } else {
@@ -175,7 +178,31 @@ void frame_drawfunc(ei_widget_t *widget,
                     ei_surface_t surface,
                     ei_surface_t pick_surface,
                     ei_rect_t *clipper) {
-
+    ei_frame_t *frame = (ei_frame_t *) widget;
+    ei_rect_t frame_rect = widget->screen_location;
+    ei_color_t color = *frame->color;
+    ei_color_t darker = {0.1 * 255 + 0.9 * color.red, 0.1 * 255 + 0.9 * color.green, 0.1 * 255 + 0.9 * color.blue,
+                         color.alpha};
+    ei_color_t lighter = {0.9 * color.red, 0.9 * color.green, 0.9 * color.blue, color.alpha};
+    ei_rect_t inside_frame;
+    int border_size = *frame->border_width;
+    inside_frame.top_left.x = frame_rect.top_left.x + border_size;
+    inside_frame.top_left.y = frame_rect.top_left.y + border_size;
+    inside_frame.size.width = frame_rect.size.width - 2 * border_size;
+    inside_frame.size.height = frame_rect.size.height - 2 * border_size;
+    if (*frame->relief == ei_relief_none) {
+        draw_rectangle(surface, frame_rect, color, clipper);
+    } else {
+        if (*frame->relief == ei_relief_raised) {
+            rect_to_triangle(surface, frame_rect, lighter, clipper, 0);
+            rect_to_triangle(surface, frame_rect, darker, clipper, 1);
+            draw_rectangle(surface, inside_frame, color, clipper);
+        } else {
+            rect_to_triangle(surface, frame_rect, darker, clipper, 0);
+            rect_to_triangle(surface, frame_rect, lighter, clipper, 1);
+            draw_rectangle(surface, inside_frame, color, clipper);
+        }
+    }
 }
 
 /* setdefaultsfunc */
@@ -184,34 +211,38 @@ void widget_setdefaultsfunc(ei_widget_t *widget) {
 }
 
 void button_setdefaultsfunc(ei_widget_t *widget) {
-    ei_button_configure(widget, default_size, default_color,
-                        k_default_button_border_width,
-                        k_default_button_corner_radius,
+    ei_button_configure(widget,
+                        default_size,
+                        default_color,
+                        &k_default_button_border_width,
+                        &k_default_button_corner_radius,
                         ei_relief_none,
-                        "",
-                        ei_default_font,
+                        NULL,
+                        &ei_default_font,
                         default_text_color,
                         NULL,
                         NULL,
                         NULL,
                         NULL,
                         NULL,
-                        NULL);
+                        NULL
+    );
 }
 
 void frame_setdefaultsfunc(ei_widget_t *widget) {
     ei_frame_configure(widget,
                        default_size,
                        default_color,
-                       k_default_button_border_width,
+                       &k_default_button_border_width,
                        ei_relief_none,
-                       "",
-                       ei_default_font,
+                       NULL,
+                       &ei_default_font,
                        default_text_color,
                        NULL,
                        NULL,
                        NULL,
-                       NULL);
+                       NULL
+    );
 }
 
 /* geomnotifyfunc */

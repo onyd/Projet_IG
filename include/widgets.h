@@ -1,12 +1,14 @@
 #ifndef PROJETC_IG_WIDGETS_H
 #define PROJETC_IG_WIDGETS_H
 
-#include "widgets.h"
-#include "ei_widgetclass.h"
 #include "ei_widget.h"
+#include "ei_widgetclass.h"
 #include "geometry.h"
 #include "ei_types.h"
 #include "ei_application.h"
+#include "ei_event.h"
+#include "draw.h"
+
 
 typedef struct ei_button_t {
     ei_widget_t widget;
@@ -92,21 +94,21 @@ ei_widget_t *frame_allocfunc();
  *
  * @param	widget		The widget which resources are to be freed.
  */
-void widget_releasefunc(struct ei_widget_t *widget);
+void widget_releasefunc(ei_widget_t *widget);
 
 /**
  * \brief	Allow to free a widget of type \ref ei_button_t to zero.
  *
  * @param	widget		The widget which resources are to be freed.
  */
-void button_releasefunc(struct ei_widget_t *widget);
+void button_releasefunc(ei_widget_t *widget);
 
 /**
  * \brief	Allow to free a widget of type \ref ei_frame_t to zero.
  *
  * @param	widget		The widget which resources are to be freed.
  */
-void frame_releasefunc(struct ei_widget_t *widget);
+void frame_releasefunc(ei_widget_t *widget);
 
 /**
  * \brief	Allow to draw a widget of type \ref ei_widget_t to zero.
