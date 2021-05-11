@@ -9,11 +9,12 @@ void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
     // Empty
     if (l->head == NULL) {
         l->head = linked_widget;
+        l->tail = linked_widget;
         return;
     }
 
-    // More than 1 elements
-    if (l->tail != l->head) {
+    // 2 elements
+    if (l->pre_tail == NULL && l->head != l->tail) {
         l->pre_tail = l->head;
     }
 
@@ -73,6 +74,10 @@ ei_linked_widget_t *pop(ei_widget_list_t *l) {
 
 void widget_deep_list(ei_widget_t *start, ei_widget_list_t *result) {
     ei_widget_list_t to_see;
+    to_see.tail = NULL;
+    to_see.head = NULL;
+    to_see.pre_tail = NULL;
+
     append_left(start, &to_see);
 
     ei_linked_widget_t *current;
@@ -187,14 +192,12 @@ void frame_drawfunc(ei_widget_t *widget,
     inside_frame.size.height = frame_rect.size.height - 2 * border_size;
     if (*frame->relief == ei_relief_none) {
         draw_rectangle(surface, frame_rect, color, clipper);
-    }
-    else {
+    } else {
         if (*frame->relief == ei_relief_raised) {
             rect_to_triangle(surface, frame_rect, lighter, clipper, 0);
             rect_to_triangle(surface, frame_rect, darker, clipper, 1);
             draw_rectangle(surface, inside_frame, color, clipper);
-        }
-        else {
+        } else {
             rect_to_triangle(surface, frame_rect, darker, clipper, 0);
             rect_to_triangle(surface, frame_rect, lighter, clipper, 1);
             draw_rectangle(surface, inside_frame, color, clipper);
@@ -208,34 +211,38 @@ void widget_setdefaultsfunc(ei_widget_t *widget) {
 }
 
 void button_setdefaultsfunc(ei_widget_t *widget) {
-    ei_button_configure(widget, default_size, default_color,
-                        k_default_button_border_width,
-                        k_default_button_corner_radius,
+    ei_button_configure(widget,
+                        default_size,
+                        default_color,
+                        &k_default_button_border_width,
+                        &k_default_button_corner_radius,
                         ei_relief_none,
-                        "",
-                        ei_default_font,
+                        NULL,
+                        &ei_default_font,
                         default_text_color,
                         NULL,
                         NULL,
                         NULL,
                         NULL,
                         NULL,
-                        NULL);
+                        NULL
+    );
 }
 
 void frame_setdefaultsfunc(ei_widget_t *widget) {
     ei_frame_configure(widget,
                        default_size,
                        default_color,
-                       k_default_button_border_width,
+                       &k_default_button_border_width,
                        ei_relief_none,
-                       "",
-                       ei_default_font,
+                       NULL,
+                       &ei_default_font,
                        default_text_color,
                        NULL,
                        NULL,
                        NULL,
-                       NULL);
+                       NULL
+    );
 }
 
 /* geomnotifyfunc */
