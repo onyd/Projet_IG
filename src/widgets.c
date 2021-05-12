@@ -363,7 +363,7 @@ void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 }
 
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
-
+    widget->screen_location = rect;
 }
 
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {

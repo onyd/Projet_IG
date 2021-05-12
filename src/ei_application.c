@@ -59,6 +59,7 @@ void ei_app_free(void) {
         current->widget->wclass->releasefunc(current->widget);
         current = current->next;
     }
+    frame_releasefunc(&(root->widget));
 
     free(frame_class);
     free(button_class);
