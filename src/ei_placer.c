@@ -50,7 +50,7 @@ void ei_place(struct ei_widget_t *widget,
 }
 
 void ei_placer_run(struct ei_widget_t *widget) {
-    int x = widget->parent->placer_params->x_data;
+    int x = widget->parent->screen_location.top_left.x;
     if (widget->placer_params->rx != NULL){
         x += (widget->placer_params->rx_data) * (widget->parent->screen_location.size.width);
     }
@@ -58,7 +58,7 @@ void ei_placer_run(struct ei_widget_t *widget) {
         x += (widget->placer_params->x_data);
     }
 
-    int y = widget->parent->placer_params->y_data;
+    int y = widget->parent->screen_location.top_left.y;
     if (widget->placer_params->ry != NULL){
         y += (widget->placer_params->ry_data) * (widget->parent->screen_location.size.width);
     }
@@ -102,6 +102,18 @@ void ei_placer_run(struct ei_widget_t *widget) {
 }
 
 void ei_placer_forget(struct ei_widget_t *widget) {
+    free(widget->placer_params);
+    widget->placer_params = NULL;
 
+    ei_widget_t *parent = widget->parent;
+    ei_widget_t *current_child = parent->children_head;
+    ei_widget_t *previous_child;
+    while (current_child != widget){
+        previous_child = current_child;
+        current_child = current_child->next_sibling;
+    }
+    previous_child->next_sibling = current_child->next_sibling;
+
+    widget->parent = NULL;
 }
 
