@@ -2,6 +2,7 @@
 #include "ei_utils.h"
 #include "utils.h"
 #include "ei_widget.h"
+#include "stdlib.h"
 
 void		ei_place	(struct ei_widget_t*	widget,
                          ei_anchor_t*		anchor,
@@ -62,6 +63,10 @@ void		ei_place	(struct ei_widget_t*	widget,
 }
 
 void ei_placer_run(struct ei_widget_t *widget) {
+    int x = (widget->parent->placer_params->x_data) + (widget->placer_params->rx_data) * (widget->parent->placer_params->w_data) + (widget->placer_params->x_data);
+    int y = (widget->parent->placer_params->y_data) + (widget->placer_params->ry_data) * (widget->parent->placer_params->w_data) + (widget->placer_params->y_data);
+    int w =(widget->placer_params->rw_data) * (widget->parent->placer_params->w_data) + (widget->placer_params->w_data);
+    int h =(widget->placer_params->h_data) * (widget->parent->placer_params->h_data) + (widget->placer_params->h_data);
 
 }
 
