@@ -39,7 +39,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     ei_linked_point_t *previous;
     ei_linked_point_t *button1;
     ei_linked_point_t *button2;
-    ei_linked_point_t * end = malloc(sizeof(ei_linked_point_t));
+    ei_linked_point_t *end = malloc(sizeof(ei_linked_point_t));
     end->next = NULL;
 
     if (param <= 1) {
@@ -150,7 +150,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
 
 
 void free_rounded_frame(ei_linked_point_t *points) {
-    while(points != NULL) {
+    while (points != NULL) {
         ei_linked_point_t *tmp = points;
         points = points->next;
         free(tmp);
@@ -158,6 +158,14 @@ void free_rounded_frame(ei_linked_point_t *points) {
 }
 
 ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {
+    if (r1 == NULL) {
+        result = r2;
+        return true;
+    }
+    if (r2 == NULL) {
+        result = r1;
+        return true;
+    }
 
     int leftX = max(r1->top_left.x, r2->top_left.x);
     int rightX = min(r1->top_left.x + r1->size.width, r2->top_left.x + r2->size.width);

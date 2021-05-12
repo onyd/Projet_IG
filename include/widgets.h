@@ -16,12 +16,12 @@ typedef struct ei_button_t {
     int border_width;
     int corner_radius;
     ei_relief_t relief;
-    char **text;
+    char *text;
     ei_font_t text_font;
     ei_color_t text_color;
     ei_anchor_t text_anchor;
     ei_surface_t img;
-    ei_rect_t **img_rect;
+    ei_rect_t *img_rect;
     ei_anchor_t img_anchor;
     ei_callback_t *callback;
 } ei_button_t;
@@ -32,12 +32,12 @@ typedef struct ei_frame_t {
     ei_color_t color;
     int border_width;
     ei_relief_t relief;
-    char **text;
+    char *text;
     ei_font_t text_font;
     ei_color_t text_color;
     ei_anchor_t text_anchor;
     ei_surface_t img;
-    ei_rect_t **img_rect;
+    ei_rect_t *img_rect;
     ei_anchor_t img_anchor;
 } ei_frame_t;
 
@@ -65,6 +65,7 @@ extern ei_color_t *default_color;
 extern ei_color_t *default_text_color;
 extern ei_size_t *default_size;
 extern ei_relief_t *default_relief;
+extern ei_anchor_t *default_anchor;
 extern bool quit_request;
 
 void append_left(ei_widget_t *widget, ei_widget_list_t *l);

@@ -182,9 +182,9 @@ void test_ei_draw_text(ei_surface_t surface, ei_rect_t *clipper) {
  *	Draws square with rounded corners at the center of the window
  */
 
-void test_rounded_frame(ei_surface_t surface, ei_rect_t* clipper) {
-    ei_color_t color = { 0, 100, 255, 255 };
-    ei_color_t color2 = { 0, 100, 0, 255 };
+void test_rounded_frame(ei_surface_t surface, ei_rect_t *clipper) {
+    ei_color_t color = {0, 100, 255, 255};
+    ei_color_t color2 = {0, 100, 0, 255};
     ei_rect_t rect = ei_rect(ei_point(200, 200), ei_size(450, 350));
     ei_linked_point_t *pts = rounded_frame(rect, 50, 30, 0);
 
@@ -214,7 +214,7 @@ void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
 
     /* Initialisation */
 
-    int max_r = min(size.width, size.height) / 2 ;
+    int max_r = min(size.width, size.height) / 2;
     int da = 360 / N;
     float a = 0;
     float angle = a + rand() % da;
@@ -312,9 +312,9 @@ int main(int argc, char **argv) {
     hw_surface_update_rects(main_window, NULL);
      */
     /* Draw text. */
-//    test_ei_draw_text(main_window, clipper_ptr);
+    test_ei_draw_text(main_window, clipper_ptr);
     /* Draw rectangle */
-    test_draw_rect(main_window, clipper_ptr);
+//    test_draw_rect(main_window, clipper_ptr);
     /* Unlock and update the surface. */
     hw_surface_unlock(main_window);
     hw_surface_update_rects(main_window, NULL);

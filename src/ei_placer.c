@@ -17,12 +17,12 @@ void ei_place(struct ei_widget_t *widget,
     int used_width = (width != NULL) ? *width : widget->requested_size.width;
     int used_height = (height != NULL) ? *height : widget->requested_size.height;
     ei_size_t used_size = ei_size(used_width, used_height);
-    //Initialisation of the placer_params
+    // Initialization of the placer_params
     if (widget->placer_params == NULL) {
         widget->placer_params = calloc(1, sizeof(ei_placer_params_t));
         ei_placer_params_t *params = widget->placer_params;
         //Default values
-        params->anchor_data = ei_anc_none;
+        params->anchor_data = ei_anc_northwest;
         params->anchor = &params->anchor_data;
         params->x = &params->x_data;
         params->y = &params->y_data;
@@ -50,6 +50,10 @@ void ei_place(struct ei_widget_t *widget,
 }
 
 void ei_placer_run(struct ei_widget_t *widget) {
+    if (widget->placer_params == NULL) {
+        return;
+    }
+
     int x = widget->parent->screen_location.top_left.x;
     if (widget->placer_params->rx != NULL){
         x += (widget->placer_params->rx_data) * (widget->parent->screen_location.size.width);
@@ -82,7 +86,7 @@ void ei_placer_run(struct ei_widget_t *widget) {
 
     int h;
     if (widget->placer_params->rh == NULL && widget->placer_params->h == NULL){
-        w = widget->requested_size.height;
+        h = widget->requested_size.height;
     }
     else{
         h = 0;
@@ -90,7 +94,7 @@ void ei_placer_run(struct ei_widget_t *widget) {
             h += (widget->placer_params->rh_data) * (widget->parent->screen_location.size.height);
         }
         if (widget->placer_params->h){
-            w += (widget->placer_params->h_data);
+            h += (widget->placer_params->h_data);
         }
     }
 

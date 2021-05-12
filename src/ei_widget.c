@@ -8,6 +8,7 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
         ei_widgetclass_t *class = ei_widgetclass_from_name(class_name);
         ei_widget_t *new_widget = class->allocfunc();
 
+        // Widget init
         new_widget->wclass = class;
         new_widget->pick_id = 0;
         new_widget->pick_color = NULL;
@@ -65,17 +66,30 @@ void ei_frame_configure(ei_widget_t *widget,
                         ei_rect_t **img_rect,
                         ei_anchor_t *img_anchor) {
     ei_frame_t *frame = (ei_frame_t *) widget;
-    frame->widget.requested_size = (requested_size != NULL) ? *requested_size : frame->widget.requested_size;
-    *(frame->color) = (color != NULL) ? *color : *(frame->color);
-    *(frame->border_width) = (border_width != NULL) ? *border_width : *(frame->border_width);
-    *(frame->relief) = (relief != NULL) ? *relief : *(frame->relief);
-    *(frame->text) = (text != NULL) ? *text : *(frame->text);
-    *(frame->text_font) = (text_font != NULL) ? *text_font : *(frame->text_font);
-    *(frame->text_color) = (text_color != NULL) ? *text_color : *(frame->text_color);
-    *(frame->text_anchor) = (text_anchor != NULL) ? *text_anchor : *(frame->text_anchor);
-    *(frame->img) = (img != NULL) ? *img : *(frame->img);
-    *(frame->img_rect) = (img_rect != NULL) ? *img_rect : *(frame->img_rect);
-    *(frame->img_anchor) = (img_anchor != NULL) ? *img_anchor : *(frame->img_anchor);
+    widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
+    if (widget->parent != NULL) {
+        ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
+        intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
+        widget->content_rect = &widget->screen_location;
+    } else { // Then it is root widget
+        widget->screen_location = ei_rect(ei_point_zero(), widget->requested_size);
+        widget->content_rect = &widget->screen_location;
+    }
+
+    frame->color = (color != NULL) ? *color : frame->color;
+    frame->border_width = (border_width != NULL) ? *border_width : frame->border_width;
+    frame->relief = (relief != NULL) ? *relief : frame->relief;
+    if (text != NULL) {
+        free(frame->text);
+        frame->text = calloc(strlen(*text) + 1, sizeof(char));
+        strcpy(*text, frame->text);
+    }
+    frame->text_font = (text_font != NULL) ? text_font : frame->text_font;
+    frame->text_color = (text_color != NULL) ? *text_color : frame->text_color;
+    frame->text_anchor = (text_anchor != NULL) ? *text_anchor : frame->text_anchor;
+    frame->img = (img != NULL) ? *img : frame->img;
+    frame->img_rect = (img_rect != NULL) ? *img_rect : frame->img_rect;
+    frame->img_anchor = (img_anchor != NULL) ? *img_anchor : frame->img_anchor;
 }
 
 void ei_button_configure(ei_widget_t *widget,
@@ -94,22 +108,37 @@ void ei_button_configure(ei_widget_t *widget,
                          ei_callback_t *callback,
                          void **user_param) {
     ei_button_t *button = (ei_button_t *) widget;
-    if (requested_size) {
-        button->widget.requested_size = (requested_size != NULL) ? *requested_size : button->widget.requested_size;
-    }
-    *(button->color) = (color != NULL) ? *color : *(button->color);
-    *(button->border_width) = (border_width != NULL) ? *border_width : *(button->border_width);
-    *(button->corner_radius) = *corner_radius;
-    *(button->relief) = (relief != NULL) ? *relief : *(button->relief);
-    *(button->text) = (text != NULL) ? *text : *(button->text);
-    *(button->text_font) = (text_font != NULL) ? *text_font : *(button->text_font);
-    *(button->text_color) = (text_color != NULL) ? *text_color : *(button->text_color);
-    *(button->text_anchor) = (text_anchor != NULL) ? *text_anchor : *(button->text_anchor);
-    *(button->img) = (img != NULL) ? *img : *(button->img);
-    *(button->img_rect) = (img_rect != NULL) ? *img_rect : *(button->img_rect);
-    *(button->img_anchor) = (img_anchor != NULL) ? *img_anchor : *(button->img_anchor);
-    *(button->callback) = (callback != NULL) ? *callback : *(button->callback);
+    widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
+    ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
+    intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
+    widget->content_rect = &widget->screen_location;
+
+    button->color = (color != NULL) ? *color : (button->color);
+    button->border_width = (border_width != NULL) ? *border_width : button->border_width;
+    button->corner_radius = *corner_radius;
+    button->relief = (relief != NULL) ? *relief : button->relief;
+    button->text_font = (text_font != NULL) ? *text_font : button->text_font;
+    button->text_color = (text_color != NULL) ? *text_color : button->text_color;
+    button->text_anchor = (text_anchor != NULL) ? *text_anchor : button->text_anchor;
+    button->img = (img != NULL) ? *img : button->img;
+    button->img_rect = (img_rect != NULL) ? *img_rect : button->img_rect;
+    button->img_anchor = (img_anchor != NULL) ? *img_anchor : button->img_anchor;
+    button->callback = (callback != NULL) ? *callback : button->callback;
     button->widget.user_data = (user_param != NULL) ? *user_param : button->widget.user_data;
+
+    // Button auto-size
+    if (text != NULL) {
+        free(button->text);
+        button->text = calloc(strlen(*text) + 1, sizeof(char));
+        strcpy(*text, button->text);
+        if (requested_size != NULL) {
+            widget->requested_size = *requested_size;
+        } else {
+            int width, height;
+            hw_text_compute_size(button->text, button->text_font, &width, &height);
+            widget->requested_size = ei_size(width, height);
+        }
+    }
 }
 
 

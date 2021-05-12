@@ -24,14 +24,21 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
 
     // Defaults init
     ei_default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, ei_font_default_size);
+
     default_color = malloc(sizeof(ei_color_t));
     *default_color = (ei_color_t) {100, 100, 100, 255};
+
     default_text_color = malloc(sizeof(ei_color_t));
     *default_text_color = (ei_color_t) {0, 0, 0, 255};
+
     default_size = malloc(sizeof(ei_size_t));
-    *default_size = (ei_size_t) {900, 700};
+    *default_size = (ei_size_t) {100, 100};
+
     default_relief = malloc(sizeof(ei_relief_t));
     *default_relief = ei_relief_raised;
+
+    default_anchor = malloc((sizeof(ei_anchor_t)));
+    *default_anchor = ei_anc_center;
 
     // root init
     root = frame_allocfunc();
@@ -45,9 +52,8 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
 
     if (fullscreen == false) {
         main_window = hw_create_window(main_window_size, EI_FALSE);
-    }
-    else{
-        main_window = hw_create_window(*default_size, EI_TRUE);
+    } else {
+        main_window = hw_create_window(ei_size(900, 700), EI_TRUE);
     }
 }
 
@@ -85,6 +91,7 @@ void ei_app_run(void) {
         widget_breadth_list(root, &children);
         ei_linked_widget_t *current = children.head;
         while (current != NULL) {
+            ei_placer_run(current->widget);
             current->widget->wclass->drawfunc(current->widget, main_window, NULL, NULL);
             current = current->next;
         }
