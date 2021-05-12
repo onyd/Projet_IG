@@ -29,7 +29,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     default_text_color = malloc(sizeof(ei_color_t));
     *default_text_color = (ei_color_t) {0, 0, 0, 255};
     default_size = malloc(sizeof(ei_size_t));
-    *default_size = ei_size(100, 100);
+    *default_size = (ei_size_t) {900, 700};
     default_relief = malloc(sizeof(ei_relief_t));
     *default_relief = ei_relief_raised;
 
@@ -46,9 +46,9 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     if (fullscreen == false) {
         main_window = hw_create_window(main_window_size, EI_FALSE);
     }
-    /* else{
-         main_window = hw_create_window(hw_surface_get_size(ei_app_root_surface()), EI_TRUE);
-    } */
+    else{
+        main_window = hw_create_window(*default_size, EI_TRUE);
+    }
 }
 
 void ei_app_free(void) {
@@ -108,7 +108,8 @@ ei_widget_t *ei_app_root_widget(void) {
 }
 
 ei_surface_t ei_app_root_surface(void) {
-    return hw_surface_create(main_window, hw_surface_get_size(root), EI_FALSE);
+    ei_surface_t surface = hw_surface_create(main_window, hw_surface_get_size(main_window), EI_FALSE);
+    return surface;
 }
 
 
