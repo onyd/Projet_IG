@@ -37,6 +37,7 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
 }
 
 void ei_widget_destroy(ei_widget_t *widget) {
+    ei_placer_forget(widget);
     ei_widget_list_t children;
     widget_breadth_list(widget, &children);
     ei_linked_widget_t *current;
@@ -82,10 +83,10 @@ void ei_frame_configure(ei_widget_t *widget,
     if (text != NULL) {
         free(frame->text);
         frame->text = calloc(strlen(*text) + 1, sizeof(char));
-        strcpy(*text, frame->text);
+        strcpy(frame->text, *text);
     }
-    frame->text_font = (text_font != NULL) ? text_font : frame->text_font;
-    frame->text_color = (text_color != NULL) ? *text_color : frame->text_color;
+    frame->text_font = (text_font != NULL) ? *text_font : frame->text_font;
+    frame->text_color = (text_color != NULL) ? (*text_color) : frame->text_color;
     frame->text_anchor = (text_anchor != NULL) ? *text_anchor : frame->text_anchor;
     frame->img = (img != NULL) ? *img : frame->img;
     frame->img_rect = (img_rect != NULL) ? *img_rect : frame->img_rect;
@@ -130,7 +131,7 @@ void ei_button_configure(ei_widget_t *widget,
     if (text != NULL) {
         free(button->text);
         button->text = calloc(strlen(*text) + 1, sizeof(char));
-        strcpy(*text, button->text);
+        strcpy(button->text, *text);
         if (requested_size != NULL) {
             widget->requested_size = *requested_size;
         } else {

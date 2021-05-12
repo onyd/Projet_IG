@@ -159,11 +159,11 @@ void free_rounded_frame(ei_linked_point_t *points) {
 
 ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {
     if (r1 == NULL) {
-        result = r2;
+        *result = ei_rect(ei_point(r2->top_left.x, r2->top_left.y), ei_size(r2->size.width, r2->size.height));
         return true;
     }
     if (r2 == NULL) {
-        result = r1;
+        *result = ei_rect(ei_point(r1->top_left.x, r1->top_left.y), ei_size(r1->size.width, r1->size.height));
         return true;
     }
 

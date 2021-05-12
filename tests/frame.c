@@ -27,12 +27,18 @@ int main(int argc, char** argv)
 
 	/* Create the application and change the color of the background. */
 	ei_app_create(screen_size, EI_FALSE);
-	ei_frame_configure(ei_app_root_widget(), NULL, &root_bgcol, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+	char *text = "Tout va bien Yannick !";
+	ei_anchor_t text_anchor = ei_anc_south;
+	ei_frame_configure(ei_app_root_widget(), NULL, &root_bgcol, NULL, NULL, &text, NULL, NULL, &text_anchor, NULL, NULL, NULL);
 
 	/* Create, configure and place the frame on screen. */
+    // text on the frame
+	char *text2 = "Toto";
+    ei_anchor_t text_anchor2 = ei_anc_center;
+
 	frame = ei_widget_create("frame", ei_app_root_widget(), NULL, NULL);
 	ei_frame_configure	(frame, &frame_size, &frame_color,
-				 &frame_border_width, &frame_relief, NULL, NULL, NULL, NULL,
+				 &frame_border_width, &frame_relief, &text2, NULL, NULL, &text_anchor2,
 				 NULL, NULL, NULL);
 	ei_place(frame, NULL, &frame_x, &frame_y, NULL, NULL, NULL, NULL, NULL, NULL );
 
