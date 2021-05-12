@@ -72,8 +72,8 @@ void ei_app_run(void) {
 
     event.type = ei_ev_none;
     while (event.type != ei_ev_keydown) {
-        hw_event_wait_next(&event);
-
+        // Draw
+        hw_surface_lock(main_window);
         ei_rect_t root_clipper = hw_surface_get_rect(main_window);
         root->widget.wclass->drawfunc(root, main_window, NULL, &root_clipper);
 
@@ -85,6 +85,10 @@ void ei_app_run(void) {
             current = current->next;
         }
         free_linked_widget(children.head);
+        hw_surface_unlock(main_window);
+
+        hw_event_wait_next(&event);
+
     }
 }
 
