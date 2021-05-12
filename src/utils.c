@@ -1,6 +1,7 @@
 #include "utils.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "ei_utils.h"
 
 void append_left_tca(struct table_cote *e, struct table_cote_actif *tca) {
     if (tca->head == NULL) {
@@ -87,18 +88,15 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
             if (current == previous) {
                 if (current->x_ymax > tc->x_ymax) {
                     append_left_tca(tc, tca);
-                }
-                else {
+                } else {
                     tc->next = current->next;
                     current->next = tc;
                 }
-            }
-            else {
+            } else {
                 if (current->x_ymax > tc->x_ymax) {
                     previous->next = tc;
                     tc->next = current;
-                }
-                else {
+                } else {
                     tc->next = current->next;
                     current->next = tc;
                 }
@@ -109,8 +107,7 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
             //si c'est la tete
             if (current == previous) {
                 append_left_tca(tc, tca);
-            }
-            else {
+            } else {
                 previous->next = tc;
                 tc->next = current;
             }
@@ -124,16 +121,20 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
     }
 }
 
-void tc_free(struct table_cote *tc){
+void tc_free(struct table_cote *tc) {
     struct table_cote *next_tc = tc;
-    while (tc != NULL){
-        next_tc = tc -> next;
+    while (tc != NULL) {
+        next_tc = tc->next;
         free(tc);
         tc = next_tc;
     }
 }
 
-void tca_free(struct table_cote_actif *tca){
-    tc_free(tca -> head);
+void tca_free(struct table_cote_actif *tca) {
+    tc_free(tca->head);
     free(tca);
+}
+
+ei_point_t absolute_coords(ei_rect_t relative, float x_rel, float y_rel) {
+    return ei_point_add(relative.top_left, ei_point(x_rel * relative.size.width, y_rel * relative.size.height));
 }
