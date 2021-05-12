@@ -116,6 +116,7 @@ void widget_breadth_list(ei_widget_t *start, ei_widget_list_t *result) {
             }
         }
     }
+    result->tail->next = NULL;
 }
 
 /* allocfunc */
@@ -203,7 +204,7 @@ void button_releasefunc(struct ei_widget_t *widget) {
     }
 }
 
-void frame_releasefunc(struct ei_widget_t *widget) {
+void frame_releasefunc(ei_widget_t *widget) {
     ei_frame_t *to_release = (ei_frame_t *) widget;
     if (to_release->color != NULL){
         free(to_release->color);
@@ -344,7 +345,7 @@ void frame_setdefaultsfunc(ei_widget_t *widget) {
                        default_size,
                        default_color,
                        &k_default_button_border_width,
-                       default_relief,
+                       ei_relief_none,
                        NULL,
                        &ei_default_font,
                        default_text_color,

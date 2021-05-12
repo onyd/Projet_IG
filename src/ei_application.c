@@ -4,7 +4,6 @@
 #include "string.h"
 #include "ei_application.h"
 #include "stdlib.h"
-#include "stdio.h"
 #include "widgets.h"
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
@@ -38,6 +37,11 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     root = frame_allocfunc();
     root->widget.wclass = frame_class;
     root->widget.wclass->setdefaultsfunc(root);
+    root->widget.requested_size = main_window_size;
+    ei_rect_t *root_rect = malloc(sizeof(ei_rect_t));
+    *root_rect = ei_rect(ei_point(0, 0), main_window_size);
+    root->widget.screen_location = *root_rect;
+    root->widget.content_rect = root_rect;
 
     if (fullscreen == false) {
         main_window = hw_create_window(main_window_size, EI_FALSE);
@@ -52,10 +56,9 @@ void ei_app_free(void) {
     widget_breadth_list(&(root->widget), &to_delete);
     ei_linked_widget_t *current = to_delete.head;
     while (current != NULL) {
-        current->widget->wclass->releasefunc(current);
+        current->widget->wclass->releasefunc(current->widget);
         current = current->next;
     }
-    frame_releasefunc(&(root->widget));
 
     free(frame_class);
     free(button_class);
@@ -74,8 +77,6 @@ void ei_app_run(void) {
     while (event.type != ei_ev_keydown) {
         // Draw
         hw_surface_lock(main_window);
-        ei_rect_t root_clipper = hw_surface_get_rect(main_window);
-        root->widget.wclass->drawfunc(root, main_window, NULL, &root_clipper);
 
         ei_widget_list_t children = {NULL, NULL, NULL};
         widget_breadth_list(root, &children);
@@ -86,6 +87,7 @@ void ei_app_run(void) {
         }
         free_linked_widget(children.head);
         hw_surface_unlock(main_window);
+        hw_surface_update_rects(main_window, NULL);
 
         hw_event_wait_next(&event);
 
