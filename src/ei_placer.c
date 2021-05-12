@@ -21,18 +21,37 @@ void		ei_place	(struct ei_widget_t*	widget,
         widget->placer_params = calloc(1, sizeof(ei_placer_params_t));
         ei_placer_params_t *params = widget->placer_params;
         //Default values
+        params->anchor_data = ei_anc_none;
+        params->anchor = &params->anchor_data;
         params->x_data = 0;
         params->x = &params->x_data;
         params->y_data = 0;
         params->y = &params->y_data;
-        params->w_data = used_width;
-        params->w = &params->w_data;
-        params->w_data = used_width;
-        params->w = &params->w_data;
+        params->rx_data = 0;
+        params->rx = &params->rx_data;
+        params->ry_data = 0;
+        params->ry = &params->ry_data;
+        params->rw_data = 0;
+        params->rw = &params->rw_data;
+        params->rh_data = 0;
+        params->rh = &params->rh_data;
     }
-    if (anchor != NULL) {
-
-    }
+    ei_placer_params_t *params = widget->placer_params;
+    params->w_data = used_width;
+    params->w = &params->w_data;
+    params->h_data = used_height;
+    params->h = &params->h_data;
+    params->anchor_data = (anchor != NULL) ? *anchor : params->anchor_data;
+    params->x_data = (x != NULL) ? *x : params->x_data;
+    params->y_data = (y != NULL) ? *y : params->x_data;
+    params->w_data = (width != NULL) ? *x : params->w_data;
+    params->h_data = (height != NULL) ? *x : params->h_data;
+    params->rx_data = (rel_x != NULL) ? *rel_x : params->rx_data;
+    params->ry_data = (rel_y != NULL) ? *rel_y : params->ry_data;
+    params->rw_data = (rel_width != NULL) ? *rel_width : params->rw_data;
+    params->rw_data = (rel_width != NULL) ? *rel_width : params->rw_data;
+    params->rh_data = (rel_height != NULL) ? *rel_height : params->rh_data;
+    ei_placer_run(widget);
 
     ei_point_t anchor_point;
     switch (*anchor) {
