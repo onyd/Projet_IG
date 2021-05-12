@@ -52,10 +52,9 @@ void ei_app_free(void) {
     widget_breadth_list(&(root->widget), &to_delete);
     ei_linked_widget_t *current = to_delete.head;
     while (current != NULL) {
-        current->widget->wclass->releasefunc(current);
+        current->widget->wclass->releasefunc(current->widget);
         current = current->next;
     }
-    frame_releasefunc(&(root->widget));
 
     free(frame_class);
     free(button_class);
