@@ -3,19 +3,36 @@
 #include "utils.h"
 #include "ei_widget.h"
 
-void ei_place(struct ei_widget_t *widget,
-              ei_anchor_t *anchor,
-              int *x,
-              int *y,
-              int *width,
-              int *height,
-              float *rel_x,
-              float *rel_y,
-              float *rel_width,
-              float *rel_height) {
+void		ei_place	(struct ei_widget_t*	widget,
+                         ei_anchor_t*		anchor,
+                         int*			x,
+                         int*			y,
+                         int*			width,
+                         int*			height,
+                         float*			rel_x,
+                         float*			rel_y,
+                         float*			rel_width,
+                         float*			rel_height){
     int used_width = (width != NULL) ? *width : widget->requested_size.width;
     int used_height = (height != NULL) ? *height : widget->requested_size.height;
     ei_size_t used_size = ei_size(used_width, used_height);
+    //Initialisation of the placer_params
+    if (widget->placer_params == NULL) {
+        widget->placer_params = calloc(1, sizeof(ei_placer_params_t));
+        ei_placer_params_t *params = widget->placer_params;
+        //Default values
+        params->x_data = 0;
+        params->x = &params->x_data;
+        params->y_data = 0;
+        params->y = &params->y_data;
+        params->w_data = used_width;
+        params->w = &params->w_data;
+        params->w_data = used_width;
+        params->w = &params->w_data;
+    }
+    if (anchor != NULL) {
+
+    }
 
     ei_point_t anchor_point;
     switch (*anchor) {
