@@ -1,9 +1,10 @@
 #include "ei_widget.h"
 #include "widgets.h"
+#include "string.h"
 
 ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *parent, void *user_data,
                               ei_widget_destructor_t destructor) {
-    if (class_name == "frame_class" || class_name == "button_class" || class_name == "widget_class") {
+    if (strcmp(class_name, "frame") == 0 || strcmp(class_name, "button") == 0 || strcmp(class_name, "widget") == 0) {
         ei_widgetclass_t *class = ei_widgetclass_from_name(class_name);
         ei_widget_t *new_widget = class->allocfunc();
 
