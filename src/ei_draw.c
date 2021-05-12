@@ -239,6 +239,7 @@ void ei_draw_text(ei_surface_t surface,
                   ei_font_t font,
                   ei_color_t color,
                   const ei_rect_t *clipper) {
+    font = (font == NULL) ? ei_default_font : font;
     ei_surface_t new_surface = hw_text_create_surface(text, font, color);
     const ei_rect_t src_rect = hw_surface_get_rect(new_surface);
 

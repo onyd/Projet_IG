@@ -64,4 +64,6 @@ ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *a
 
 ei_point_t anchor_point(ei_point_t topleft, ei_size_t size, const ei_anchor_t *anchor);
 
+ei_point_t *topleft_text(ei_anchor_t anchor, ei_font_t font, char *text, ei_rect_t parent);
+
 #endif //PROJETC_IG_UTILS_H
