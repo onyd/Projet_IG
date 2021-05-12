@@ -1,5 +1,6 @@
 #include "widgets.h"
 #include "stdlib.h"
+#include "utils.h"
 
 // Class declarations
 ei_widgetclass_t *frame_class;
@@ -283,6 +284,16 @@ void button_drawfunc(ei_widget_t *widget,
     free_rounded_frame(top);
     free_rounded_frame(bot);
     free_rounded_frame(points_button);
+
+    //text eventually inside the button
+    if (button->text != NULL) {
+        ei_point_t *topleft = topleft_text(*button->text_anchor, *button->text_font, *button->text, button_rect);
+        ei_rect_t clipper_text;
+        //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
+        intersection(&button_rect, clipper, &clipper_text);
+        ei_draw_text(surface, topleft, *button->text, button->text_font, *button->text_color, &clipper_text);
+        free(topleft);
+    }
 }
 
 void frame_drawfunc(ei_widget_t *widget,
@@ -313,6 +324,15 @@ void frame_drawfunc(ei_widget_t *widget,
             rect_to_triangle(surface, frame_rect, lighter, clipper, 1);
             draw_rectangle(surface, inside_frame, color, clipper);
         }
+    }
+    //text eventually inside the frame
+    if (frame->text != NULL) {
+        ei_point_t *topleft = topleft_text(*frame->text_anchor, *frame->text_font, *frame->text, frame_rect);
+        ei_rect_t clipper_text;
+        //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
+        intersection(&frame_rect, clipper, &clipper_text);
+        ei_draw_text(surface, topleft, *frame->text, frame->text_font, *frame->text_color, &clipper_text);
+        free(topleft);
     }
 }
 
