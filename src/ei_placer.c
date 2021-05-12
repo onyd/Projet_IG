@@ -4,16 +4,16 @@
 #include "ei_widget.h"
 #include "stdlib.h"
 
-void		ei_place	(struct ei_widget_t*	widget,
-                         ei_anchor_t*		anchor,
-                         int*			x,
-                         int*			y,
-                         int*			width,
-                         int*			height,
-                         float*			rel_x,
-                         float*			rel_y,
-                         float*			rel_width,
-                         float*			rel_height){
+void ei_place(struct ei_widget_t *widget,
+              ei_anchor_t *anchor,
+              int *x,
+              int *y,
+              int *width,
+              int *height,
+              float *rel_x,
+              float *rel_y,
+              float *rel_width,
+              float *rel_height) {
     int used_width = (width != NULL) ? *width : widget->requested_size.width;
     int used_height = (height != NULL) ? *height : widget->requested_size.height;
     ei_size_t used_size = ei_size(used_width, used_height);
@@ -22,52 +22,38 @@ void		ei_place	(struct ei_widget_t*	widget,
         widget->placer_params = calloc(1, sizeof(ei_placer_params_t));
         ei_placer_params_t *params = widget->placer_params;
         //Default values
-        params->x_data = 0;
+        params->anchor_data = ei_anc_none;
+        params->anchor = &params->anchor_data;
         params->x = &params->x_data;
-        params->y_data = 0;
         params->y = &params->y_data;
-        params->w_data = used_width;
+        params->rx = &params->rx_data;
+        params->ry = &params->ry_data;
+        params->rw = &params->rw_data;
+        params->rh = &params->rh_data;
         params->w = &params->w_data;
-        params->w_data = used_width;
-        params->w = &params->w_data;
+        params->h = &params->h_data;
     }
-    if (anchor != NULL) {
-
-    }
-
-    ei_point_t anchor_point;
-    switch (*anchor) {
-        case ei_anc_none:
-            break;
-        case ei_anc_center:
-            anchor_point = absolute_coords(ei_rect(ei_point(*x, *y), used_size), 0.5, 0.5);
-            break;
-        case ei_anc_north:
-            break;
-        case ei_anc_northeast:
-            break;
-        case ei_anc_east:
-            break;
-        case ei_anc_southeast:
-            break;
-        case ei_anc_south:
-            break;
-        case ei_anc_southwest:
-            break;
-        case ei_anc_west:
-            break;
-        case ei_anc_northwest:
-            break;
-
-    }
+    ei_placer_params_t *params = widget->placer_params;
+    params->w_data = used_width;
+    params->h_data = used_height;
+    params->anchor_data = (anchor != NULL) ? *anchor : params->anchor_data;
+    params->x_data = (x != NULL) ? *x : params->x_data;
+    params->y_data = (y != NULL) ? *y : params->x_data;
+    params->w_data = (width != NULL) ? *x : params->w_data;
+    params->h_data = (height != NULL) ? *x : params->h_data;
+    params->rx_data = (rel_x != NULL) ? *rel_x : params->rx_data;
+    params->ry_data = (rel_y != NULL) ? *rel_y : params->ry_data;
+    params->rw_data = (rel_width != NULL) ? *rel_width : params->rw_data;
+    params->rw_data = (rel_width != NULL) ? *rel_width : params->rw_data;
+    params->rh_data = (rel_height != NULL) ? *rel_height : params->rh_data;
+    ei_placer_run(widget);
 }
 
 void ei_placer_run(struct ei_widget_t *widget) {
-    int x = (widget->parent->placer_params->x_data) + (widget->placer_params->rx_data) * (widget->parent->placer_params->w_data) + (widget->placer_params->x_data);
-    int y = (widget->parent->placer_params->y_data) + (widget->placer_params->ry_data) * (widget->parent->placer_params->w_data) + (widget->placer_params->y_data);
-    int w =(widget->placer_params->rw_data) * (widget->parent->placer_params->w_data) + (widget->placer_params->w_data);
-    int h =(widget->placer_params->h_data) * (widget->parent->placer_params->h_data) + (widget->placer_params->h_data);
 
+    if (widget->placer_params->x) {
+
+    }
 }
 
 void ei_placer_forget(struct ei_widget_t *widget) {
