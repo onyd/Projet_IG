@@ -50,10 +50,55 @@ void ei_place(struct ei_widget_t *widget,
 }
 
 void ei_placer_run(struct ei_widget_t *widget) {
-
-    if (widget->placer_params->x) {
-
+    int x = widget->parent->placer_params->x_data;
+    if (widget->placer_params->rx != NULL){
+        x += (widget->placer_params->rx_data) * (widget->parent->screen_location.size.width);
     }
+    if (widget->placer_params->x != NULL){
+        x += (widget->placer_params->x_data);
+    }
+
+    int y = widget->parent->placer_params->y_data;
+    if (widget->placer_params->ry != NULL){
+        y += (widget->placer_params->ry_data) * (widget->parent->screen_location.size.width);
+    }
+    if (widget->placer_params->y != NULL){
+        y += (widget->placer_params->y_data);
+    }
+
+    int w;
+    if (widget->placer_params->rw == NULL && widget->placer_params->w == NULL){
+        w = widget->requested_size.width;
+    }
+    else{
+        w = 0;
+        if (widget->placer_params->rw != NULL){
+            w += (widget->placer_params->rw_data) * (widget->parent->screen_location.size.width);
+        }
+        if (widget->placer_params->w){
+            w += (widget->placer_params->w_data);
+        }
+    }
+
+    int h;
+    if (widget->placer_params->rh == NULL && widget->placer_params->h == NULL){
+        w = widget->requested_size.height;
+    }
+    else{
+        h = 0;
+        if (widget->placer_params->rh != NULL){
+            h += (widget->placer_params->rh_data) * (widget->parent->screen_location.size.height);
+        }
+        if (widget->placer_params->h){
+            w += (widget->placer_params->h_data);
+        }
+    }
+
+    ei_point_t top_left_point = topleft(ei_point(x, y), widget->screen_location.size, widget->placer_params->anchor);
+    widget->screen_location.top_left = top_left_point;
+
+    ei_size_t size = ei_size(w, h);
+    widget->screen_location.size = size;
 }
 
 void ei_placer_forget(struct ei_widget_t *widget) {
