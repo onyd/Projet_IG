@@ -217,16 +217,14 @@ void ei_draw_polygon(ei_surface_t surface,
                     current->E -= current->dy;
                 }
             } else {                 // x-directed
-                int current_dx = 0;
                 while (true) {
                     current->E += current->dy;
-                    current_dx += current->sign_dx;
+                    current->x_ymin += current->sign_dx;
                     if (2 * current->E > abs(current->dx)) {
                         current->E -= abs(current->dx);
-                        break;
+                        break; // Stop when we change of scanline
                     }
                 }
-                current->x_ymin += current_dx;
             }
             current = current->next;
         }

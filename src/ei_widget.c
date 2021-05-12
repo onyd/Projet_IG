@@ -94,7 +94,9 @@ void ei_button_configure(ei_widget_t *widget,
                          ei_callback_t *callback,
                          void **user_param) {
     ei_button_t *button = (ei_button_t *) widget;
-    button->widget.requested_size = (requested_size != NULL) ? *requested_size : button->widget.requested_size;
+    if (requested_size) {
+        button->widget.requested_size = (requested_size != NULL) ? *requested_size : button->widget.requested_size;
+    }
     *(button->color) = (color != NULL) ? *color : *(button->color);
     *(button->border_width) = (border_width != NULL) ? *border_width : *(button->border_width);
     *(button->corner_radius) = *corner_radius;

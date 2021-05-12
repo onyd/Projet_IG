@@ -60,6 +60,8 @@ struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked
  */
 struct ei_linked_point_t *y_argmin(struct ei_linked_point_t *a, struct ei_linked_point_t *b);
 
-ei_point_t absolute_coords(ei_rect_t relative, float x_rel, float y_rel);
+ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *anchor);
+
+ei_point_t anchor_point(ei_point_t topleft, ei_size_t size, const ei_anchor_t *anchor);
 
 #endif //PROJETC_IG_UTILS_H

@@ -135,6 +135,71 @@ void tca_free(struct table_cote_actif *tca) {
     free(tca);
 }
 
-ei_point_t absolute_coords(ei_rect_t relative, float x_rel, float y_rel) {
-    return ei_point_add(relative.top_left, ei_point(x_rel * relative.size.width, y_rel * relative.size.height));
+
+ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *anchor) {
+    switch (*anchor) {
+        case ei_anc_none:
+            break;
+        case ei_anc_center:
+            anchor_point = ei_point_sub(anchor_point, ei_point(0.5 * size.width, 0.5 * size.height));
+            break;
+        case ei_anc_north:
+            anchor_point = ei_point_sub(anchor_point, ei_point(0.5 * size.width, 0));
+            break;
+        case ei_anc_northeast:
+            anchor_point = ei_point_sub(anchor_point, ei_point(size.width, 0));
+            break;
+        case ei_anc_east:
+            anchor_point = ei_point_sub(anchor_point, ei_point(size.width, 0.5 * size.height));
+            break;
+        case ei_anc_southeast:
+            anchor_point = ei_point_sub(anchor_point, ei_point(size.width, size.height));
+            break;
+        case ei_anc_south:
+            anchor_point = ei_point_sub(anchor_point, ei_point(0.5 * size.width, size.height));
+            break;
+        case ei_anc_southwest:
+            anchor_point = ei_point_sub(anchor_point, ei_point(0, size.height));
+            break;
+        case ei_anc_west:
+            anchor_point = ei_point_sub(anchor_point, ei_point(0, 0.5 * size.height));
+            break;
+        case ei_anc_northwest:
+            break;
+    }
+    return anchor_point;
+}
+
+ei_point_t anchor_point(ei_point_t topleft, ei_size_t size, const ei_anchor_t *anchor) {
+    switch (*anchor) {
+        case ei_anc_none:
+            break;
+        case ei_anc_center:
+            topleft = ei_point_add(topleft, ei_point(0.5 * size.width, 0.5 * size.height));
+            break;
+        case ei_anc_north:
+            topleft = ei_point_add(topleft, ei_point(0.5 * size.width, 0));
+            break;
+        case ei_anc_northeast:
+            topleft = ei_point_add(topleft, ei_point(size.width, 0));
+            break;
+        case ei_anc_east:
+            topleft = ei_point_add(topleft, ei_point(size.width, 0.5 * size.height));
+            break;
+        case ei_anc_southeast:
+            topleft = ei_point_add(topleft, ei_point(size.width, size.height));
+            break;
+        case ei_anc_south:
+            topleft = ei_point_add(topleft, ei_point(0.5 * size.width, size.height));
+            break;
+        case ei_anc_southwest:
+            topleft = ei_point_add(topleft, ei_point(0, size.height));
+            break;
+        case ei_anc_west:
+            topleft = ei_point_add(topleft, ei_point(0, 0.5 * size.height));
+            break;
+        case ei_anc_northwest:
+            break;
+    }
+    return topleft;
 }
