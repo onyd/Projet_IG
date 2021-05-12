@@ -8,7 +8,7 @@
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     hw_init();
-
+    quit_request = false;
     // Class init
     widget_class = malloc(sizeof(ei_widgetclass_t));
     button_class = malloc(sizeof(ei_widgetclass_t));
@@ -59,7 +59,6 @@ void ei_app_free(void) {
         current->widget->wclass->releasefunc(current->widget);
         current = current->next;
     }
-    frame_releasefunc(&(root->widget));
 
     free(frame_class);
     free(button_class);
@@ -75,7 +74,10 @@ void ei_app_run(void) {
     ei_event_t event;
 
     event.type = ei_ev_none;
-    while (event.type != ei_ev_keydown) {
+    while (quit_request == false) {
+        if (event.type == ei_ev_keydown){
+            ei_app_quit_request();
+        }
         // Draw
         hw_surface_lock(main_window);
 
@@ -100,7 +102,7 @@ void ei_app_invalidate_rect(ei_rect_t *rect) {
 }
 
 void ei_app_quit_request(void) {
-
+    quit_request = true;
 }
 
 ei_widget_t *ei_app_root_widget(void) {
