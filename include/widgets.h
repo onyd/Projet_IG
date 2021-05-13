@@ -41,6 +41,17 @@ typedef struct ei_frame_t {
     ei_anchor_t img_anchor;
 } ei_frame_t;
 
+typedef struct ei_toplevel_t {
+    ei_widget_t widget;
+    //Specific field
+    ei_color_t color;
+    int	border_width;
+    char* title;
+    ei_bool_t closable;
+    ei_axis_set_t resizable;
+    ei_size_t min_size;
+} ei_toplevel_t;
+
 typedef struct ei_linked_widget_t {
     ei_widget_t *widget;
     struct ei_linked_widget_t *next;
@@ -56,11 +67,15 @@ typedef struct ei_widget_list_t {
 extern ei_widgetclass_t *frame_class;
 extern ei_widgetclass_t *button_class;
 extern ei_widgetclass_t *widget_class;
+extern ei_widgetclass_t *toplevel_class;
 
 // Default declaration
 extern ei_surface_t main_window;
 extern ei_frame_t *root;
 
+extern ei_size_t *toplevel_default_size;
+extern ei_size_t *toplevel_default_min_size;
+extern int *toplevel_default_border_width;
 extern ei_color_t *default_color;
 extern ei_color_t *default_text_color;
 extern ei_size_t *default_size;
@@ -94,6 +109,11 @@ ei_widget_t *button_allocfunc();
 ei_widget_t *frame_allocfunc();
 
 /**
+ * \brief	Allows to allocate a widget of type \ref ei_toplevel_t to zero.
+ */
+ei_widget_t *toplevel_allocfunc();
+
+/**
  * \brief	Allow to free a widget of type \ref ei_widget_t to zero.
  *
  * @param	widget		The widget which resources are to be freed.
@@ -108,11 +128,19 @@ void widget_releasefunc(ei_widget_t *widget);
 void button_releasefunc(ei_widget_t *widget);
 
 /**
- * \brief	Allow to free a widget of type \ref ei_frame_t to zero.
+ * \brief	Allow to free a widget of type \ref ei_toplevel_t to zero.
  *
  * @param	widget		The widget which resources are to be freed.
  */
 void frame_releasefunc(ei_widget_t *widget);
+
+
+/**
+ * \brief	Allow to free a widget of type \ref ei_button_t to zero.
+ *
+ * @param	widget		The widget which resources are to be freed.
+ */
+void toplevel_releasefunc(ei_widget_t *widget);
 
 /**
  * \brief	Allow to draw a widget of type \ref ei_widget_t to zero.
@@ -153,6 +181,20 @@ void frame_drawfunc(ei_widget_t *widget,
                     ei_surface_t pick_surface,
                     ei_rect_t *clipper);
 
+
+/**
+ * \brief	Allow to draw a widget of type \ref ei_toplevel_t to zero.
+ *
+ * @param	widget		The widget we want to draw.
+ * @param	surface		The surface on which we want to draw.
+ * @param	pick_surface		The picking surface.
+ * @param	clipper		The clipper that restrain the drawing.
+ */
+void toplevel_drawfunc(ei_widget_t *widget,
+                    ei_surface_t surface,
+                    ei_surface_t pick_surface,
+                    ei_rect_t *clipper);
+
 /**
  * \brief	Allow to apply defaults values to a widget of type \ref ei_widget_t.
  *
@@ -174,6 +216,14 @@ void button_setdefaultsfunc(ei_widget_t *widget);
  */
 void frame_setdefaultsfunc(ei_widget_t *widget);
 
+
+/**
+ * \brief	Allow to apply defaults values to a widget of type \ref ei_toplevel_t.
+ *
+ * @param	widget		The widget which we want to set.
+ */
+void toplevel_setdefaultsfunc(ei_widget_t *widget);
+
 /* geomnotifyfunc */
 
 void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
@@ -182,6 +232,8 @@ void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
+void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
+
 /* handlefunc */
 
 ei_bool_t widget_handlefunc(ei_widget_t *widget, ei_event_t *event);
@@ -189,5 +241,7 @@ ei_bool_t widget_handlefunc(ei_widget_t *widget, ei_event_t *event);
 ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
 ei_bool_t frame_handlefunc(ei_widget_t *widget, ei_event_t *event);
+
+ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event);
 
 #endif //PROJETC_IG_WIDGETS_H

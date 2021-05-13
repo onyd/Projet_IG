@@ -27,6 +27,14 @@ void ei_widgetclass_register(ei_widgetclass_t *widgetclass) {
         widgetclass->geomnotifyfunc = &frame_geomnotifyfunc;
         widgetclass->handlefunc = &frame_handlefunc;
     }
+    if (strcmp(widgetclass->name, "toplevel") == 0) {
+        widgetclass->allocfunc = &toplevel_allocfunc;
+        widgetclass->releasefunc = &toplevel_releasefunc;
+        widgetclass->drawfunc = &toplevel_drawfunc;
+        widgetclass->setdefaultsfunc = &toplevel_setdefaultsfunc;
+        widgetclass->geomnotifyfunc = &toplevel_geomnotifyfunc;
+        widgetclass->handlefunc = &toplevel_handlefunc;
+    }
 }
 
 
@@ -38,6 +46,9 @@ ei_widgetclass_t *ei_widgetclass_from_name(ei_widgetclass_name_t name) {
         return frame_class;
     }
     if (strcmp(name, "widget") == 0) {
+        return widget_class;
+    }
+    if (strcmp(name, "toplevel") == 0) {
         return widget_class;
     }
 }

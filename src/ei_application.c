@@ -13,14 +13,17 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     widget_class = malloc(sizeof(ei_widgetclass_t));
     button_class = malloc(sizeof(ei_widgetclass_t));
     frame_class = malloc(sizeof(ei_widgetclass_t));
+    toplevel_class = malloc(sizeof(ei_widgetclass_t));
 
     strcpy(widget_class->name, "widget");
     strcpy(button_class->name, "button");
     strcpy(frame_class->name, "frame");
+    strcpy(toplevel_class->name, "toplevel");
 
     ei_widgetclass_register(widget_class);
     ei_widgetclass_register(button_class);
     ei_widgetclass_register(frame_class);
+    ei_widgetclass_register(toplevel_class);
 
     // Defaults init
     ei_default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, ei_font_default_size);
@@ -39,6 +42,15 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
 
     default_anchor = malloc((sizeof(ei_anchor_t)));
     *default_anchor = ei_anc_center;
+
+    toplevel_default_size = malloc(sizeof(ei_size_t));
+    *toplevel_default_size = ei_size(320, 240);
+
+    toplevel_default_min_size = malloc(sizeof(ei_size_t));
+    *toplevel_default_min_size = ei_size(160, 120);
+
+    toplevel_default_border_width = malloc(sizeof(ei_size_t));
+    *toplevel_default_border_width = 4;
 
     // root init
     root = frame_allocfunc();

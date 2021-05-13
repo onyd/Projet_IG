@@ -6,11 +6,15 @@
 ei_widgetclass_t *frame_class;
 ei_widgetclass_t *button_class;
 ei_widgetclass_t *widget_class;
+ei_widgetclass_t *toplevel_class;
 
 // Default declaration
 ei_surface_t main_window;
 ei_frame_t *root;
 
+ei_size_t *toplevel_default_size;
+ei_size_t *toplevel_default_min_size;
+int *toplevel_default_border_width;
 ei_color_t *default_color;
 ei_color_t *default_text_color;
 ei_size_t *default_size;
@@ -143,6 +147,11 @@ ei_widget_t *frame_allocfunc() {
     return widget;
 }
 
+ei_widget_t *toplevel_allocfunc() {
+    ei_widget_t *widget = (ei_toplevel_t *) calloc(1, sizeof(ei_toplevel_t));
+    return widget;
+}
+
 /* releasefunc */
 void widget_releasefunc(struct ei_widget_t *widget) {
     free(widget);
@@ -165,6 +174,13 @@ void frame_releasefunc(ei_widget_t *widget) {
     }
     if (to_release->img_rect != NULL) {
         free(to_release->img_rect);
+    }
+}
+
+void toplevel_releasefunc(ei_widget_t *widget) {
+    ei_toplevel_t *to_release = (ei_toplevel_t *) widget;
+    if (to_release->title != NULL) {
+        free(to_release->title);
     }
 }
 
@@ -265,6 +281,13 @@ void frame_drawfunc(ei_widget_t *widget,
     }
 }
 
+void toplevel_drawfunc(ei_widget_t *widget,
+                    ei_surface_t surface,
+                    ei_surface_t pick_surface,
+                    ei_rect_t *clipper) {
+
+}
+
 /* setdefaultsfunc */
 
 void widget_setdefaultsfunc(ei_widget_t *widget) {
@@ -305,6 +328,21 @@ void frame_setdefaultsfunc(ei_widget_t *widget) {
     );
 }
 
+void toplevel_setdefaultsfunc(ei_widget_t *widget) {
+    ei_color_t background = { 0xA0, 0xA0, 0xA0, 0xff };
+    char *title = "Toplevel";
+    ei_bool_t default_closable = EI_TRUE;
+    ei_axis_set_t default_resizable = ei_axis_both;
+    ei_toplevel_configure(widget,
+                          toplevel_default_size,
+                          &background,
+                          toplevel_default_border_width,
+                          &title,
+                          &default_closable,
+                          &default_resizable,
+                          &toplevel_default_min_size);
+}
+
 /* geomnotifyfunc */
 
 void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
@@ -319,6 +357,10 @@ void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
 }
 
+void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+
+}
+
 /* handlefunc */
 
 ei_bool_t widget_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
@@ -330,6 +372,10 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 }
 
 ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
+
+}
+
+ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 
 }
 

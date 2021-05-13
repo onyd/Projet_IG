@@ -4,7 +4,8 @@
 
 ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *parent, void *user_data,
                               ei_widget_destructor_t destructor) {
-    if (strcmp(class_name, "frame") == 0 || strcmp(class_name, "button") == 0 || strcmp(class_name, "widget") == 0) {
+    if (strcmp(class_name, "frame") == 0 || strcmp(class_name, "button") == 0 || strcmp(class_name, "widget") == 0
+        || strcmp(class_name, "toplevel") == 0) {
         ei_widgetclass_t *class = ei_widgetclass_from_name(class_name);
         ei_widget_t *new_widget = class->allocfunc();
 
@@ -151,5 +152,33 @@ void ei_toplevel_configure(ei_widget_t *widget,
                            ei_bool_t *closable,
                            ei_axis_set_t *resizable,
                            ei_size_t **min_size) {
+    ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
+    widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
+    if (widget->parent != NULL) {
+        ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
+        intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
+        widget->content_rect = &widget->screen_location;
+    } else { // Then it is root widget
+        widget->screen_location = ei_rect(ei_point_zero(), widget->requested_size);
+        widget->content_rect = &widget->screen_location;
+    }
 
+    toplevel->color = (color != NULL) ? *color : (toplevel->color);
+    toplevel->border_width = (border_width != NULL) ? *border_width : toplevel->border_width;
+
+    if (title != NULL) {
+        free(toplevel->title);
+        toplevel->title = calloc(strlen(*title) + 1, sizeof(char));
+        strcpy(toplevel->title, *title);
+    }
+    toplevel->closable = (closable != NULL) ? *closable : toplevel->closable;
+    toplevel->resizable = (resizable != NULL) ? *resizable : toplevel->resizable;
+    if (min_size != NULL) {
+        if (*min_size != NULL) {
+            toplevel->min_size = **min_size;
+        }
+        else {
+            toplevel->min_size = *toplevel_default_min_size;
+        }
+    }
 }
