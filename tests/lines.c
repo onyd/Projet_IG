@@ -284,7 +284,7 @@ int main(int argc, char **argv) {
     hw_surface_lock(main_window);
     ei_fill(main_window, &white, clipper_ptr);
 
-    /* Draw polylines. */
+       /* Draw polylines. */
 //    test_line(main_window, clipper_ptr);
 //	test_octogone	(main_window, clipper_ptr);
 //    test_octogone(main_window, &clipper_test);
@@ -312,7 +312,7 @@ int main(int argc, char **argv) {
     hw_surface_update_rects(main_window, NULL);
      */
     /* Draw text. */
-    test_ei_draw_text(main_window, clipper_ptr);
+    //test_ei_draw_text(main_window, clipper_ptr);
     /* Draw rectangle */
 //    test_draw_rect(main_window, clipper_ptr);
     /* Unlock and update the surface. */

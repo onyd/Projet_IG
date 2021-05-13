@@ -260,7 +260,7 @@ void frame_drawfunc(ei_widget_t *widget,
         ei_rect_t clipper_text;
         //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
         intersection(&frame_rect, clipper, &clipper_text);
-        ei_draw_text(surface, topleft, frame->text, frame->text_font, frame->text_color, NULL);
+        ei_draw_text(surface, topleft, frame->text, frame->text_font, frame->text_color, clipper);
         free(topleft);
     }
 }
