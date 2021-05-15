@@ -50,10 +50,14 @@ void append(ei_widget_t *widget, ei_widget_list_t *l) {
     linked_widget->widget = widget;
     linked_widget->next = NULL;
 
+    append_linked(linked_widget, l);
+}
+
+void append_linked(ei_linked_widget_t *e, ei_widget_list_t *l) {
     // Empty
     if (l->head == NULL) {
-        l->head = linked_widget;
-        l->tail = linked_widget;
+        l->head = e;
+        l->tail = e;
         return;
     }
 
@@ -62,37 +66,32 @@ void append(ei_widget_t *widget, ei_widget_list_t *l) {
         l->pre_tail = l->tail;
     }
 
-    l->tail->next = linked_widget;
-    l->tail = linked_widget;
+    l->tail->next = e;
+    l->tail = e;
 }
 
-ei_widget_t *pop(ei_widget_list_t *l) {
+void move(ei_widget_list_t *src, ei_widget_list_t *dst) {
     // Empty
-    if (l->head == NULL) {
-        return NULL;
+    if (src->head == NULL) {
+        return;
     }
-
-    //ei_linked_widget_t *tmp = l->tail;
-    ei_widget_t *popped = l->tail->widget;
+    append_linked(src->tail, dst);
     // 1 or 2 elements
-    if (l->pre_tail == NULL) {
+    if (src->pre_tail == NULL) {
         // 1
-        if (l->tail == l->head) {
-            l->head = NULL;
-            l->tail = NULL;
-            return popped;
-        } else {
-            l->tail = l->head;
-            return popped;
+        if (src->tail == src->head) {
+            src->head = NULL;
+            src->tail = NULL;
+            return;
+        } else { // 2
+            src->tail = src->head;
+            src->tail->next = NULL;
+            return;
         }
     }
-
     // More
-    l->tail = l->pre_tail;
-    l->tail->next = NULL;
-
-    //free(tmp);
-    return popped;
+    src->tail = src->pre_tail;
+    src->tail->next = NULL;
 }
 
 void free_linked_widget(ei_linked_widget_t *start) {
@@ -112,11 +111,10 @@ void widget_breadth_list(ei_widget_t *start, ei_widget_list_t *result) {
 
     ei_linked_widget_t *current;
     while (to_see.head != NULL) {
-        ei_widget_t *current = pop(&to_see);
-        append(current, result);
+        move(&to_see, result);
 
         // Add children for next children stage
-        ei_widget_t *children = current->children_head;
+        ei_widget_t *children = result->tail->widget->children_head;
         if (children != NULL) {
             while (children != NULL) {
                 append_left(children, &to_see);
@@ -230,14 +228,24 @@ void button_drawfunc(ei_widget_t *widget,
     free_rounded_frame(bot);
     free_rounded_frame(points_button);
 
-    //text eventually inside the button
+    // Text eventually inside the button
     if (button->text != NULL) {
-        ei_point_t *topleft = topleft_text(button->text_anchor, button->text_font, button->text, button_rect);
+        int width, height;
+        hw_text_compute_size(button->text, button->text_font, &width, &height);
+        ei_point_t topleft = anchor_target_pos(button->text_anchor, ei_size(width, height), button_rect);
         ei_rect_t clipper_text;
         //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
         intersection(&button_rect, clipper, &clipper_text);
-        ei_draw_text(surface, topleft, button->text, button->text_font, button->text_color, &clipper_text);
-        free(topleft);
+        ei_draw_text(surface, &topleft, button->text, button->text_font, button->text_color, &clipper_text);
+    }
+    // Image eventually inside the frame
+    if (button->img != NULL) {
+        ei_size_t img_size = (button->img_rect != NULL) ? button->img_rect->size : hw_surface_get_size(button->img);
+        ei_point_t topleft = anchor_target_pos(button->text_anchor, img_size, button_rect);
+        ei_rect_t clipper_text;
+        //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
+        intersection(&button_rect, clipper, &clipper_text);
+        draw_image(surface, button->img, &topleft, &clipper_text);
     }
 }
 
@@ -261,30 +269,40 @@ void frame_drawfunc(ei_widget_t *widget,
         draw_rectangle(surface, frame_rect, color, clipper);
     } else {
         if (frame->relief == ei_relief_raised) {
-            rect_to_triangle(surface, frame_rect, lighter, clipper, 0);
-            rect_to_triangle(surface, frame_rect, darker, clipper, 1);
+            draw_rect_triangle(surface, frame_rect, lighter, clipper, 0);
+            draw_rect_triangle(surface, frame_rect, darker, clipper, 1);
             draw_rectangle(surface, inside_frame, color, clipper);
         } else {
-            rect_to_triangle(surface, frame_rect, darker, clipper, 0);
-            rect_to_triangle(surface, frame_rect, lighter, clipper, 1);
+            draw_rect_triangle(surface, frame_rect, darker, clipper, 0);
+            draw_rect_triangle(surface, frame_rect, lighter, clipper, 1);
             draw_rectangle(surface, inside_frame, color, clipper);
         }
     }
-    //text eventually inside the frame
+    // Text eventually inside the frame
     if (frame->text != NULL) {
-        ei_point_t *topleft = topleft_text(frame->text_anchor, frame->text_font, frame->text, frame_rect);
+        int width, height;
+        hw_text_compute_size(frame->text, frame->text_font, &width, &height);
+        ei_point_t topleft = anchor_target_pos(frame->text_anchor, ei_size(width, height), frame_rect);
         ei_rect_t clipper_text;
         //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
         intersection(&frame_rect, clipper, &clipper_text);
-        ei_draw_text(surface, topleft, frame->text, frame->text_font, frame->text_color, clipper);
-        free(topleft);
+        ei_draw_text(surface, &topleft, frame->text, frame->text_font, frame->text_color, &clipper_text);
+    }
+    // Image eventually inside the frame
+    if (frame->img != NULL) {
+        ei_size_t img_size = (frame->img_rect != NULL) ? frame->img_rect->size : hw_surface_get_size(frame->img);
+        ei_point_t topleft = anchor_target_pos(frame->text_anchor, img_size, frame_rect);
+        ei_rect_t clipper_text;
+        //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
+        intersection(&frame_rect, clipper, &clipper_text);
+        draw_image(surface, frame->img, &topleft, &clipper_text);
     }
 }
 
 void toplevel_drawfunc(ei_widget_t *widget,
-                    ei_surface_t surface,
-                    ei_surface_t pick_surface,
-                    ei_rect_t *clipper) {
+                       ei_surface_t surface,
+                       ei_surface_t pick_surface,
+                       ei_rect_t *clipper) {
 
 }
 
@@ -329,7 +347,7 @@ void frame_setdefaultsfunc(ei_widget_t *widget) {
 }
 
 void toplevel_setdefaultsfunc(ei_widget_t *widget) {
-    ei_color_t background = { 0xA0, 0xA0, 0xA0, 0xff };
+    ei_color_t background = {0xA0, 0xA0, 0xA0, 0xff};
     char *title = "Toplevel";
     ei_bool_t default_closable = EI_TRUE;
     ei_axis_set_t default_resizable = ei_axis_both;

@@ -89,6 +89,7 @@ void ei_frame_configure(ei_widget_t *widget,
     frame->text_font = (text_font != NULL) ? *text_font : frame->text_font;
     frame->text_color = (text_color != NULL) ? (*text_color) : frame->text_color;
     frame->text_anchor = (text_anchor != NULL) ? *text_anchor : frame->text_anchor;
+
     frame->img = (img != NULL) ? *img : frame->img;
     frame->img_rect = (img_rect != NULL) ? *img_rect : frame->img_rect;
     frame->img_anchor = (img_anchor != NULL) ? *img_anchor : frame->img_anchor;
@@ -119,28 +120,37 @@ void ei_button_configure(ei_widget_t *widget,
     button->border_width = (border_width != NULL) ? *border_width : button->border_width;
     button->corner_radius = *corner_radius;
     button->relief = (relief != NULL) ? *relief : button->relief;
-    button->text_font = (text_font != NULL) ? *text_font : button->text_font;
-    button->text_color = (text_color != NULL) ? *text_color : button->text_color;
-    button->text_anchor = (text_anchor != NULL) ? *text_anchor : button->text_anchor;
-    button->img = (img != NULL) ? *img : button->img;
-    button->img_rect = (img_rect != NULL) ? *img_rect : button->img_rect;
-    button->img_anchor = (img_anchor != NULL) ? *img_anchor : button->img_anchor;
     button->callback = (callback != NULL) ? *callback : button->callback;
     button->widget.user_data = (user_param != NULL) ? *user_param : button->widget.user_data;
 
-    // Button auto-size
-    if (text != NULL) {
-        free(button->text);
-        button->text = calloc(strlen(*text) + 1, sizeof(char));
-        strcpy(button->text, *text);
-        if (requested_size != NULL) {
-            widget->requested_size = *requested_size;
-        } else {
+    // Auto-size image
+    if (img != NULL) {
+        button->img = *img;
+
+        if (requested_size == NULL) {
             int width, height;
             hw_text_compute_size(button->text, button->text_font, &width, &height);
             widget->requested_size = ei_size(width, height);
         }
     }
+    button->img_rect = (img_rect != NULL) ? *img_rect : button->img_rect;
+    button->img_anchor = (img_anchor != NULL) ? *img_anchor : button->img_anchor;
+
+    // Auto-size text
+    if (text != NULL) {
+        free(button->text);
+        button->text = calloc(strlen(*text) + 1, sizeof(char));
+        strcpy(button->text, *text);
+
+        if (requested_size == NULL) {
+            int width, height;
+            hw_text_compute_size(button->text, button->text_font, &width, &height);
+            widget->requested_size = ei_size(width, height);
+        }
+    }
+    button->text_font = (text_font != NULL) ? *text_font : button->text_font;
+    button->text_color = (text_color != NULL) ? *text_color : button->text_color;
+    button->text_anchor = (text_anchor != NULL) ? *text_anchor : button->text_anchor;
 }
 
 
@@ -154,14 +164,9 @@ void ei_toplevel_configure(ei_widget_t *widget,
                            ei_size_t **min_size) {
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
-    if (widget->parent != NULL) {
-        ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
-        intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
-        widget->content_rect = &widget->screen_location;
-    } else { // Then it is root widget
-        widget->screen_location = ei_rect(ei_point_zero(), widget->requested_size);
-        widget->content_rect = &widget->screen_location;
-    }
+    ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
+    intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
+    widget->content_rect = &widget->screen_location;
 
     toplevel->color = (color != NULL) ? *color : (toplevel->color);
     toplevel->border_width = (border_width != NULL) ? *border_width : toplevel->border_width;
@@ -176,8 +181,7 @@ void ei_toplevel_configure(ei_widget_t *widget,
     if (min_size != NULL) {
         if (*min_size != NULL) {
             toplevel->min_size = **min_size;
-        }
-        else {
+        } else {
             toplevel->min_size = *toplevel_default_min_size;
         }
     }

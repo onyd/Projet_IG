@@ -52,8 +52,8 @@ void display(struct table_cote_actif *tca) {
 }
 
 
-void swap(uint32_t *a, uint32_t *b) {
-    uint32_t tmp = *a;
+void swap(int *a, int *b) {
+    int tmp = *a;
     (*a) = *b;
     (*b) = tmp;
 }
@@ -205,51 +205,50 @@ ei_point_t anchor_point(ei_point_t topleft, ei_size_t size, const ei_anchor_t *a
     return topleft;
 }
 
-ei_point_t *topleft_text(ei_anchor_t anchor, ei_font_t font, char *text, ei_rect_t parent) {
-    int width;
-    int height;
-    ei_point_t *topleft = malloc(sizeof(ei_point_t));
-    hw_text_compute_size(text, font, &width, &height);
+ei_point_t anchor_target_pos(ei_anchor_t anchor, ei_size_t target_size, ei_rect_t parent_rect) {
+    int width = target_size.width;
+    int height = target_size.height;
+    ei_point_t topleft;
     switch (anchor) {
         case ei_anc_none:
-            topleft->y = parent.top_left.y;
-            topleft->x = parent.top_left.x;
+            topleft.y = parent_rect.top_left.y;
+            topleft.x = parent_rect.top_left.x;
             break;
         case ei_anc_center:
-            topleft->y = parent.top_left.y + parent.size.height/2 - height/2;
-            topleft->x = parent.top_left.x + parent.size.width/2 - width/2;
+            topleft.y = parent_rect.top_left.y + parent_rect.size.height / 2 - height / 2;
+            topleft.x = parent_rect.top_left.x + parent_rect.size.width / 2 - width / 2;
             break;
         case ei_anc_north:
-            topleft->y = parent.top_left.y;
-            topleft->x = parent.top_left.x + parent.size.width/2 - width/2;
+            topleft.y = parent_rect.top_left.y;
+            topleft.x = parent_rect.top_left.x + parent_rect.size.width / 2 - width / 2;
             break;
         case ei_anc_northeast:
-            topleft->y = parent.top_left.y;
-            topleft->x = parent.top_left.x + parent.size.width - width;
+            topleft.y = parent_rect.top_left.y;
+            topleft.x = parent_rect.top_left.x + parent_rect.size.width - width;
             break;
         case ei_anc_east:
-            topleft->y = parent.top_left.y + parent.size.height/2 - height/2;
-            topleft->x = parent.top_left.x + parent.size.width - width;
+            topleft.y = parent_rect.top_left.y + parent_rect.size.height / 2 - height / 2;
+            topleft.x = parent_rect.top_left.x + parent_rect.size.width - width;
             break;
         case ei_anc_southeast:
-            topleft->y = parent.top_left.y + parent.size.height - height;
-            topleft->x = parent.top_left.x + parent.size.width - width;
+            topleft.y = parent_rect.top_left.y + parent_rect.size.height - height;
+            topleft.x = parent_rect.top_left.x + parent_rect.size.width - width;
             break;
         case ei_anc_south:
-            topleft->y = parent.top_left.y + parent.size.height - height;
-            topleft->x = parent.top_left.x + parent.size.width/2 - width/2;
+            topleft.y = parent_rect.top_left.y + parent_rect.size.height - height;
+            topleft.x = parent_rect.top_left.x + parent_rect.size.width / 2 - width / 2;
             break;
         case ei_anc_southwest:
-            topleft->y = parent.top_left.y + parent.size.height - height;
-            topleft->x = parent.top_left.x;
+            topleft.y = parent_rect.top_left.y + parent_rect.size.height - height;
+            topleft.x = parent_rect.top_left.x;
             break;
         case ei_anc_west:
-            topleft->y = parent.top_left.y + parent.size.height/2 - height/2;
-            topleft->x = parent.top_left.x;
+            topleft.y = parent_rect.top_left.y + parent_rect.size.height / 2 - height / 2;
+            topleft.x = parent_rect.top_left.x;
             break;
         case ei_anc_northwest:
-            topleft->y = parent.top_left.y;
-            topleft->x = parent.top_left.x;
+            topleft.y = parent_rect.top_left.y;
+            topleft.x = parent_rect.top_left.x;
             break;
     }
     return topleft;

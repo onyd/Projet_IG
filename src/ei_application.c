@@ -78,13 +78,22 @@ void ei_app_free(void) {
         current = current->next;
     }
 
+    // Free classes
     free(frame_class);
     free(button_class);
     free(widget_class);
+    free(toplevel_class);
+
+    // Free defaults
     free(default_color);
     free(default_text_color);
     free(default_size);
     free(default_relief);
+    free(default_anchor);
+    free(toplevel_default_border_width);
+    free(toplevel_default_min_size);
+    free(toplevel_default_size);
+    //hw_text_font_free(ei_default_font); seems to be already freed by hw_quit()
     hw_quit();
 }
 

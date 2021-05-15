@@ -48,7 +48,7 @@ void tca_free(struct table_cote_actif *);
  * @param	a 	uint32_t variable.
  * @param	b   uint32_t variable.
  */
-void swap(uint32_t *a, uint32_t *b);
+void swap(int *a, int *b);
 
 struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked_point_t *b);
 
@@ -64,6 +64,6 @@ ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *a
 
 ei_point_t anchor_point(ei_point_t topleft, ei_size_t size, const ei_anchor_t *anchor);
 
-ei_point_t *topleft_text(ei_anchor_t anchor, ei_font_t font, char *text, ei_rect_t parent);
+ei_point_t anchor_target_pos(ei_anchor_t anchor, ei_size_t target_size, ei_rect_t parent_rect);
 
 #endif //PROJETC_IG_UTILS_H
