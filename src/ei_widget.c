@@ -91,7 +91,7 @@ void ei_frame_configure(ei_widget_t *widget,
     frame->text_anchor = (text_anchor != NULL) ? *text_anchor : frame->text_anchor;
 
     frame->img = (img != NULL) ? *img : frame->img;
-    frame->img_rect = (img_rect != NULL) ? *img_rect : frame->img_rect;
+    *(frame->img_rect) = (img_rect != NULL) ? *img_rect : *frame->img_rect;
     frame->img_anchor = (img_anchor != NULL) ? *img_anchor : frame->img_anchor;
 }
 
@@ -133,7 +133,7 @@ void ei_button_configure(ei_widget_t *widget,
             widget->requested_size = ei_size(width, height);
         }
     }
-    button->img_rect = (img_rect != NULL) ? *img_rect : button->img_rect;
+    *(button->img_rect) = (img_rect != NULL) ? *img_rect : *button->img_rect;
     button->img_anchor = (img_anchor != NULL) ? *img_anchor : button->img_anchor;
 
     // Auto-size text

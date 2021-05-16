@@ -1,5 +1,7 @@
 #include "draw.h"
 #include "stdlib.h"
+#include "ei_utils.h"
+#include "geometry.h"
 
 void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper) {
     ei_linked_point_t first_point[5];
@@ -68,30 +70,17 @@ void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, 
     ei_draw_polygon(surface, first_point, color, clipper);
 }
 
-void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect_t *clipper) {
-    uint32_t *img_buffer = (uint32_t *) hw_surface_get_buffer(img);
-    ei_size_t img_size = hw_surface_get_size(img);
+void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect_t *img_rect, ei_rect_t *clipper) {
 
-    uint32_t *buffer = (uint32_t *) hw_surface_get_buffer(surface);
-    ei_size_t size = hw_surface_get_size(img);
-
-    // Clipper coordinates
-    int top_left_x, top_right_x, top_left_y, bottom_left_y;
-    if (clipper != NULL) {
-        top_left_x = clipper->top_left.x;
-        top_right_x = clipper->top_left.x + clipper->size.width;
-        top_left_y = clipper->top_left.y;
-        bottom_left_y = clipper->top_left.y + clipper->size.height;
+    ei_rect_t dst_rect;
+    if (img_rect != NULL) {
+        dst_rect = ei_rect(*pos, img_rect->size);
+        // Crop the image in the clipper according to img_rect
+        intersection(&dst_rect, clipper, &dst_rect);
+    } else {
+        dst_rect = *clipper;
     }
 
-    for (uint32_t x = 0; x < img_size.width; x++) {
-        for (uint32_t y = 0; y < img_size.height; y++) {
-            if (clipper == NULL || (pos->x + x >= top_left_x &&
-                                    pos->x + x <= top_right_x &&
-                                    pos->y + y >= top_left_y &&
-                                    pos->y + y <= bottom_left_y)) {
-                buffer[pos->x + x + (pos->y + y) * size.width] = img_buffer[x + y * img_size.width];
-            }
-        }
-    }
+    ei_rect_t src_rect = ei_rect(ei_point_zero(), dst_rect.size);
+    ei_copy_surface(surface, &dst_rect, img, &src_rect, EI_TRUE);
 }

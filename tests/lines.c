@@ -191,13 +191,7 @@ void test_rounded_frame(ei_surface_t surface, ei_rect_t *clipper) {
     ei_draw_polygon(surface, pts, color, clipper);
     ei_draw_polyline(surface, pts, color2, clipper);
 }
-/*
-void test_draw_button(ei_surface_t surface, ei_rect_t* clipper, bool etat) {
-    ei_color_t color = {83, 200, 150, 255};
-    ei_rect_t rect = ei_rect(ei_point(100, 100), ei_size(200, 100));
-//    draw_button(surface, clipper, rect, color, 25, etat);
-}
- */
+
 
 /* test_rounded_frame --
  *
@@ -250,7 +244,7 @@ void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
 void test_draw_rect(ei_surface_t surface, ei_rect_t *clipper) {
     ei_color_t color = {83, 200, 150, 255};
     ei_rect_t rect = ei_rect(ei_point(100, 100), ei_size(200, 100));
-    rect_to_triangle(surface, rect, color, clipper, 0);
+    draw_rect_triangle(surface, rect, color, clipper, 0);
 }
 
 /*
@@ -284,19 +278,20 @@ int main(int argc, char **argv) {
     hw_surface_lock(main_window);
     ei_fill(main_window, &white, clipper_ptr);
 
-       /* Draw polylines. */
-//    test_line(main_window, clipper_ptr);
-//	test_octogone	(main_window, clipper_ptr);
-//    test_octogone(main_window, &clipper_test);
-//	test_square	(main_window, clipper_ptr);
-//	test_dot	(main_window, clipper_ptr);
-//  test_polygone(main_window, clipper_ptr);
-//    test_polygone(main_window, &clipper_test);
-//    test_random_polygon(main_window, 10, clipper_ptr);
+       /* Draw polylines and plygon. */
+//      test_line(main_window, clipper_ptr);
+//	    test_octogone	(main_window, clipper_ptr);
+//      test_octogone(main_window, &clipper_test);
+//	    test_square	(main_window, clipper_ptr);
+//	    test_dot	(main_window, clipper_ptr);
+//      test_polygone(main_window, clipper_ptr);
+//      test_polygone(main_window, &clipper_test);
+//      test_random_polygon(main_window, 10, clipper_ptr);
 
     /* Rounded polygon */
 //    test_rounded_frame(main_window, clipper_ptr);
-    // test button
+
+    /* test button */
     /*
     hw_surface_unlock(main_window);
     bool etat = true;
@@ -311,10 +306,13 @@ int main(int argc, char **argv) {
     hw_surface_unlock(main_window);
     hw_surface_update_rects(main_window, NULL);
      */
+
     /* Draw text. */
     //test_ei_draw_text(main_window, clipper_ptr);
+
     /* Draw rectangle */
-//    test_draw_rect(main_window, clipper_ptr);
+//      test_draw_rect(main_window, clipper_ptr);
+
     /* Unlock and update the surface. */
     hw_surface_unlock(main_window);
     hw_surface_update_rects(main_window, NULL);

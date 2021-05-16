@@ -22,6 +22,6 @@ void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_r
  */
 void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int direction);
 
-void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect_t *clipper);
+void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect_t *img_rect, ei_rect_t *clipper);
 
 #endif //PROJETC_IG_DRAW_H

@@ -134,14 +134,14 @@ ei_widget_t *widget_allocfunc() {
 ei_widget_t *button_allocfunc() {
     ei_widget_t *widget = (ei_button_t *) calloc(1, sizeof(ei_button_t));
     ei_button_t *button = (ei_button_t *) widget;
-    button->img_rect = calloc(1, sizeof(ei_rect_t *));
+    button->img_rect = calloc(1, sizeof(ei_rect_t*));
     return widget;
 }
 
 ei_widget_t *frame_allocfunc() {
     ei_widget_t *widget = (ei_frame_t *) calloc(1, sizeof(ei_frame_t));
     ei_frame_t *frame = (ei_frame_t *) widget;
-    frame->img_rect = calloc(1, sizeof(ei_rect_t *));
+    frame->img_rect = calloc(1, sizeof(ei_rect_t*));
     return widget;
 }
 
@@ -234,18 +234,18 @@ void button_drawfunc(ei_widget_t *widget,
         hw_text_compute_size(button->text, button->text_font, &width, &height);
         ei_point_t topleft = anchor_target_pos(button->text_anchor, ei_size(width, height), button_rect);
         ei_rect_t clipper_text;
-        //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
+        // We crop text in the button
         intersection(&button_rect, clipper, &clipper_text);
         ei_draw_text(surface, &topleft, button->text, button->text_font, button->text_color, &clipper_text);
     }
-    // Image eventually inside the frame
+    // Image eventually inside the button
     if (button->img != NULL) {
-        ei_size_t img_size = (button->img_rect != NULL) ? button->img_rect->size : hw_surface_get_size(button->img);
+        ei_size_t img_size = (button->img_rect != NULL) ? (*button->img_rect)->size : hw_surface_get_size(button->img);
         ei_point_t topleft = anchor_target_pos(button->text_anchor, img_size, button_rect);
-        ei_rect_t clipper_text;
-        //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
-        intersection(&button_rect, clipper, &clipper_text);
-        draw_image(surface, button->img, &topleft, &clipper_text);
+        ei_rect_t clipper_img;
+        // We crop image in the button
+        intersection(&button_rect, clipper, &clipper_img);
+        draw_image(surface, button->img, &topleft, *button->img_rect, &clipper_img);
     }
 }
 
@@ -290,12 +290,12 @@ void frame_drawfunc(ei_widget_t *widget,
     }
     // Image eventually inside the frame
     if (frame->img != NULL) {
-        ei_size_t img_size = (frame->img_rect != NULL) ? frame->img_rect->size : hw_surface_get_size(frame->img);
+        ei_size_t img_size = (*frame->img_rect != NULL) ? (*frame->img_rect)->size : hw_surface_get_size(frame->img);
         ei_point_t topleft = anchor_target_pos(frame->text_anchor, img_size, frame_rect);
-        ei_rect_t clipper_text;
+        ei_rect_t clipper_img;
         //in case the clipper is NULL, clipper_text must be button_rect to avoid having the text outside the button
-        intersection(&frame_rect, clipper, &clipper_text);
-        draw_image(surface, frame->img, &topleft, &clipper_text);
+        intersection(&frame_rect, clipper, &clipper_img);
+        draw_image(surface, frame->img, &topleft, *frame->img_rect, &clipper_img);
     }
 }
 

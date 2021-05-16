@@ -21,7 +21,7 @@ typedef struct ei_button_t {
     ei_color_t text_color;
     ei_anchor_t text_anchor;
     ei_surface_t img;
-    ei_rect_t *img_rect;
+    ei_rect_t **img_rect;
     ei_anchor_t img_anchor;
     ei_callback_t *callback;
 } ei_button_t;
@@ -37,7 +37,7 @@ typedef struct ei_frame_t {
     ei_color_t text_color;
     ei_anchor_t text_anchor;
     ei_surface_t img;
-    ei_rect_t *img_rect;
+    ei_rect_t **img_rect;
     ei_anchor_t img_anchor;
 } ei_frame_t;
 
