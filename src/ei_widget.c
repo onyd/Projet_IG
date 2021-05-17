@@ -20,10 +20,10 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
         new_widget->next_sibling = NULL;
         new_widget->placer_params = NULL;
         class->setdefaultsfunc(new_widget);
-        ei_rect_t screen_location = ei_rect(parent->screen_location.top_left, new_widget->requested_size);
-        intersection(&(parent->screen_location), &screen_location, &screen_location);
-        new_widget->screen_location = screen_location;
-        new_widget->content_rect = &screen_location;
+        //ei_rect_t screen_location = ei_rect(parent->screen_location.top_left, new_widget->requested_size);
+        //intersection(&(parent->screen_location), &screen_location, &screen_location);
+        //new_widget->screen_location = screen_location;
+        //new_widget->content_rect = &screen_location;
 
         if (parent->children_head == NULL) {
             parent->children_head = new_widget;
@@ -174,9 +174,7 @@ void ei_toplevel_configure(ei_widget_t *widget,
                            ei_size_t **min_size) {
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
-    ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
-    intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
-    widget->content_rect = &widget->screen_location;
+    ei_rect_t *rect = malloc(sizeof(ei_rect_t));
 
     toplevel->color = (color != NULL) ? *color : (toplevel->color);
     toplevel->border_width = (border_width != NULL) ? *border_width : toplevel->border_width;
@@ -186,6 +184,19 @@ void ei_toplevel_configure(ei_widget_t *widget,
         toplevel->title = calloc(strlen(*title) + 1, sizeof(char));
         strcpy(toplevel->title, *title);
     }
+    int width;
+    int height;
+    hw_text_compute_size(toplevel->title, ei_default_font, &width, &height);
+    *rect = ei_rect(ei_point(widget->parent->screen_location.top_left.x + toplevel->border_width,
+                             widget->parent->screen_location.top_left.y + toplevel->border_width + height), widget->requested_size);
+    ei_rect_t inside_toplevel_rect = *rect;
+    if (widget->content_rect != NULL) {
+        free(widget->content_rect);
+    }
+    widget->content_rect = rect;
+    widget->screen_location = ei_rect(widget->parent->screen_location.top_left,
+                                      ei_size(inside_toplevel_rect.size.width + 2*toplevel->border_width,
+                                              inside_toplevel_rect.size.height + 2*toplevel->border_width + height));
     toplevel->closable = (closable != NULL) ? *closable : toplevel->closable;
     toplevel->resizable = (resizable != NULL) ? *resizable : toplevel->resizable;
     if (min_size != NULL) {

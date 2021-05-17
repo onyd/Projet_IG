@@ -180,3 +180,18 @@ ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *resu
     }
     return true;
 }
+
+ei_bool_t inside(ei_point_t p, const ei_rect_t *r) {
+    if (r == NULL) {
+        return true;
+    }
+
+    if (p.x <= r->top_left.x &&
+        p.x >= r->top_left.x + r->size.width &&
+        p.y <= r->top_left.y &&
+        p.y >= r->top_left.y + r->size.height) {
+        return true;
+    }
+
+    return false;
+}

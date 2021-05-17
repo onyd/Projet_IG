@@ -1,6 +1,7 @@
 #include "widgets.h"
 #include "stdlib.h"
 #include "utils.h"
+#include "hw_interface.h"
 
 // Class declarations
 ei_widgetclass_t *frame_class;
@@ -135,14 +136,14 @@ ei_widget_t *widget_allocfunc() {
 ei_widget_t *button_allocfunc() {
     ei_widget_t *widget = (ei_button_t *) calloc(1, sizeof(ei_button_t));
     ei_button_t *button = (ei_button_t *) widget;
-    button->img_rect = calloc(1, sizeof(ei_rect_t*));
+    button->img_rect = calloc(1, sizeof(ei_rect_t *));
     return widget;
 }
 
 ei_widget_t *frame_allocfunc() {
     ei_widget_t *widget = (ei_frame_t *) calloc(1, sizeof(ei_frame_t));
     ei_frame_t *frame = (ei_frame_t *) widget;
-    frame->img_rect = calloc(1, sizeof(ei_rect_t*));
+    frame->img_rect = calloc(1, sizeof(ei_rect_t *));
     return widget;
 }
 
@@ -309,6 +310,18 @@ void toplevel_drawfunc(ei_widget_t *widget,
                        ei_surface_t surface,
                        ei_surface_t pick_surface,
                        ei_rect_t *clipper) {
+    ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
+    ei_rect_t inside_toplevel_rect = *widget->content_rect;
+    ei_rect_t toplevel_rect = widget->screen_location;
+    ei_color_t color = toplevel->color;
+    char *title = toplevel->title;
+
+    //Draw all the top level
+    draw_rectangle(surface, toplevel_rect, *default_color, clipper);
+
+    //Draw the toplevel without border and top bar
+    draw_rectangle(surface, inside_toplevel_rect, color, clipper);
+
 
 }
 
@@ -392,7 +405,16 @@ ei_bool_t widget_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 }
 
 ei_bool_t button_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
+    ei_button_t *button = (ei_button_t *) widget;
+    switch (event->type) {
 
+        case ei_ev_mouse_buttondown:
+            button->relief = ei_relief_sunken;
+            break;
+        case ei_ev_mouse_buttonup:
+            button->relief = ei_relief_raised;
+            break;
+    }
 }
 
 ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
