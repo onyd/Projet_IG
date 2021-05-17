@@ -72,6 +72,7 @@ extern ei_widgetclass_t *toplevel_class;
 // Default declaration
 extern ei_surface_t main_window;
 extern ei_frame_t *root;
+extern ei_surface_t *picking_offscreen;
 
 extern ei_size_t *toplevel_default_size;
 extern ei_size_t *toplevel_default_min_size;

@@ -52,7 +52,17 @@ void ei_widget_destroy(ei_widget_t *widget) {
 
 
 ei_widget_t *ei_widget_pick(ei_point_t *where) {
-    return NULL;
+    uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(picking_offscreen);
+    int width = hw_surface_get_size(picking_offscreen).width;
+    uint32_t current_pick_color = pixels[where->x + width*(where->y)];
+
+    ei_widget_list_t widgetList = {NULL, NULL, NULL};
+    widget_breadth_list(&(root->widget), &widgetList);
+    ei_linked_widget_t *current = widgetList.head;
+    while((ei_map_rgba(picking_offscreen, *(current->widget->pick_color)) != current_pick_color) && current->widget != NULL){
+        current = current->next;
+    }
+    return current->widget;
 }
 
 void ei_frame_configure(ei_widget_t *widget,

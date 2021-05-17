@@ -11,6 +11,7 @@ ei_widgetclass_t *toplevel_class;
 // Default declaration
 ei_surface_t main_window;
 ei_frame_t *root;
+ei_surface_t *picking_offscreen;
 
 ei_size_t *toplevel_default_size;
 ei_size_t *toplevel_default_min_size;
@@ -224,6 +225,10 @@ void button_drawfunc(ei_widget_t *widget,
     }
     ei_draw_polygon(surface, points_button, color, clipper);
 
+    ei_draw_polygon(pick_surface, points_button, *(widget->pick_color), clipper);
+    ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
+    ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
+
     free_rounded_frame(top);
     free_rounded_frame(bot);
     free_rounded_frame(points_button);
@@ -278,6 +283,7 @@ void frame_drawfunc(ei_widget_t *widget,
             draw_rectangle(surface, inside_frame, color, clipper);
         }
     }
+    draw_rectangle(pick_surface, frame_rect, *(widget->pick_color), clipper);
     // Text eventually inside the frame
     if (frame->text != NULL) {
         int width, height;
