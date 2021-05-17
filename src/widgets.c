@@ -1,6 +1,7 @@
 #include "widgets.h"
 #include "stdlib.h"
 #include "utils.h"
+#include "hw_interface.h"
 
 // Class declarations
 ei_widgetclass_t *frame_class;
@@ -303,6 +304,18 @@ void toplevel_drawfunc(ei_widget_t *widget,
                        ei_surface_t surface,
                        ei_surface_t pick_surface,
                        ei_rect_t *clipper) {
+    ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
+    ei_rect_t inside_toplevel_rect = *widget->content_rect;
+    ei_rect_t toplevel_rect = widget->screen_location;
+    ei_color_t color = toplevel->color;
+    char *title = toplevel->title;
+
+    //Draw all the top level
+    draw_rectangle(surface, toplevel_rect, *default_color, clipper);
+
+    //Draw the toplevel without border and top bar
+    draw_rectangle(surface, inside_toplevel_rect, color, clipper);
+
 
 }
 

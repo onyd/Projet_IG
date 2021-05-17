@@ -49,6 +49,6 @@ ei_widgetclass_t *ei_widgetclass_from_name(ei_widgetclass_name_t name) {
         return widget_class;
     }
     if (strcmp(name, "toplevel") == 0) {
-        return widget_class;
+        return toplevel_class;
     }
 }
