@@ -11,19 +11,8 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
 
         // Widget init
         new_widget->wclass = class;
-        new_widget->pick_id = 0;
-        new_widget->pick_color = NULL;
-        new_widget->user_data = NULL;
         new_widget->parent = parent;
-        new_widget->children_head = NULL;
-        new_widget->children_tail = NULL;
-        new_widget->next_sibling = NULL;
-        new_widget->placer_params = NULL;
         class->setdefaultsfunc(new_widget);
-        //ei_rect_t screen_location = ei_rect(parent->screen_location.top_left, new_widget->requested_size);
-        //intersection(&(parent->screen_location), &screen_location, &screen_location);
-        //new_widget->screen_location = screen_location;
-        //new_widget->content_rect = &screen_location;
 
         if (parent->children_head == NULL) {
             parent->children_head = new_widget;

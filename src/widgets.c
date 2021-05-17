@@ -151,7 +151,14 @@ ei_widget_t *toplevel_allocfunc() {
     ei_widget_t *widget = (ei_toplevel_t *) calloc(1, sizeof(ei_toplevel_t));
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     widget->content_rect = calloc(1, sizeof(ei_rect_t));
-    toplevel->button->widget.wclass->allocfunc();
+
+    // Button
+    ei_widgetclass_t *class = ei_widgetclass_from_name("button");
+    toplevel->button = class->allocfunc();
+
+    // Widget init
+    toplevel->button->widget.wclass = class;
+    toplevel->button->widget.parent = toplevel;
 
     return widget;
 }
@@ -183,13 +190,14 @@ void frame_releasefunc(ei_widget_t *widget) {
 
 void toplevel_releasefunc(ei_widget_t *widget) {
     ei_toplevel_t *to_release = (ei_toplevel_t *) widget;
+    to_release->button->widget.wclass->releasefunc(to_release->button);
+
     if (to_release->title != NULL) {
         free(to_release->title);
     }
     if (widget->content_rect != NULL) {
         free(widget->content_rect);
     }
-    to_release->button->widget.wclass->releasefunc(to_release->button);
 }
 
 /* drawfunc */
@@ -207,7 +215,8 @@ void button_drawfunc(ei_widget_t *widget,
     ei_color_t color = button->color;
     int radius = button->corner_radius;
     // If etat is true the button is up else he is down
-    ei_color_t darker = {0.1 * 255 + 0.9 * button->color.red, 0.1 * 255 + 0.9 * color.green, 0.1 * 255 + 0.9 * color.blue,
+    ei_color_t darker = {0.1 * 255 + 0.9 * button->color.red, 0.1 * 255 + 0.9 * color.green,
+                         0.1 * 255 + 0.9 * color.blue,
                          color.alpha};
     ei_color_t lighter = {0.9 * color.red, 0.9 * color.green, 0.9 * color.blue, color.alpha};
 
@@ -336,6 +345,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
         ei_point_t point_text = ei_point(widget->screen_location.top_left.x + 2 * toplevel->border_width + 20,
                                          widget->screen_location.top_left.y);
         ei_draw_text(surface, &point_text, title, ei_default_font, toplevel->color, &clipper_text);
+        toplevel->button->widget.wclass->drawfunc(toplevel->button, surface, pick_surface, clipper);
     }
 }
 
@@ -401,18 +411,18 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
     ei_size_t size = ei_size(20, 20);
     int corner_size = 10;
     ei_color_t color_button = {255, 0, 0, 255};
-    ei_button_configure(toplevel->button, &size, &color_button, &button_width,
+    ei_button_configure((ei_widget_t *) toplevel->button, &size, &color_button, &button_width,
                         &corner_size, NULL, NULL, NULL, NULL,
                         NULL, NULL, NULL, NULL, NULL, NULL);
-    ei_point_t point_button = ei_point(widget->content_rect->top_left.x + toplevel->border_width,
-                                       widget->content_rect->top_left.y + toplevel->border_width);
+    ei_point_t point_button = ei_point(widget->screen_location.top_left.x + toplevel->border_width,
+                                       widget->screen_location.top_left.y + toplevel->border_width);
     toplevel->button->widget.screen_location.top_left = point_button;
 }
 
 /* geomnotifyfunc */
 
 void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
-
+    widget->screen_location = rect;
 }
 
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
@@ -434,6 +444,8 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
                                                widget->content_rect->top_left.y - toplevel->border_width - height),
                                       ei_size(widget->content_rect->size.width + 2 * toplevel->border_width,
                                               widget->content_rect->size.height + 2 * toplevel->border_width + height));
+    toplevel->button->widget.screen_location.top_left.x = widget->screen_location.top_left.x + toplevel->border_width;
+    toplevel->button->widget.screen_location.top_left.y = widget->screen_location.top_left.y + toplevel->border_width;
 }
 
 /* handlefunc */
@@ -462,7 +474,8 @@ ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 }
 
 ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
-    return false;
+    ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
+    return toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
 }
 
 
