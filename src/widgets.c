@@ -209,8 +209,8 @@ void button_drawfunc(ei_widget_t *widget,
     ei_color_t lighter = {0.9 * color.red, 0.9 * color.green, 0.9 * color.blue, color.alpha};
 
     // The two part of the button
-    ei_linked_point_t *top = rounded_frame(button_rect, radius, 2, 1);
-    ei_linked_point_t *bot = rounded_frame(button_rect, radius, 2, 2);
+    ei_linked_point_t *top = rounded_frame(button_rect, radius, 15, 1);
+    ei_linked_point_t *bot = rounded_frame(button_rect, radius, 15, 2);
     // The button
     ei_rect_t inside_button;
     int border_size = button->border_width;
@@ -219,7 +219,7 @@ void button_drawfunc(ei_widget_t *widget,
     inside_button.size.width = button_rect.size.width - 2 * border_size;
     inside_button.size.height = button_rect.size.height - 2 * border_size;
     radius = radius - border_size;
-    ei_linked_point_t *points_button = rounded_frame(inside_button, radius, 10, 0);
+    ei_linked_point_t *points_button = rounded_frame(inside_button, radius, 15, 0);
 
     if (button->relief == ei_relief_raised) {
         ei_draw_polygon(surface, top, lighter, clipper);
@@ -330,12 +330,11 @@ void toplevel_drawfunc(ei_widget_t *widget,
     intersection(&toplevel_rect, clipper, &clipper_text);
     if (toplevel->closable == EI_FALSE) {
         ei_point_t point_text = ei_point(toplevel_rect.top_left.x + toplevel->border_width,
-                                         toplevel_rect.top_left.y + toplevel->border_width);
+                                         toplevel_rect.top_left.y);
         ei_draw_text(surface, &point_text, title, ei_default_font, toplevel->color, &clipper_text);
     }
     else {
         ei_widget_t *button_widget = ei_widget_create("button", widget, NULL, NULL);
-        ei_button_t *button = (ei_button_t *) button_widget;
         int button_width = 2;
         ei_size_t size = ei_size(20, 20);
         int corner_size = 10;
@@ -346,7 +345,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
         ei_point_t point_button = ei_point(toplevel_rect.top_left.x + toplevel->border_width,
                                          toplevel_rect.top_left.y + toplevel->border_width);
         ei_point_t point_text = ei_point(toplevel_rect.top_left.x + 2*toplevel->border_width + 20,
-                                           toplevel_rect.top_left.y + toplevel->border_width);
+                                           toplevel_rect.top_left.y);
         button_widget->screen_location.top_left = point_button;
         ei_draw_text(surface, &point_text, title, ei_default_font, toplevel->color, &clipper_text);
     }
