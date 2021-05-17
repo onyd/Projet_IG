@@ -314,8 +314,8 @@ int ei_copy_surface(ei_surface_t destination,
         int x2 = dst_first_x;
         while (x1 < src_first_x + src_size_x) {
             // Draw pixel in the buffer
-            if (!inside(ei_point(x1, y1), src_rect) &&
-                !inside(ei_point(x2, y2), dst_rect)) {
+            if (inside(ei_point(x1, y1), src_rect) &&
+                inside(ei_point(x2, y2), dst_rect)) {
                 if (!alpha) {
                     dst_pixels[x2 + dst_size.width * y2] = src_pixels[x1 + src_size.width * y1];
                     printf("%i, %i | %x\n", x1, y1, src_pixels[x1 + src_size.width * y1]);

@@ -182,10 +182,10 @@ ei_bool_t inside(ei_point_t p, const ei_rect_t *r) {
         return true;
     }
 
-    if (p.x <= r->top_left.x &&
-        p.x >= r->top_left.x + r->size.width &&
-        p.y <= r->top_left.y &&
-        p.y >= r->top_left.y + r->size.height) {
+    if (p.x >= r->top_left.x &&
+        p.x <= r->top_left.x + r->size.width &&
+        p.y >= r->top_left.y &&
+        p.y <= r->top_left.y + r->size.height) {
         return true;
     }
 

@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "utils.h"
 #include "hw_interface.h"
+#include "geometry.h"
 
 // Class declarations
 ei_widgetclass_t *frame_class;
@@ -454,18 +455,24 @@ ei_bool_t widget_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     return false;
 }
 
-ei_bool_t button_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
+ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
     ei_button_t *button = (ei_button_t *) widget;
     switch (event->type) {
 
         case ei_ev_mouse_buttondown:
-            button->relief = ei_relief_sunken;
-            return true;
+            printf("%i, %i\n", event->param.mouse.where.x, event->param.mouse.where.y);
+            if (inside(event->param.mouse.where, button->widget.content_rect)) {
+                button->relief = ei_relief_sunken;
+                if (button->callback != NULL){
+                    //(*button->callback)(widget, event, NULL);
+                }
+                return true;
+            }
+            break;
         case ei_ev_mouse_buttonup:
             button->relief = ei_relief_raised;
             return true;
     }
-
     return false;
 }
 

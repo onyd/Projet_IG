@@ -1,7 +1,7 @@
 #include "widgets.h"
 #include "ei_application.h"
 
-ei_default_handle_func_t *default_handle_func;
+ei_default_handle_func_t default_handle_func;
 ei_widget_t *active_widget;
 
 void event_propagation(ei_widget_t *widget, ei_event_t *event) {
@@ -26,4 +26,8 @@ void handle_event(ei_event_t *event) {
 
 void identity(ei_event_t *event) {
     return;
+}
+
+ei_bool_t always_true(ei_event_t *event) {
+    return true;
 }
