@@ -149,7 +149,10 @@ ei_widget_t *frame_allocfunc() {
 
 ei_widget_t *toplevel_allocfunc() {
     ei_widget_t *widget = (ei_toplevel_t *) calloc(1, sizeof(ei_toplevel_t));
+    ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     widget->content_rect = calloc(1, sizeof(ei_rect_t));
+    toplevel->button->widget.wclass->allocfunc();
+
     return widget;
 }
 
@@ -186,6 +189,7 @@ void toplevel_releasefunc(ei_widget_t *widget) {
     if (widget->content_rect != NULL) {
         free(widget->content_rect);
     }
+    to_release->button->widget.wclass->releasefunc(to_release->button);
 }
 
 /* drawfunc */
@@ -209,8 +213,8 @@ void button_drawfunc(ei_widget_t *widget,
     ei_color_t lighter = {0.9 * color.red, 0.9 * color.green, 0.9 * color.blue, color.alpha};
 
     // The two part of the button
-    ei_linked_point_t *top = rounded_frame(button_rect, radius, 2, 1);
-    ei_linked_point_t *bot = rounded_frame(button_rect, radius, 2, 2);
+    ei_linked_point_t *top = rounded_frame(button_rect, radius, 10, 1);
+    ei_linked_point_t *bot = rounded_frame(button_rect, radius, 10, 2);
     // The button
     ei_rect_t inside_button;
     int border_size = button->border_width;
@@ -367,7 +371,7 @@ void button_setdefaultsfunc(ei_widget_t *widget) {
                         NULL,
                         &ei_default_font,
                         default_text_color,
-                        NULL,
+                        default_anchor,
                         NULL,
                         NULL,
                         NULL,
