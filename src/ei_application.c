@@ -132,7 +132,7 @@ void ei_app_run(void) {
         free_linked_widget(children.head);
 
         hw_surface_unlock(main_window);
-        hw_surface_update_rects(main_window, NULL);
+        hw_surface_update_rects(main_window, rect_to_update);
 
         hw_event_wait_next(&event);
         //handle_event(&event);
