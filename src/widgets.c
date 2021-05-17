@@ -149,6 +149,7 @@ ei_widget_t *frame_allocfunc() {
 
 ei_widget_t *toplevel_allocfunc() {
     ei_widget_t *widget = (ei_toplevel_t *) calloc(1, sizeof(ei_toplevel_t));
+    widget->content_rect = calloc(1, sizeof(ei_rect_t));
     return widget;
 }
 
@@ -181,6 +182,9 @@ void toplevel_releasefunc(ei_widget_t *widget) {
     ei_toplevel_t *to_release = (ei_toplevel_t *) widget;
     if (to_release->title != NULL) {
         free(to_release->title);
+    }
+    if (widget->content_rect != NULL) {
+        free(widget->content_rect);
     }
 }
 
@@ -391,17 +395,26 @@ void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 }
 
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
-
+    widget->screen_location = rect;
 }
 
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+    *widget->content_rect = rect;
 
+    ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
+    int width, height;
+    hw_text_compute_size(toplevel->title, ei_default_font, &width, &height);
+
+    widget->screen_location = ei_rect(ei_point(widget->content_rect->top_left.x - toplevel->border_width,
+                                               widget->content_rect->top_left.y - toplevel->border_width - height),
+                                      ei_size(widget->content_rect->size.width + 2 * toplevel->border_width,
+                                              widget->content_rect->size.height + 2 * toplevel->border_width + height));
 }
 
 /* handlefunc */
 
 ei_bool_t widget_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
-
+    return false;
 }
 
 ei_bool_t button_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
@@ -410,19 +423,23 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 
         case ei_ev_mouse_buttondown:
             button->relief = ei_relief_sunken;
+            return true;
             break;
         case ei_ev_mouse_buttonup:
             button->relief = ei_relief_raised;
+            return true;
             break;
     }
+
+    return false;
 }
 
 ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
-
+    return false;
 }
 
 ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
-
+    return false;
 }
 
 

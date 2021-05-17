@@ -174,7 +174,6 @@ void ei_toplevel_configure(ei_widget_t *widget,
                            ei_size_t **min_size) {
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
-    ei_rect_t *rect = malloc(sizeof(ei_rect_t));
 
     toplevel->color = (color != NULL) ? *color : (toplevel->color);
     toplevel->border_width = (border_width != NULL) ? *border_width : toplevel->border_width;
@@ -184,19 +183,15 @@ void ei_toplevel_configure(ei_widget_t *widget,
         toplevel->title = calloc(strlen(*title) + 1, sizeof(char));
         strcpy(toplevel->title, *title);
     }
-    int width;
-    int height;
+
+    int width, height;
     hw_text_compute_size(toplevel->title, ei_default_font, &width, &height);
-    *rect = ei_rect(ei_point(widget->parent->screen_location.top_left.x + toplevel->border_width,
+    *widget->content_rect = ei_rect(ei_point(widget->parent->screen_location.top_left.x + toplevel->border_width,
                              widget->parent->screen_location.top_left.y + toplevel->border_width + height), widget->requested_size);
-    ei_rect_t inside_toplevel_rect = *rect;
-    if (widget->content_rect != NULL) {
-        free(widget->content_rect);
-    }
-    widget->content_rect = rect;
     widget->screen_location = ei_rect(widget->parent->screen_location.top_left,
-                                      ei_size(inside_toplevel_rect.size.width + 2*toplevel->border_width,
-                                              inside_toplevel_rect.size.height + 2*toplevel->border_width + height));
+                                      ei_size(widget->content_rect->size.width + 2*toplevel->border_width,
+                                              widget->content_rect->size.height + 2*toplevel->border_width + height));
+
     toplevel->closable = (closable != NULL) ? *closable : toplevel->closable;
     toplevel->resizable = (resizable != NULL) ? *resizable : toplevel->resizable;
     if (min_size != NULL) {
