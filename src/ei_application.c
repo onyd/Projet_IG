@@ -72,6 +72,9 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     } else {
         main_window = hw_create_window(ei_size(900, 700), EI_TRUE);
     }
+
+    // offscreen for picking
+    picking_offscreen = hw_surface_create(main_window, hw_surface_get_size(main_window), EI_FALSE);
 }
 
 void ei_app_free(void) {
@@ -116,11 +119,16 @@ void ei_app_run(void) {
         ei_widget_list_t children = {NULL, NULL, NULL};
         widget_breadth_list(root, &children);
         ei_linked_widget_t *current = children.head;
+        ei_linked_rect_t *rect_to_update;
+        rect_to_update->rect = *(current->widget->content_rect);
         while (current != NULL) {
+            rect_to_update = rect_to_update->next;
+            rect_to_update->rect = *(current->widget->content_rect);
             ei_placer_run(current->widget);
-            current->widget->wclass->drawfunc(current->widget, main_window, NULL, NULL);
+            current->widget->wclass->drawfunc(current->widget, main_window, picking_offscreen, NULL);
             current = current->next;
         }
+        rect_to_update->next = NULL;
         free_linked_widget(children.head);
         hw_surface_unlock(main_window);
         hw_surface_update_rects(main_window, NULL);
