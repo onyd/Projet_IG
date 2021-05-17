@@ -53,8 +53,8 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     toplevel_default_border_width = malloc(sizeof(ei_size_t));
     *toplevel_default_border_width = 4;
 
-    default_handle_func = malloc(sizeof(ei_default_handle_func_t));
-    *default_handle_func = &identity;
+    //default_handle_func = malloc(sizeof(ei_default_handle_func_t));
+    //*default_handle_func = &identity;
 
 
     // root init
@@ -130,11 +130,12 @@ void ei_app_run(void) {
         }
         rect_to_update->next = NULL;
         free_linked_widget(children.head);
+
         hw_surface_unlock(main_window);
         hw_surface_update_rects(main_window, NULL);
 
         hw_event_wait_next(&event);
-        handle_event(&event);
+        //handle_event(&event);
 
     }
 }

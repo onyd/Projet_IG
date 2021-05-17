@@ -1,5 +1,4 @@
 #include "draw.h"
-#include "stdlib.h"
 #include "ei_utils.h"
 #include "geometry.h"
 

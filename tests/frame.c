@@ -36,9 +36,9 @@ int main(int argc, char** argv)
     int		toplevel_y			= 150;
     ei_size_t	toplevel_size		= {500,400};
 	ei_widget_t *toplevel = ei_widget_create("toplevel", ei_app_root_widget(), NULL, NULL);
-    //ei_toplevel_configure(toplevel, &frame_size, NULL,
-    //                       NULL, NULL, NULL, NULL, NULL);
-    //ei_place(toplevel, NULL, &toplevel_x, &toplevel_y, NULL, NULL, NULL, NULL, NULL, NULL );
+    ei_toplevel_configure(toplevel, &frame_size, NULL,
+                           NULL, NULL, NULL, NULL, NULL);
+    ei_place(toplevel, NULL, &toplevel_x, &toplevel_y, NULL, NULL, NULL, NULL, NULL, NULL );
 
 	/* Create, configure and place the frame on screen. */
     // text on the frame
