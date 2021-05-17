@@ -150,11 +150,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
 
 
 void free_rounded_frame(ei_linked_point_t *points) {
-    while (points != NULL) {
-        ei_linked_point_t *tmp = points;
-        points = points->next;
-        free(tmp);
-    }
+    free(points);
 }
 
 ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {

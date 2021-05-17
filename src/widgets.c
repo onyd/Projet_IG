@@ -209,8 +209,8 @@ void button_drawfunc(ei_widget_t *widget,
     ei_color_t lighter = {0.9 * color.red, 0.9 * color.green, 0.9 * color.blue, color.alpha};
 
     // The two part of the button
-    ei_linked_point_t *top = rounded_frame(button_rect, radius, 10, 1);
-    ei_linked_point_t *bot = rounded_frame(button_rect, radius, 10, 2);
+    ei_linked_point_t *top = rounded_frame(button_rect, radius, 2, 1);
+    ei_linked_point_t *bot = rounded_frame(button_rect, radius, 2, 2);
     // The button
     ei_rect_t inside_button;
     int border_size = button->border_width;
@@ -230,9 +230,9 @@ void button_drawfunc(ei_widget_t *widget,
     }
     ei_draw_polygon(surface, points_button, color, clipper);
 
-    ei_draw_polygon(pick_surface, points_button, *(widget->pick_color), clipper);
-    ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
-    ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
+    //ei_draw_polygon(pick_surface, points_button, *(widget->pick_color), clipper);
+    //ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
+    //ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
 
     free_rounded_frame(top);
     free_rounded_frame(bot);
@@ -288,7 +288,7 @@ void frame_drawfunc(ei_widget_t *widget,
             draw_rectangle(surface, inside_frame, color, clipper);
         }
     }
-    draw_rectangle(pick_surface, frame_rect, *(widget->pick_color), clipper);
+    //draw_rectangle(pick_surface, frame_rect, *(widget->pick_color), clipper);
     // Text eventually inside the frame
     if (frame->text != NULL) {
         int width, height;
@@ -326,7 +326,30 @@ void toplevel_drawfunc(ei_widget_t *widget,
     //Draw the toplevel without border and top bar
     draw_rectangle(surface, inside_toplevel_rect, color, clipper);
 
-
+    ei_rect_t clipper_text;
+    intersection(&toplevel_rect, clipper, &clipper_text);
+    if (toplevel->closable == EI_FALSE) {
+        ei_point_t point_text = ei_point(toplevel_rect.top_left.x + toplevel->border_width,
+                                         toplevel_rect.top_left.y + toplevel->border_width);
+        ei_draw_text(surface, &point_text, title, ei_default_font, toplevel->color, &clipper_text);
+    }
+    else {
+        ei_widget_t *button_widget = ei_widget_create("button", widget, NULL, NULL);
+        ei_button_t *button = (ei_button_t *) button_widget;
+        int button_width = 2;
+        ei_size_t size = ei_size(20, 20);
+        int corner_size = 10;
+        ei_color_t color_button = {255, 0, 0, 255};
+        ei_button_configure(button_widget ,&size, &color_button, &button_width,
+                            &corner_size, NULL, NULL, NULL, NULL,
+                            NULL, NULL, NULL, NULL, NULL, NULL);
+        ei_point_t point_button = ei_point(toplevel_rect.top_left.x + toplevel->border_width,
+                                         toplevel_rect.top_left.y + toplevel->border_width);
+        ei_point_t point_text = ei_point(toplevel_rect.top_left.x + 2*toplevel->border_width + 20,
+                                           toplevel_rect.top_left.y + toplevel->border_width);
+        button_widget->screen_location.top_left = point_button;
+        ei_draw_text(surface, &point_text, title, ei_default_font, toplevel->color, &clipper_text);
+    }
 }
 
 /* setdefaultsfunc */
