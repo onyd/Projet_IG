@@ -5,6 +5,7 @@
 #include "ei_application.h"
 #include "stdlib.h"
 #include "widgets.h"
+#include "eventhandler.h"
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     hw_init();
@@ -51,6 +52,10 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
 
     toplevel_default_border_width = malloc(sizeof(ei_size_t));
     *toplevel_default_border_width = 4;
+
+    default_handle_func = malloc(sizeof(ei_default_handle_func_t));
+    *default_handle_func = &identity;
+
 
     // root init
     root = frame_allocfunc();
@@ -102,7 +107,7 @@ void ei_app_run(void) {
 
     event.type = ei_ev_none;
     while (quit_request == false) {
-        if (event.type == ei_ev_keydown){
+        if (event.type == ei_ev_keydown) {
             ei_app_quit_request();
         }
         // Draw
@@ -121,6 +126,7 @@ void ei_app_run(void) {
         hw_surface_update_rects(main_window, NULL);
 
         hw_event_wait_next(&event);
+        handle_event(&event);
 
     }
 }

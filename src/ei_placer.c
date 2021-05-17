@@ -55,45 +55,43 @@ void ei_placer_run(struct ei_widget_t *widget) {
     }
 
     int x = widget->parent->screen_location.top_left.x;
-    if (widget->placer_params->rx != NULL){
+    if (widget->placer_params->rx != NULL) {
         x += (widget->placer_params->rx_data) * (widget->parent->screen_location.size.width);
     }
-    if (widget->placer_params->x != NULL){
+    if (widget->placer_params->x != NULL) {
         x += (widget->placer_params->x_data);
     }
 
     int y = widget->parent->screen_location.top_left.y;
-    if (widget->placer_params->ry != NULL){
+    if (widget->placer_params->ry != NULL) {
         y += (widget->placer_params->ry_data) * (widget->parent->screen_location.size.width);
     }
-    if (widget->placer_params->y != NULL){
+    if (widget->placer_params->y != NULL) {
         y += (widget->placer_params->y_data);
     }
 
     int w;
-    if (widget->placer_params->rw == NULL && widget->placer_params->w == NULL){
-        w = widget->requested_size.width;
-    }
-    else{
+    if (widget->placer_params->rw == NULL && widget->placer_params->w == NULL) {
+        w = widget->screen_location.size.width;
+    } else {
         w = 0;
-        if (widget->placer_params->rw != NULL){
+        if (widget->placer_params->rw != NULL) {
             w += (widget->placer_params->rw_data) * (widget->parent->screen_location.size.width);
         }
-        if (widget->placer_params->w){
+        if (widget->placer_params->w) {
             w += (widget->placer_params->w_data);
         }
     }
 
     int h;
-    if (widget->placer_params->rh == NULL && widget->placer_params->h == NULL){
-        h = widget->requested_size.height;
-    }
-    else{
+    if (widget->placer_params->rh == NULL && widget->placer_params->h == NULL) {
+        h = widget->screen_location.size.height;
+    } else {
         h = 0;
-        if (widget->placer_params->rh != NULL){
+        if (widget->placer_params->rh != NULL) {
             h += (widget->placer_params->rh_data) * (widget->parent->screen_location.size.height);
         }
-        if (widget->placer_params->h){
+        if (widget->placer_params->h) {
             h += (widget->placer_params->h_data);
         }
     }
@@ -112,7 +110,7 @@ void ei_placer_forget(struct ei_widget_t *widget) {
     ei_widget_t *parent = widget->parent;
     ei_widget_t *current_child = parent->children_head;
     ei_widget_t *previous_child;
-    while (current_child != widget){
+    while (current_child != widget) {
         previous_child = current_child;
         current_child = current_child->next_sibling;
     }

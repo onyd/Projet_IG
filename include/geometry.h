@@ -20,4 +20,6 @@ void free_rounded_frame(ei_linked_point_t *points);
 
 ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result);
 
+ei_bool_t inside(ei_point_t p, const ei_rect_t *r);
+
 #endif //PROJETC_IG_GEOMETRY_H
