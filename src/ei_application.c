@@ -7,6 +7,7 @@
 #include "widgets.h"
 #include "eventhandler.h"
 #include "vector.h"
+#include "chainedlist.h"
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     hw_init();
@@ -87,13 +88,15 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
 }
 
 void ei_app_free(void) {
-    ei_widget_list_t to_delete = {NULL, NULL, NULL};
+    chained_list *to_delete = create_chained_list();
     widget_breadth_list(&(root->widget), &to_delete);
-    ei_linked_widget_t *current = to_delete.head;
+    struct chained_cell *current = to_delete->head;
     while (current != NULL) {
-        current->widget->wclass->releasefunc(current->widget);
+        ei_widget_t *widget = ((ei_widget_t *) current->val);
+        widget->wclass->releasefunc(widget);
         current = current->next;
     }
+    free_chained_list(to_delete);
     free_vector(&pick_vector);
     // Free classes
     free(frame_class);
