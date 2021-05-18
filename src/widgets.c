@@ -30,17 +30,13 @@ bool quit_request;
 ei_rect_t *clipping_window;
 
 void draw_window(ei_widget_t *current) {
-    if (current == NULL) {
-        return;
-    }
-    else {
+    if (current != NULL) {
         while(current != NULL) {
             ei_placer_run(current);
             current->wclass->drawfunc(current, main_window, picking_offscreen, clipping_window);
             draw_window(current->children_head);
             current = current->next_sibling;
         }
-        return;
     }
 }
 
