@@ -51,66 +51,75 @@ void ei_place(struct ei_widget_t *widget,
 }
 
 void ei_placer_run(ei_widget_t *widget) {
-    if (widget->placer_params == NULL) {
+    if (widget == NULL) {
         return;
     }
 
-    int x = widget->parent->content_rect->top_left.x;
-    if (widget->placer_params->rx != NULL) {
-        x += (widget->placer_params->rx_data) * (widget->parent->content_rect->size.width);
-    }
-    if (widget->placer_params->x != NULL) {
-        x += (widget->placer_params->x_data);
+    if (widget->placer_params != NULL) {
+        int x = widget->parent->content_rect->top_left.x;
+        if (widget->placer_params->rx != NULL) {
+            x += (widget->placer_params->rx_data) * (widget->parent->content_rect->size.width);
+        }
+        if (widget->placer_params->x != NULL) {
+            x += (widget->placer_params->x_data);
+        }
+
+        int y = widget->parent->content_rect->top_left.y;
+        if (widget->placer_params->ry != NULL) {
+            y += (widget->placer_params->ry_data) * (widget->parent->content_rect->size.width);
+        }
+        if (widget->placer_params->y != NULL) {
+            y += (widget->placer_params->y_data);
+        }
+
+        int w;
+        if (widget->placer_params->rw == NULL && widget->placer_params->w == NULL) {
+            w = widget->content_rect->size.width;
+        } else {
+            w = 0;
+            if (widget->placer_params->rw != NULL) {
+                w += (widget->placer_params->rw_data) * (widget->parent->content_rect->size.width);
+            }
+            if (widget->placer_params->w) {
+                w += (widget->placer_params->w_data);
+            }
+        }
+
+        int h;
+        if (widget->placer_params->rh == NULL && widget->placer_params->h == NULL) {
+            h = widget->content_rect->size.height;
+        } else {
+            h = 0;
+            if (widget->placer_params->rh != NULL) {
+                h += (widget->placer_params->rh_data) * (widget->parent->content_rect->size.height);
+            }
+            if (widget->placer_params->h) {
+                h += (widget->placer_params->h_data);
+            }
+        }
+
+        ei_point_t top_left_point = topleft(ei_point(x, y), widget->content_rect->size, widget->placer_params->anchor);
+        ei_rect_t rect = ei_rect(top_left_point, ei_size(w, h));
+        if ((rect.size.width == widget->content_rect->size.width) &&
+            (rect.size.height == widget->content_rect->size.height) &&
+            (rect.top_left.x == widget->content_rect->top_left.x) &&
+            (rect.top_left.y == widget->content_rect->top_left.y)) {
+            return;
+        }
+        widget->wclass->geomnotifyfunc(widget, rect);
+        append_cl(widget, &chainedList);
     }
 
-    int y = widget->parent->content_rect->top_left.y;
-    if (widget->placer_params->ry != NULL) {
-        y += (widget->placer_params->ry_data) * (widget->parent->content_rect->size.width);
+    while (widget != NULL) {
+        ei_placer_run(widget->children_head);
+        widget = widget->next_sibling;
     }
-    if (widget->placer_params->y != NULL) {
-        y += (widget->placer_params->y_data);
-    }
-
-    int w;
-    if (widget->placer_params->rw == NULL && widget->placer_params->w == NULL) {
-        w = widget->content_rect->size.width;
-    } else {
-        w = 0;
-        if (widget->placer_params->rw != NULL) {
-            w += (widget->placer_params->rw_data) * (widget->parent->content_rect->size.width);
-        }
-        if (widget->placer_params->w) {
-            w += (widget->placer_params->w_data);
-        }
-    }
-
-    int h;
-    if (widget->placer_params->rh == NULL && widget->placer_params->h == NULL) {
-        h = widget->content_rect->size.height;
-    } else {
-        h = 0;
-        if (widget->placer_params->rh != NULL) {
-            h += (widget->placer_params->rh_data) * (widget->parent->content_rect->size.height);
-        }
-        if (widget->placer_params->h) {
-            h += (widget->placer_params->h_data);
-        }
-    }
-
-    ei_point_t top_left_point = topleft(ei_point(x, y), widget->content_rect->size, widget->placer_params->anchor);
-    ei_rect_t rect = ei_rect(top_left_point, ei_size(w, h));
-    if ((rect.size.width == widget->content_rect->size.width) && (rect.size.height == widget->content_rect->size.height) &&
-        (rect.top_left.x == widget->content_rect->top_left.x) && (rect.top_left.y == widget->content_rect->top_left.y)){
-        return;
-    }
-    widget->wclass->geomnotifyfunc(widget, rect);
-    append_cl(widget, &chainedList);
 }
 
 void ei_placer_forget(ei_widget_t *widget) {
     free(widget->placer_params);
     widget->placer_params = NULL;
-    widget_compt = delete(&pick_vector, widget);
+    widget_counter = delete(&pick_vector, widget);
 
     ei_widget_t *parent = widget->parent;
     ei_widget_t *current_child = parent->children_head;

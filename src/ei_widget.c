@@ -23,33 +23,31 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
             parent->children_tail->next_sibling = new_widget;
             parent->children_tail = new_widget;
         }
-        new_widget->pick_id = widget_compt;
-        ei_color_t pick_color = ei_map_rgba_inverse(picking_offscreen, new_widget->pick_id);
+        new_widget->pick_id = widget_counter;
+        ei_color_t pick_color = ei_map_rgba_inverse(pick_surface, new_widget->pick_id);
         *(new_widget->pick_color) = pick_color;
         append(&pick_vector, new_widget);
-        widget_compt++;
+        widget_counter++;
         return new_widget;
     }
     return NULL;
 }
 
 void ei_widget_destroy(ei_widget_t *widget) {
-    chained_list *children = create_chained_list();
-    widget_breadth_list(widget, children);
-
-    ei_placer_forget(widget);
-    chained_cell *current = children->head;
-    while (current != children->tail) {
-        ei_widget_t *tmp = (ei_widget_t *) current->val;
-        current = current->next;
+    ei_widget_t *current = widget;
+    while (current != NULL) {
+        ei_placer_forget(current);
+        ei_widget_destroy(widget->children_head);
+        ei_widget_t *tmp = current;
+        current = current->next_sibling;
         tmp->wclass->releasefunc(tmp);
     }
 }
 
 
 ei_widget_t *ei_widget_pick(ei_point_t *where) {
-    uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(picking_offscreen);
-    int width = hw_surface_get_size(picking_offscreen).width;
+    uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(pick_surface);
+    int width = hw_surface_get_size(pick_surface).width;
     uint32_t current_pick_color = pixels[where->x + width * (where->y)];
 
     return get(&pick_vector, current_pick_color);

@@ -55,6 +55,7 @@ typedef struct ei_toplevel_t {
     ei_button_t *button;
     //previous active point for the event
     ei_point_t active;
+    ei_rect_t *minimize_square;
 } ei_toplevel_t;
 
 
@@ -67,8 +68,8 @@ extern ei_widgetclass_t *toplevel_class;
 // Default declaration
 extern ei_surface_t main_window;
 extern ei_frame_t *root;
-extern ei_surface_t picking_offscreen;
-extern uint32_t widget_compt;
+extern ei_surface_t pick_surface;
+extern uint32_t widget_counter;
 extern vector pick_vector;
 extern chained_list *chainedList;
 
@@ -87,8 +88,9 @@ extern ei_rect_t *clipping_window;
 
 ei_surface_t get_main_window();
 
-void draw_window(ei_widget_t *current);
+ei_surface_t get_pick_surface();
 
+void draw_window(ei_widget_t *root);
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.

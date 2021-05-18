@@ -4,6 +4,7 @@
 #include "hw_interface.h"
 #include "geometry.h"
 #include "eventhandler.h"
+#include "ei_application.h"
 
 // Class declarations
 ei_widgetclass_t *frame_class;
@@ -14,8 +15,8 @@ ei_widgetclass_t *toplevel_class;
 // Default declaration
 ei_surface_t main_window;
 ei_frame_t *root;
-ei_surface_t picking_offscreen;
-uint32_t widget_compt;
+ei_surface_t pick_surface;
+uint32_t widget_counter;
 vector pick_vector;
 chained_list *chainedList;
 
@@ -36,16 +37,14 @@ ei_surface_t get_main_window() {
     return main_window;
 }
 
-void draw_window(ei_widget_t *current) {
-    if (current != NULL) {
-        while(current != NULL) {
-            ei_placer_run(current);
-            current->wclass->drawfunc(current, main_window, picking_offscreen, clipping_window);
-            draw_window(current->children_head);
-            current = current->next_sibling;
-        }
-    }
+ei_surface_t get_pick_surface() {
+    return pick_surface;
 }
+
+void draw_window(ei_widget_t *root) {
+    root->wclass->drawfunc(root, get_main_window(), get_pick_surface(), root->content_rect);
+}
+
 
 /* allocfunc */
 ei_widget_t *widget_allocfunc() {
@@ -132,6 +131,10 @@ void button_drawfunc(ei_widget_t *widget,
                      ei_surface_t surface,
                      ei_surface_t pick_surface,
                      ei_rect_t *clipper) {
+    if (widget == NULL) {
+        return;
+    }
+
     ei_button_t *button = (ei_button_t *) widget;
     ei_color_t color = button->color;
     int radius = button->corner_radius;
@@ -190,12 +193,24 @@ void button_drawfunc(ei_widget_t *widget,
         intersection(&widget->screen_location, clipper, &clipper_img);
         draw_image(surface, button->img, &topleft, *button->img_rect, &clipper_img);
     }
+
+    // Recursively draw children
+    while (widget != NULL) {
+        if (widget->children_head != NULL)
+            widget->children_head->wclass->drawfunc(widget->children_head, get_main_window(), get_pick_surface(),
+                                                    widget->content_rect);
+        widget = widget->next_sibling;
+    }
 }
 
 void frame_drawfunc(ei_widget_t *widget,
                     ei_surface_t surface,
                     ei_surface_t pick_surface,
                     ei_rect_t *clipper) {
+    if (widget == NULL) {
+        return;
+    }
+
     ei_frame_t *frame = (ei_frame_t *) widget;
     ei_color_t color = frame->color;
     ei_color_t darker = {0.1 * 255 + 0.9 * color.red, 0.1 * 255 + 0.9 * color.green, 0.1 * 255 + 0.9 * color.blue,
@@ -235,12 +250,24 @@ void frame_drawfunc(ei_widget_t *widget,
         intersection(&widget->screen_location, clipper, &clipper_img);
         draw_image(surface, frame->img, &topleft, *frame->img_rect, &clipper_img);
     }
+
+    // Recursively draw children
+    while (widget != NULL) {
+        if (widget->children_head != NULL)
+            widget->children_head->wclass->drawfunc(widget->children_head, get_main_window(), get_pick_surface(),
+                                                    widget->content_rect);
+        widget = widget->next_sibling;
+    }
 }
 
 void toplevel_drawfunc(ei_widget_t *widget,
                        ei_surface_t surface,
                        ei_surface_t pick_surface,
                        ei_rect_t *clipper) {
+    if (widget == NULL) {
+        return;
+    }
+
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     ei_color_t color = toplevel->color;
     char *title = toplevel->title;
@@ -263,6 +290,18 @@ void toplevel_drawfunc(ei_widget_t *widget,
                                          widget->screen_location.top_left.y);
         ei_draw_text(surface, &point_text, title, ei_default_font, toplevel->color, &clipper_text);
         toplevel->button->widget.wclass->drawfunc(toplevel->button, surface, pick_surface, clipper);
+    }
+
+    // Recursively draw children
+    while (widget != NULL) {
+        if (widget->children_head != NULL)
+            widget->children_head->wclass->drawfunc(widget->children_head, get_main_window(), get_pick_surface(),
+                                                    widget->content_rect);
+        widget = widget->next_sibling;
+    }
+
+    if (toplevel->minimize_square != NULL) {
+        draw_rectangle(get_main_window(), *toplevel->minimize_square, *default_color, NULL);
     }
 }
 
@@ -338,11 +377,11 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
 
     // Picking
     toplevel->button->widget.pick_color = malloc(sizeof(ei_color_t));
-    toplevel->button->widget.pick_id = widget_compt;
-    ei_color_t pick_color = ei_map_rgba_inverse(picking_offscreen, toplevel->button->widget.pick_id);
+    toplevel->button->widget.pick_id = widget_counter;
+    ei_color_t pick_color = ei_map_rgba_inverse(pick_surface, toplevel->button->widget.pick_id);
     *(toplevel->button->widget.pick_color) = pick_color;
     append(&pick_vector, toplevel->button);
-    widget_compt++;
+    widget_counter++;
 }
 
 /* geomnotifyfunc */
@@ -420,14 +459,20 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                 return true;
             }
             //Draw the square to minimize the toplevel
-            ei_rect_t minimize_rect = ei_rect(ei_point(widget->screen_location.top_left.x+widget->screen_location.size.width-20,
-                                                       widget->screen_location.top_left.y+widget->screen_location.size.height-20),
-                                              ei_size(20, 20));
-            if (inside(event->param.mouse.where, &minimize_rect)) {
-                hw_surface_lock(main_window);
-                draw_rectangle(main_window, minimize_rect, *default_color, NULL);
-                hw_surface_unlock(main_window);
-                hw_surface_update_rects(main_window, NULL);
+            ei_rect_t minimize_rect = ei_rect(
+                    ei_point(widget->screen_location.top_left.x + widget->screen_location.size.width - 20,
+                             widget->screen_location.top_left.y + widget->screen_location.size.height - 20),
+                    ei_size(20, 20));
+            if (toplevel->minimize_square == NULL) {
+                if (inside(event->param.mouse.where, &minimize_rect)) {
+                    toplevel->minimize_square = malloc(sizeof(ei_rect_t));
+                    *(toplevel->minimize_square) = minimize_rect;
+                }
+            } else {
+                if (!inside(event->param.mouse.where, &minimize_rect)) {
+                    free(toplevel->minimize_square);
+                    toplevel->minimize_square = NULL;
+                }
             }
             break;
         case ei_ev_mouse_buttonup:

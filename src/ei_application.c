@@ -61,7 +61,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     default_handle_func = malloc(sizeof(ei_default_handle_func_t));
     default_handle_func = &always_true;
 
-    widget_compt = 0;
+    widget_counter = 0;
     create_vector(&pick_vector, 1);
 
     // root init
@@ -84,19 +84,17 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     }
 
     // offscreen for picking
-    picking_offscreen = hw_surface_create(main_window, hw_surface_get_size(main_window), EI_FALSE);
+    pick_surface = hw_surface_create(get_main_window(), hw_surface_get_size(main_window), EI_FALSE);
 }
 
 void ei_app_free(void) {
-    chained_list *to_delete = create_chained_list();
-    widget_breadth_list(&(root->widget), &to_delete);
-    struct chained_cell *current = to_delete->head;
+    // Clear all widgets
+    ei_widget_t *current = ei_app_root_widget()->children_head;
     while (current != NULL) {
-        ei_widget_t *widget = ((ei_widget_t *) current->val);
-        widget->wclass->releasefunc(widget);
-        current = current->next;
+        ei_widget_destroy(current);
+        current = current->next_sibling;
     }
-    free_chained_list(to_delete);
+
     free_vector(&pick_vector);
     // Free classes
     free(frame_class);
@@ -126,15 +124,25 @@ void ei_app_run(void) {
         if (event.type == ei_ev_keydown) {
             ei_app_quit_request();
         }
+        chained_list *chainedList = create_chained_list();
+
+        // Recursively place children of root widget
+        ei_widget_t *current = root->widget.children_head;
+        while (current != NULL) {
+            ei_placer_run(current);
+            current = current->next_sibling;
+        }
+
         // Draw
         hw_surface_lock(main_window);
-        chained_list *chainedList = create_chained_list();
         draw_window(root);
 
-        ei_linked_rect_t *rec_to_update = (ei_linked_rect_t*) (chainedList->head);
-        hw_surface_unlock(main_window);
-        hw_surface_update_rects(main_window, rec_to_update);
+        ei_linked_rect_t *rec_to_update = (ei_linked_rect_t *) (chainedList->head);
+        hw_surface_unlock(get_main_window());
+        hw_surface_update_rects(get_main_window(), rec_to_update);
         free_chained_list(chainedList);
+
+        // Event handling
         hw_event_wait_next(&event);
         handle_event(&event);
     }
@@ -153,7 +161,7 @@ ei_widget_t *ei_app_root_widget(void) {
 }
 
 ei_surface_t ei_app_root_surface(void) {
-    ei_surface_t surface = hw_surface_create(main_window, hw_surface_get_size(main_window), EI_FALSE);
+    ei_surface_t surface = hw_surface_create(get_main_window(), hw_surface_get_size(main_window), EI_FALSE);
     return surface;
 }
 
