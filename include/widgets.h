@@ -51,6 +51,8 @@ typedef struct ei_toplevel_t {
     ei_axis_set_t resizable;
     ei_size_t min_size;
     ei_button_t *button;
+    //previous active point for the event
+    ei_point_t active;
 } ei_toplevel_t;
 
 typedef struct ei_linked_widget_t {
