@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "stdlib.h"
+#include "widgets.h"
 
 int main() {
     struct table_cote_actif *tca = malloc(sizeof(struct table_cote_actif));

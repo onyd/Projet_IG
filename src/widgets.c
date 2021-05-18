@@ -32,9 +32,13 @@ bool quit_request;
 
 ei_rect_t *clipping_window;
 
+ei_surface_t get_main_window() {
+    return main_window;
+}
+
 void draw_window(ei_widget_t *current) {
     if (current != NULL) {
-        while (current != NULL) {
+        while(current != NULL) {
             ei_placer_run(current);
             current->wclass->drawfunc(current, main_window, picking_offscreen, clipping_window);
             draw_window(current->children_head);
@@ -42,8 +46,6 @@ void draw_window(ei_widget_t *current) {
         }
     }
 }
-
-
 
 /* allocfunc */
 ei_widget_t *widget_allocfunc() {
@@ -161,9 +163,9 @@ void button_drawfunc(ei_widget_t *widget,
     }
     ei_draw_polygon(surface, points_button, color, clipper);
 
-    //ei_draw_polygon(pick_surface, points_button, *(widget->pick_color), clipper);
-    //ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
-    //ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
+    ei_draw_polygon(pick_surface, points_button, *(widget->pick_color), clipper);
+    ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
+    ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
 
     free_rounded_frame(top);
     free_rounded_frame(bot);
@@ -248,6 +250,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
     draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper);
     //Draw the toplevel without border and top bar
     draw_rectangle(surface, *widget->content_rect, color, clipper);
+
 
     ei_rect_t clipper_text;
     intersection(&widget->screen_location, clipper, &clipper_text);
@@ -396,7 +399,7 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
     return false;
 }
 
-ei_bool_t frame_handlefunc(ei_widget_t *widget, ei_event_t *event) {
+ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     return false;
 }
 
@@ -416,12 +419,24 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                 toplevel->active = event->param.mouse.where;
                 return true;
             }
+            //Draw the square to minimize the toplevel
+            ei_rect_t minimize_rect = ei_rect(ei_point(widget->screen_location.top_left.x+widget->screen_location.size.width-20,
+                                                       widget->screen_location.top_left.y+widget->screen_location.size.height-20),
+                                              ei_size(20, 20));
+            if (inside(event->param.mouse.where, &minimize_rect)) {
+                hw_surface_lock(main_window);
+                draw_rectangle(main_window, minimize_rect, *default_color, NULL);
+                hw_surface_unlock(main_window);
+                hw_surface_update_rects(main_window, NULL);
+            }
             break;
         case ei_ev_mouse_buttonup:
             ei_event_set_active_widget(NULL);
             toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
             return true;
     }
+
+    return toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
 }
 
 

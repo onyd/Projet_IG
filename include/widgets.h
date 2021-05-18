@@ -85,6 +85,8 @@ extern bool quit_request;
 //Rectangle of the main window for the clipping
 extern ei_rect_t *clipping_window;
 
+ei_surface_t get_main_window();
+
 void draw_window(ei_widget_t *current);
 
 
