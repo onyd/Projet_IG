@@ -17,6 +17,7 @@ ei_frame_t *root;
 ei_surface_t picking_offscreen;
 uint32_t widget_compt;
 vector pick_vector;
+chained_list *chainedList;
 
 ei_size_t *toplevel_default_size;
 ei_size_t *toplevel_default_min_size;

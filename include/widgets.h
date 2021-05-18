@@ -8,6 +8,7 @@
 #include "ei_event.h"
 #include "draw.h"
 #include "vector.h"
+#include "chainedlist.h"
 
 
 typedef struct ei_button_t {
@@ -69,6 +70,7 @@ extern ei_frame_t *root;
 extern ei_surface_t picking_offscreen;
 extern uint32_t widget_compt;
 extern vector pick_vector;
+extern chained_list *chainedList;
 
 extern ei_size_t *toplevel_default_size;
 extern ei_size_t *toplevel_default_min_size;

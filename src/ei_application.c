@@ -128,18 +128,13 @@ void ei_app_run(void) {
         }
         // Draw
         hw_surface_lock(main_window);
-
+        chained_list *chainedList = create_chained_list();
         draw_window(root);
 
-        ei_widget_list_t children = {NULL, NULL, NULL};
-        widget_breadth_list(root, &children);
-        ei_linked_widget_t *current = children.head;
-
-        free_linked_widget(children.head);
-
+        ei_linked_rect_t *rec_to_update = (ei_linked_rect_t*) (chainedList->head);
         hw_surface_unlock(main_window);
-        hw_surface_update_rects(main_window, NULL);
-
+        hw_surface_update_rects(main_window, rec_to_update);
+        free_chained_list(chainedList);
         hw_event_wait_next(&event);
         handle_event(&event);
     }

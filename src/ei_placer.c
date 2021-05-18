@@ -104,6 +104,7 @@ void ei_placer_run(ei_widget_t *widget) {
         return;
     }
     widget->wclass->geomnotifyfunc(widget, rect);
+    append_cl(widget, &chainedList);
 }
 
 void ei_placer_forget(ei_widget_t *widget) {
