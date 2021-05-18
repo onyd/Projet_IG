@@ -305,7 +305,7 @@ void frame_drawfunc(ei_widget_t *widget,
         draw_rect_triangle(surface, widget->screen_location, darker, clipper, 1 - direction);
         draw_rectangle(surface, inside_frame, color, clipper);
     }
-    //draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper);
+    draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper);
     // Text eventually inside the frame
     if (frame->text != NULL) {
         int width, height;
@@ -337,7 +337,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
 
     //Draw all the top level
     draw_rectangle(surface, widget->screen_location, *default_color, clipper);
-
+    draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper);
     //Draw the toplevel without border and top bar
     draw_rectangle(surface, *widget->content_rect, color, clipper);
 
@@ -426,11 +426,11 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
     toplevel->button->widget.screen_location.top_left = point_button;
 
     // Picking
-    widget->pick_color = malloc(sizeof(ei_color_t));
-    widget->pick_id = widget_compt;
-    ei_color_t pick_color = ei_map_rgba_inverse(picking_offscreen, widget->pick_id);
-    *(widget->pick_color) = pick_color;
-    append(&pick_vector, widget);
+    toplevel->button->widget.pick_color = malloc(sizeof(ei_color_t));
+    toplevel->button->widget.pick_id = widget_compt;
+    ei_color_t pick_color = ei_map_rgba_inverse(picking_offscreen, toplevel->button->widget.pick_id);
+    *(toplevel->button->widget.pick_color) = pick_color;
+    append(&pick_vector, toplevel->button);
     widget_compt++;
 }
 
