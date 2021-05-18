@@ -74,6 +74,7 @@ extern ei_widgetclass_t *toplevel_class;
 extern ei_surface_t main_window;
 extern ei_frame_t *root;
 extern ei_surface_t picking_offscreen;
+extern uint32_t widget_compt;
 
 extern ei_size_t *toplevel_default_size;
 extern ei_size_t *toplevel_default_min_size;

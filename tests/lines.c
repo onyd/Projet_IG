@@ -9,6 +9,7 @@
 #include "geometry.h"
 #include <time.h>
 #include "draw.h"
+#include "utils.h"
 
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -277,7 +278,6 @@ int main(int argc, char **argv) {
     /* Lock the drawing surface, paint it white. */
     hw_surface_lock(main_window);
     ei_fill(main_window, &white, clipper_ptr);
-
        /* Draw polylines and plygon. */
 //      test_line(main_window, clipper_ptr);
 //	    test_octogone	(main_window, clipper_ptr);

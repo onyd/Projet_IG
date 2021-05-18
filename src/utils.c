@@ -253,3 +253,20 @@ ei_point_t anchor_target_pos(ei_anchor_t anchor, ei_size_t target_size, ei_rect_
     }
     return topleft;
 }
+
+ei_color_t ei_map_rgba_inverse(ei_surface_t surface, uint32_t color_id){
+    int ir, ig, ib, ia;
+    hw_surface_get_channel_indices(surface, &ir, &ig, &ib, &ia);
+    uint32_t r, g, b, a = 0;
+    ei_color_t color;
+    r = color_id & (255 << (8 * ir));
+    color.red = r >> (8 * ir);
+    g = color_id & (255 << (8 * ig));
+    color.green = g >> (8 * ig);
+    b = color_id & (255 << (8 * ib));
+    color.blue = b >> (8 * ib);
+    ia = 6 - ir - ig - ib;
+    a = color_id & (255 << (8 * ia));
+    color.alpha = a >> (8 * ia);
+    return color;
+}

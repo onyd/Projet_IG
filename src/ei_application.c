@@ -56,6 +56,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     default_handle_func = malloc(sizeof(ei_default_handle_func_t));
     default_handle_func = &always_true;
 
+    widget_compt = 0;
 
     // root init
     root = frame_allocfunc();

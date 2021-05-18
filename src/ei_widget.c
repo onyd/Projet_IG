@@ -21,6 +21,7 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
             parent->children_tail->next_sibling = new_widget;
             parent->children_tail = new_widget;
         }
+        widget_compt++;
         return new_widget;
     }
     return NULL;
