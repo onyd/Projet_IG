@@ -9,6 +9,10 @@ void create_vector(vector *a, size_t size) {
     a->size = size;
 }
 
+void *get(vector *v, size_t i) {
+    return v->data[i];
+}
+
 void append(vector *a, void *element) {
     // Not enough space, up-size the vector
     if (a->used == a->size) {
@@ -18,7 +22,7 @@ void append(vector *a, void *element) {
     a->data[a->used++] = element;
 }
 
-void delete(vector *a, void *element) {
+size_t delete(vector *a, void *element) {
     for (uint32_t i = 0; i < a->size; i++) {
         if (a->data[i] == element) {
             a->data[i] = NULL;
@@ -35,6 +39,7 @@ void delete(vector *a, void *element) {
         a->size /= 2;
         a->data = realloc(a->data, a->size * sizeof(void *));
     }
+    return a->used;
 }
 
 void free_vector(vector *a) {
@@ -47,4 +52,5 @@ void print_vector(vector *a) {
     for (uint32_t i = 0; i < a->size; i++) {
         printf("%p\n", a->data[i]);
     }
+    printf("\n");
 }
