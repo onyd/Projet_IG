@@ -128,21 +128,12 @@ void ei_app_run(void) {
 
         draw_window(root);
 
-        /*ei_widget_list_t children = {NULL, NULL, NULL};
+        ei_widget_list_t children = {NULL, NULL, NULL};
         widget_breadth_list(root, &children);
         ei_linked_widget_t *current = children.head;
-        //ei_linked_rect_t *rect_to_update;
-        //rect_to_update->rect = *(current->widget->content_rect);
-        while (current != NULL) {
-            //rect_to_update = rect_to_update->next;
-            //rect_to_update->rect = *(current->widget->content_rect);
-            ei_placer_run(current->widget);
-            current->widget->wclass->drawfunc(current->widget, main_window, picking_offscreen, clipping_window);
-            current = current->next;
-        }
-        //rect_to_update->next = NULL;
+
         free_linked_widget(children.head);
-        */
+
         hw_surface_unlock(main_window);
         hw_surface_update_rects(main_window, NULL);
 
