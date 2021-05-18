@@ -2,6 +2,7 @@
 #include "widgets.h"
 #include "string.h"
 #include "utils.h"
+#include "chainedlist.h"
 
 ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *parent, void *user_data,
                               ei_widget_destructor_t destructor) {
@@ -33,14 +34,13 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
 }
 
 void ei_widget_destroy(ei_widget_t *widget) {
-    ei_widget_list_t children = {NULL, NULL, NULL};
-    widget_breadth_list(widget, &children);
+    chained_list *children = create_chained_list();
+    widget_breadth_list(widget, children);
 
     ei_placer_forget(widget);
-    ei_linked_widget_t *current;
-    current = children.head;
-    while (current != children.tail) {
-        ei_widget_t *tmp = current->widget;
+    chained_cell *current = children->head;
+    while (current != children->tail) {
+        ei_widget_t *tmp = (ei_widget_t *) current->val;
         current = current->next;
         tmp->wclass->releasefunc(tmp);
     }
@@ -52,14 +52,7 @@ ei_widget_t *ei_widget_pick(ei_point_t *where) {
     int width = hw_surface_get_size(picking_offscreen).width;
     uint32_t current_pick_color = pixels[where->x + width * (where->y)];
 
-    ei_widget_list_t widgetList = {NULL, NULL, NULL};
-    widget_breadth_list(&(root->widget), &widgetList);
-    ei_linked_widget_t *current = widgetList.head;
-    while ((ei_map_rgba(picking_offscreen, *(current->widget->pick_color)) != current_pick_color) &&
-           current->widget != NULL) {
-        current = current->next;
-    }
-    return current->widget;
+
 }
 
 void ei_frame_configure(ei_widget_t *widget,

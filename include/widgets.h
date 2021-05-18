@@ -46,8 +46,8 @@ typedef struct ei_toplevel_t {
     ei_widget_t widget;
     //Specific field
     ei_color_t color;
-    int	border_width;
-    char* title;
+    int border_width;
+    char *title;
     ei_bool_t closable;
     ei_axis_set_t resizable;
     ei_size_t min_size;
@@ -56,16 +56,6 @@ typedef struct ei_toplevel_t {
     ei_point_t active;
 } ei_toplevel_t;
 
-typedef struct ei_linked_widget_t {
-    ei_widget_t *widget;
-    struct ei_linked_widget_t *next;
-} ei_linked_widget_t;
-
-typedef struct ei_widget_list_t {
-    ei_linked_widget_t *head;
-    ei_linked_widget_t *pre_tail;
-    ei_linked_widget_t *tail;
-} ei_widget_list_t;
 
 // Class declarations
 extern ei_widgetclass_t *frame_class;
@@ -95,15 +85,6 @@ extern ei_rect_t *clipping_window;
 
 void draw_window(ei_widget_t *current);
 
-void append_left(ei_widget_t *widget, ei_widget_list_t *l);
-
-void append_linked(ei_linked_widget_t *e, ei_widget_list_t *l);
-
-void move(ei_widget_list_t *src, ei_widget_list_t *dst);
-
-void free_linked_widget(ei_linked_widget_t *start);
-
-void widget_breadth_list(ei_widget_t *start, ei_widget_list_t *result);
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
@@ -203,9 +184,9 @@ void frame_drawfunc(ei_widget_t *widget,
  * @param	clipper		The clipper that restrain the drawing.
  */
 void toplevel_drawfunc(ei_widget_t *widget,
-                    ei_surface_t surface,
-                    ei_surface_t pick_surface,
-                    ei_rect_t *clipper);
+                       ei_surface_t surface,
+                       ei_surface_t pick_surface,
+                       ei_rect_t *clipper);
 
 /**
  * \brief	Allow to apply defaults values to a widget of type \ref ei_widget_t.

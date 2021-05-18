@@ -33,7 +33,7 @@ ei_rect_t *clipping_window;
 
 void draw_window(ei_widget_t *current) {
     if (current != NULL) {
-        while(current != NULL) {
+        while (current != NULL) {
             ei_placer_run(current);
             current->wclass->drawfunc(current, main_window, picking_offscreen, clipping_window);
             draw_window(current->children_head);
@@ -43,99 +43,6 @@ void draw_window(ei_widget_t *current) {
 }
 
 
-void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
-    ei_linked_widget_t *linked_widget = malloc(sizeof(ei_linked_widget_t));
-    linked_widget->widget = widget;
-    linked_widget->next = NULL;
-
-    // Empty
-    if (l->head == NULL) {
-        l->head = linked_widget;
-        l->tail = linked_widget;
-        return;
-    }
-
-    // 2 elements
-    if (l->pre_tail == NULL && l->head != l->tail) {
-        l->pre_tail = l->head;
-    }
-
-    linked_widget->next = l->head;
-    l->head = linked_widget;
-}
-
-
-void append_linked(ei_linked_widget_t *e, ei_widget_list_t *l) {
-    // Empty
-    if (l->head == NULL) {
-        l->head = e;
-        l->tail = e;
-        return;
-    }
-
-    // More than 1 element
-    if (l->tail != l->head) {
-        l->pre_tail = l->tail;
-    }
-
-    l->tail->next = e;
-    l->tail = e;
-}
-
-void move(ei_widget_list_t *src, ei_widget_list_t *dst) {
-    // Empty
-    if (src->head == NULL) {
-        return;
-    }
-    append_linked(src->tail, dst);
-    // 1 or 2 elements
-    if (src->pre_tail == NULL) {
-        // 1
-        if (src->tail == src->head) {
-            src->head = NULL;
-            src->tail = NULL;
-            return;
-        } else { // 2
-            src->tail = src->head;
-            src->tail->next = NULL;
-            return;
-        }
-    }
-    // More
-    src->tail = src->pre_tail;
-    src->tail->next = NULL;
-}
-
-void free_linked_widget(ei_linked_widget_t *start) {
-    ei_linked_widget_t *current = start;
-    while (current != NULL) {
-        ei_linked_widget_t *tmp = current;
-        current = current->next;
-        free(tmp);
-    }
-}
-
-void widget_breadth_list(ei_widget_t *start, ei_widget_list_t *result) {
-    ei_linked_widget_t *linked_start = malloc(sizeof(ei_linked_widget_t));
-    linked_start->widget = start;
-    linked_start->next = NULL;
-    ei_widget_list_t to_see = {linked_start, NULL, linked_start};
-
-    ei_linked_widget_t *current;
-    while (to_see.head != NULL) {
-        move(&to_see, result);
-
-        // Add children for next children stage
-        ei_widget_t *children = result->tail->widget->children_head;
-        if (children != NULL) {
-            while (children != NULL) {
-                append_left(children, &to_see);
-                children = children->next_sibling;
-            }
-        }
-    }
-    result->tail->next = NULL;
-}
 
 /* allocfunc */
 ei_widget_t *widget_allocfunc() {
@@ -253,9 +160,9 @@ void button_drawfunc(ei_widget_t *widget,
     }
     ei_draw_polygon(surface, points_button, color, clipper);
 
-    ei_draw_polygon(pick_surface, points_button, *(widget->pick_color), clipper);
-    ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
-    ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
+    //ei_draw_polygon(pick_surface, points_button, *(widget->pick_color), clipper);
+    //ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
+    //ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
 
     free_rounded_frame(top);
     free_rounded_frame(bot);
@@ -488,24 +395,32 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
     return false;
 }
 
-ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
+ei_bool_t frame_handlefunc(ei_widget_t *widget, ei_event_t *event) {
     return false;
 }
 
 ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
-    if (event->type == ei_ev_mouse_move && active_widget == widget) {
-        //ei_event_set_active_widget(NULL);
-        int topleft_x = event->param.mouse.where.x - (toplevel->active.x - widget->content_rect->top_left.x);
-        int topleft_y = event->param.mouse.where.y - (toplevel->active.y - widget->content_rect->top_left.y);
-        ei_place(toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
-                 NULL, NULL );
-        toplevel->active = event->param.mouse.where;
+    switch (event->type) {
+        case ei_ev_mouse_buttondown:
+            ei_event_set_active_widget(toplevel);
+            toplevel->active = event->param.mouse.where;
+            return true;
+        case ei_ev_mouse_move:
+            if (ei_event_get_active_widget() == widget) {
+                int topleft_x = widget->content_rect->top_left.x + (event->param.mouse.where.x - toplevel->active.x);
+                int topleft_y = widget->content_rect->top_left.y + (event->param.mouse.where.y - toplevel->active.y);
+                ei_place(toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
+                         NULL, NULL);
+                toplevel->active = event->param.mouse.where;
+                return true;
+            }
+            break;
+        case ei_ev_mouse_buttonup:
+            ei_event_set_active_widget(NULL);
+            toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
+            return true;
     }
-    if (event->type == ei_ev_mouse_buttonup) {
-        ei_event_set_active_widget(NULL);
-    }
-    return toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
 }
 
 

@@ -21,25 +21,18 @@ void event_propagation(ei_widget_t *widget, ei_event_t *event) {
 
 void handle_event(ei_event_t *event) {
     ei_widget_t *root = ei_app_root_widget();
-    if (event->type == ei_ev_mouse_buttondown && active_widget == NULL) {
-        //if it's the top bar of a toplevel, then it's active and wait for the mouse to move
-        /** Temporary **/
-        ei_event_set_active_widget(root->children_head);
-        ei_toplevel_t * active_toplevel = (ei_toplevel_t *) active_widget;
-        active_toplevel->active = event->param.mouse.where;
-    }
-    if (active_widget == NULL) {
+
+    if (active_widget != NULL) {
+        event_propagation(active_widget, event);
+    } else {
         event_propagation(root, event);
-    }
-    else {
-        active_widget->wclass->handlefunc(active_widget, event);
     }
 }
 
 
 void destroy_widget_callback(ei_widget_t *widget,
-                    struct ei_event_t *event,
-                    void *user_param) {
+                             struct ei_event_t *event,
+                             void *user_param) {
     ei_widget_destroy(widget);
 }
 
