@@ -86,6 +86,11 @@ extern ei_relief_t *default_relief;
 extern ei_anchor_t *default_anchor;
 extern bool quit_request;
 
+//Rectangle of the main window for the clipping
+extern ei_rect_t *clipping_window;
+
+void draw_window(ei_widget_t *current);
+
 void append_left(ei_widget_t *widget, ei_widget_list_t *l);
 
 void append(ei_widget_t *widget, ei_widget_list_t *l);

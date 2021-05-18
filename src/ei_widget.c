@@ -122,7 +122,7 @@ void ei_button_configure(ei_widget_t *widget,
     button->border_width = (border_width != NULL) ? *border_width : button->border_width;
     button->corner_radius = *corner_radius;
     button->relief = (relief != NULL) ? *relief : button->relief;
-    button->callback = (callback != NULL) ? callback : button->callback;
+    button->callback = (callback != NULL) ? *callback : button->callback;
     button->widget.user_data = (user_param != NULL) ? *user_param : button->widget.user_data;
 
     // Auto-size image

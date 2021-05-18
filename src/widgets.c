@@ -28,6 +28,19 @@ ei_anchor_t *default_anchor;
 
 bool quit_request;
 
+ei_rect_t *clipping_window;
+
+void draw_window(ei_widget_t *current) {
+    if (current != NULL) {
+        while(current != NULL) {
+            ei_placer_run(current);
+            current->wclass->drawfunc(current, main_window, picking_offscreen, clipping_window);
+            draw_window(current->children_head);
+            current = current->next_sibling;
+        }
+    }
+}
+
 
 void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
     ei_linked_widget_t *linked_widget = malloc(sizeof(ei_linked_widget_t));
@@ -409,10 +422,11 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
     int button_width = 2;
     ei_size_t size = ei_size(20, 20);
     int corner_size = 10;
-    ei_color_t color_button = {255, 0, 0, 255};
+    ei_color_t color_button = {200, 0, 0, 255};
+    ei_callback_t close_callback = destroy_widget_callback;
     ei_button_configure((ei_widget_t *) toplevel->button, &size, &color_button, &button_width,
                         &corner_size, NULL, NULL, NULL, NULL,
-                        NULL, NULL, NULL, NULL, &destroy_widget_callback, NULL);
+                        NULL, NULL, NULL, NULL, &close_callback, NULL);
     ei_point_t point_button = ei_point(widget->screen_location.top_left.x + toplevel->border_width,
                                        widget->screen_location.top_left.y + toplevel->border_width);
     toplevel->button->widget.screen_location.top_left = point_button;
@@ -459,14 +473,14 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
         case ei_ev_mouse_buttondown:
             if (inside(event->param.mouse.where, button->widget.content_rect)) {
                 button->relief = ei_relief_sunken;
-                if (button->callback != NULL) {
-                    button->callback(widget->parent, event, NULL);
-                }
                 return true;
             }
             break;
         case ei_ev_mouse_buttonup:
             button->relief = ei_relief_raised;
+            if (button->callback != NULL && inside(event->param.mouse.where, button->widget.content_rect)) {
+                button->callback(widget->parent, event, NULL);
+            }
             return true;
     }
     return false;

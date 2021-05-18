@@ -53,6 +53,9 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     toplevel_default_border_width = malloc(sizeof(ei_size_t));
     *toplevel_default_border_width = 4;
 
+    clipping_window = malloc(sizeof(ei_rect_t));
+    *clipping_window = ei_rect(ei_point(0, 0), main_window_size);
+
     default_handle_func = malloc(sizeof(ei_default_handle_func_t));
     default_handle_func = &always_true;
 
@@ -102,6 +105,7 @@ void ei_app_free(void) {
     free(toplevel_default_border_width);
     free(toplevel_default_min_size);
     free(toplevel_default_size);
+    free(clipping_window);
     //hw_text_font_free(ei_default_font); seems to be already freed by hw_quit()
     hw_quit();
 }
@@ -117,7 +121,9 @@ void ei_app_run(void) {
         // Draw
         hw_surface_lock(main_window);
 
-        ei_widget_list_t children = {NULL, NULL, NULL};
+        draw_window(root);
+
+        /*ei_widget_list_t children = {NULL, NULL, NULL};
         widget_breadth_list(root, &children);
         ei_linked_widget_t *current = children.head;
         //ei_linked_rect_t *rect_to_update;
@@ -126,12 +132,12 @@ void ei_app_run(void) {
             //rect_to_update = rect_to_update->next;
             //rect_to_update->rect = *(current->widget->content_rect);
             ei_placer_run(current->widget);
-            current->widget->wclass->drawfunc(current->widget, main_window, picking_offscreen, NULL);
+            current->widget->wclass->drawfunc(current->widget, main_window, picking_offscreen, clipping_window);
             current = current->next;
         }
         //rect_to_update->next = NULL;
         free_linked_widget(children.head);
-
+        */
         hw_surface_unlock(main_window);
         hw_surface_update_rects(main_window, NULL);
 
