@@ -117,7 +117,7 @@ void ei_placer_forget(ei_widget_t *widget) {
     if (previous_child != NULL) {
         previous_child->next_sibling = current_child->next_sibling;
         if (current_child == parent->children_tail) // Update tail
-            parent->children_tail = previous_child->next_sibling;
+            parent->children_tail = previous_child;
     } else { // head
         parent->children_head = NULL;
         if (current_child == parent->children_tail) // 1 child
