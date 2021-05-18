@@ -127,9 +127,7 @@ void ei_app_run(void) {
             ei_app_quit_request();
         }
         // Draw
-        hw_surface_lock(main_window);
 
-        draw_window(root);
 
         /*ei_widget_list_t children = {NULL, NULL, NULL};
         widget_breadth_list(root, &children);
@@ -146,10 +144,14 @@ void ei_app_run(void) {
         //rect_to_update->next = NULL;
         free_linked_widget(children.head);
         */
-        hw_surface_unlock(main_window);
-        hw_surface_update_rects(main_window, NULL);
+
 
         hw_event_wait_next(&event);
+        hw_surface_lock(main_window);
+
+        draw_window(root);
+        hw_surface_unlock(main_window);
+        hw_surface_update_rects(main_window, NULL);
         handle_event(&event);
     }
 }
