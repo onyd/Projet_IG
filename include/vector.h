@@ -10,6 +10,8 @@ typedef struct {
 
 void create_vector(vector *a, size_t size);
 
+void *get(vector *v, size_t i);
+
 void append(vector *a, void *element);
 
 void delete(vector *a, void *element);

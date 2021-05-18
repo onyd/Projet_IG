@@ -9,6 +9,10 @@ void create_vector(vector *a, size_t size) {
     a->size = size;
 }
 
+void *get(vector *v, size_t i) {
+    return v->data[i];
+}
+
 void append(vector *a, void *element) {
     // Not enough space, up-size the vector
     if (a->used == a->size) {
@@ -47,4 +51,5 @@ void print_vector(vector *a) {
     for (uint32_t i = 0; i < a->size; i++) {
         printf("%p\n", a->data[i]);
     }
+    printf("\n");
 }
