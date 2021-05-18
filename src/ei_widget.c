@@ -27,9 +27,10 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
 }
 
 void ei_widget_destroy(ei_widget_t *widget) {
-    ei_placer_forget(widget);
-    ei_widget_list_t children;
+    ei_widget_list_t children = {NULL, NULL, NULL};
     widget_breadth_list(widget, &children);
+
+    ei_placer_forget(widget);
     ei_linked_widget_t *current;
     current = children.head;
     while (current != children.tail) {
@@ -43,12 +44,13 @@ void ei_widget_destroy(ei_widget_t *widget) {
 ei_widget_t *ei_widget_pick(ei_point_t *where) {
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(picking_offscreen);
     int width = hw_surface_get_size(picking_offscreen).width;
-    uint32_t current_pick_color = pixels[where->x + width*(where->y)];
+    uint32_t current_pick_color = pixels[where->x + width * (where->y)];
 
     ei_widget_list_t widgetList = {NULL, NULL, NULL};
     widget_breadth_list(&(root->widget), &widgetList);
     ei_linked_widget_t *current = widgetList.head;
-    while((ei_map_rgba(picking_offscreen, *(current->widget->pick_color)) != current_pick_color) && current->widget != NULL){
+    while ((ei_map_rgba(picking_offscreen, *(current->widget->pick_color)) != current_pick_color) &&
+           current->widget != NULL) {
         current = current->next;
     }
     return current->widget;
@@ -119,7 +121,7 @@ void ei_button_configure(ei_widget_t *widget,
     button->border_width = (border_width != NULL) ? *border_width : button->border_width;
     button->corner_radius = *corner_radius;
     button->relief = (relief != NULL) ? *relief : button->relief;
-    button->callback = (callback != NULL) ? *callback : button->callback;
+    button->callback = (callback != NULL) ? callback : button->callback;
     button->widget.user_data = (user_param != NULL) ? *user_param : button->widget.user_data;
 
     // Auto-size image
@@ -176,10 +178,11 @@ void ei_toplevel_configure(ei_widget_t *widget,
     int width, height;
     hw_text_compute_size(toplevel->title, ei_default_font, &width, &height);
     *widget->content_rect = ei_rect(ei_point(widget->parent->screen_location.top_left.x + toplevel->border_width,
-                             widget->parent->screen_location.top_left.y + toplevel->border_width + height), widget->requested_size);
+                                             widget->parent->screen_location.top_left.y + toplevel->border_width +
+                                             height), widget->requested_size);
     widget->screen_location = ei_rect(widget->parent->screen_location.top_left,
-                                      ei_size(widget->content_rect->size.width + 2*toplevel->border_width,
-                                              widget->content_rect->size.height + 2*toplevel->border_width + height));
+                                      ei_size(widget->content_rect->size.width + 2 * toplevel->border_width,
+                                              widget->content_rect->size.height + 2 * toplevel->border_width + height));
 
     toplevel->closable = (closable != NULL) ? *closable : toplevel->closable;
     toplevel->resizable = (resizable != NULL) ? *resizable : toplevel->resizable;

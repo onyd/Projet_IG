@@ -10,8 +10,10 @@ void event_propagation(ei_widget_t *widget, ei_event_t *event);
 
 void handle_event(ei_event_t *event);
 
-void identity(ei_event_t *event);
-
 ei_bool_t always_true(ei_event_t *event);
+
+void destroy_widget_callback(ei_widget_t *widget,
+                    struct ei_event_t *event,
+                    void *user_param);
 
 #endif //PROJETC_IG_EVENTHANDLER_H

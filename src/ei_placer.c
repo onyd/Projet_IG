@@ -101,19 +101,28 @@ void ei_placer_run(ei_widget_t *widget) {
     widget->wclass->geomnotifyfunc(widget, rect);
 }
 
-void ei_placer_forget(struct ei_widget_t *widget) {
+void ei_placer_forget(ei_widget_t *widget) {
     free(widget->placer_params);
     widget->placer_params = NULL;
 
     ei_widget_t *parent = widget->parent;
     ei_widget_t *current_child = parent->children_head;
-    ei_widget_t *previous_child;
+    ei_widget_t *previous_child = NULL;
     while (current_child != widget) {
         previous_child = current_child;
         current_child = current_child->next_sibling;
     }
-    previous_child->next_sibling = current_child->next_sibling;
 
+    // Pop widget from its parent
+    if (previous_child != NULL) {
+        previous_child->next_sibling = current_child->next_sibling;
+        if (current_child == parent->children_tail) // Update tail
+            parent->children_tail = previous_child->next_sibling;
+    } else { // head
+        parent->children_head = NULL;
+        if (current_child == parent->children_tail) // 1 child
+            parent->children_tail = NULL;
+    }
     widget->parent = NULL;
 }
 

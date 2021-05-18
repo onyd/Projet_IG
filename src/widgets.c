@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "hw_interface.h"
 #include "geometry.h"
+#include "eventhandler.h"
 
 // Class declarations
 ei_widgetclass_t *frame_class;
@@ -138,6 +139,7 @@ ei_widget_t *button_allocfunc() {
     ei_widget_t *widget = (ei_button_t *) calloc(1, sizeof(ei_button_t));
     ei_button_t *button = (ei_button_t *) widget;
     button->img_rect = calloc(1, sizeof(ei_rect_t *));
+    button->callback = NULL;
     return widget;
 }
 
@@ -290,15 +292,10 @@ void frame_drawfunc(ei_widget_t *widget,
     if (frame->relief == ei_relief_none) {
         draw_rectangle(surface, widget->screen_location, color, clipper);
     } else {
-        if (frame->relief == ei_relief_raised) {
-            draw_rect_triangle(surface, widget->screen_location, lighter, clipper, 0);
-            draw_rect_triangle(surface, widget->screen_location, darker, clipper, 1);
-            draw_rectangle(surface, inside_frame, color, clipper);
-        } else {
-            draw_rect_triangle(surface, widget->screen_location, darker, clipper, 0);
-            draw_rect_triangle(surface, widget->screen_location, lighter, clipper, 1);
-            draw_rectangle(surface, inside_frame, color, clipper);
-        }
+        int direction = (frame->relief == ei_relief_raised) ? 0 : 1;
+        draw_rect_triangle(surface, widget->screen_location, lighter, clipper, direction);
+        draw_rect_triangle(surface, widget->screen_location, darker, clipper, 1 - direction);
+        draw_rectangle(surface, inside_frame, color, clipper);
     }
     //draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper);
     // Text eventually inside the frame
@@ -414,7 +411,7 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
     ei_color_t color_button = {255, 0, 0, 255};
     ei_button_configure((ei_widget_t *) toplevel->button, &size, &color_button, &button_width,
                         &corner_size, NULL, NULL, NULL, NULL,
-                        NULL, NULL, NULL, NULL, NULL, NULL);
+                        NULL, NULL, NULL, NULL, &destroy_widget_callback, NULL);
     ei_point_t point_button = ei_point(widget->screen_location.top_left.x + toplevel->border_width,
                                        widget->screen_location.top_left.y + toplevel->border_width);
     toplevel->button->widget.screen_location.top_left = point_button;
@@ -458,13 +455,11 @@ ei_bool_t widget_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
     ei_button_t *button = (ei_button_t *) widget;
     switch (event->type) {
-
         case ei_ev_mouse_buttondown:
-            printf("%i, %i\n", event->param.mouse.where.x, event->param.mouse.where.y);
             if (inside(event->param.mouse.where, button->widget.content_rect)) {
                 button->relief = ei_relief_sunken;
-                if (button->callback != NULL){
-                    //(*button->callback)(widget, event, NULL);
+                if (button->callback != NULL) {
+                    button->callback(widget->parent, event, NULL);
                 }
                 return true;
             }

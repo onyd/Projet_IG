@@ -24,8 +24,11 @@ void handle_event(ei_event_t *event) {
     event_propagation(root, event);
 }
 
-void identity(ei_event_t *event) {
-    return;
+
+void destroy_widget_callback(ei_widget_t *widget,
+                    struct ei_event_t *event,
+                    void *user_param) {
+    ei_widget_destroy(widget);
 }
 
 ei_bool_t always_true(ei_event_t *event) {
