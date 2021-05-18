@@ -492,15 +492,15 @@ ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     if (event->type == ei_ev_mouse_move && active_widget == widget) {
-
-    }
-    if (event->type == ei_ev_mouse_buttonup) {
-        ei_event_set_active_widget(NULL);
-        int topleft_x = event->param.mouse.where.x - (toplevel->active.x - widget->screen_location.top_left.x);
-        int topleft_y = event->param.mouse.where.y - (toplevel->active.y - widget->screen_location.top_left.y);
+        //ei_event_set_active_widget(NULL);
+        int topleft_x = event->param.mouse.where.x - (toplevel->active.x - widget->content_rect->top_left.x);
+        int topleft_y = event->param.mouse.where.y - (toplevel->active.y - widget->content_rect->top_left.y);
         ei_place(toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
                  NULL, NULL );
         toplevel->active = event->param.mouse.where;
+    }
+    if (event->type == ei_ev_mouse_buttonup) {
+        ei_event_set_active_widget(NULL);
     }
     return toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
 }

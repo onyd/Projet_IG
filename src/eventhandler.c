@@ -21,7 +21,7 @@ void event_propagation(ei_widget_t *widget, ei_event_t *event) {
 
 void handle_event(ei_event_t *event) {
     ei_widget_t *root = ei_app_root_widget();
-    if (event->type == ei_ev_mouse_buttondown) {
+    if (event->type == ei_ev_mouse_buttondown && active_widget == NULL) {
         //if it's the top bar of a toplevel, then it's active and wait for the mouse to move
         /** Temporary **/
         ei_event_set_active_widget(root->children_head);
