@@ -22,7 +22,7 @@ void append(vector *a, void *element) {
     a->data[a->used++] = element;
 }
 
-void delete(vector *a, void *element) {
+size_t delete(vector *a, void *element) {
     for (uint32_t i = 0; i < a->size; i++) {
         if (a->data[i] == element) {
             a->data[i] = NULL;
@@ -39,6 +39,7 @@ void delete(vector *a, void *element) {
         a->size /= 2;
         a->data = realloc(a->data, a->size * sizeof(void *));
     }
+    return a->used;
 }
 
 void free_vector(vector *a) {

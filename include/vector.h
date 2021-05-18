@@ -14,7 +14,7 @@ void *get(vector *v, size_t i);
 
 void append(vector *a, void *element);
 
-void delete(vector *a, void *element);
+size_t delete(vector *a, void *element);
 
 void free_vector(vector *a);
 
