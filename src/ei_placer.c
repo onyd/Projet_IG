@@ -40,7 +40,7 @@ void ei_place(struct ei_widget_t *widget,
     params->h_data = used_height;
     params->anchor_data = (anchor != NULL) ? *anchor : params->anchor_data;
     params->x_data = (x != NULL) ? *x : params->x_data;
-    params->y_data = (y != NULL) ? *y : params->x_data;
+    params->y_data = (y != NULL) ? *y : params->y_data;
     params->w_data = (width != NULL) ? *x : params->w_data;
     params->h_data = (height != NULL) ? *x : params->h_data;
     params->rx_data = (rel_x != NULL) ? *rel_x : params->rx_data;

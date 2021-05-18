@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     ei_toplevel_configure(toplevel, &frame_size, NULL,
                            NULL, NULL, NULL, NULL, NULL);
     ei_place(toplevel, NULL, &toplevel_x, &toplevel_y, NULL, NULL, NULL, NULL, NULL, NULL );
-
+    ei_place(toplevel, NULL, &toplevel_x, &toplevel_y, NULL, NULL, NULL, NULL, NULL, NULL );
 	/* Create, configure and place the frame on screen. */
     // text on the frame
 	char *text2 = "Toto";
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 	ei_frame_configure	(frame, &frame_size, &frame_color,
 				 &frame_border_width, &frame_relief, &text2, NULL, NULL, &text_anchor2,
 				 NULL, NULL, NULL);
-	ei_place(frame, NULL, &frame_x, &frame_y, NULL, NULL, NULL, NULL, NULL, NULL );
+	ei_place(frame, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
 	/* Run the application's main loop. */
 	ei_app_run();
 

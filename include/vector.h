@@ -1,6 +1,8 @@
 #ifndef PROJETC_IG_VECTOR_H
 #define PROJETC_IG_VECTOR_H
 
+#include "stddef.h"
+
 typedef struct {
     void **data;
     size_t used;
