@@ -3,6 +3,8 @@
 #include "utils.h"
 #include "ei_widget.h"
 #include "stdlib.h"
+#include "vector.h"
+#include "widgets.h"
 
 void ei_place(struct ei_widget_t *widget,
               ei_anchor_t *anchor,
@@ -104,6 +106,7 @@ void ei_placer_run(ei_widget_t *widget) {
 void ei_placer_forget(ei_widget_t *widget) {
     free(widget->placer_params);
     widget->placer_params = NULL;
+    widget_compt = delete(&pick_vector, widget);
 
     ei_widget_t *parent = widget->parent;
     ei_widget_t *current_child = parent->children_head;

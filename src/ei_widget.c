@@ -1,6 +1,7 @@
 #include "ei_widget.h"
 #include "widgets.h"
 #include "string.h"
+#include "utils.h"
 
 ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *parent, void *user_data,
                               ei_widget_destructor_t destructor) {
@@ -8,7 +9,7 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
         || strcmp(class_name, "toplevel") == 0) {
         ei_widgetclass_t *class = ei_widgetclass_from_name(class_name);
         ei_widget_t *new_widget = class->allocfunc();
-
+        new_widget->pick_color = malloc(sizeof(ei_color_t));
         // Widget init
         new_widget->wclass = class;
         new_widget->parent = parent;
@@ -21,6 +22,10 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
             parent->children_tail->next_sibling = new_widget;
             parent->children_tail = new_widget;
         }
+        new_widget->pick_id = widget_compt;
+        ei_color_t pick_color = ei_map_rgba_inverse(picking_offscreen, new_widget->pick_id);
+        *(new_widget->pick_color) = pick_color;
+        append(&pick_vector, new_widget);
         widget_compt++;
         return new_widget;
     }

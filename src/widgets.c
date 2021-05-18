@@ -16,6 +16,7 @@ ei_surface_t main_window;
 ei_frame_t *root;
 ei_surface_t picking_offscreen;
 uint32_t widget_compt;
+vector pick_vector;
 
 ei_size_t *toplevel_default_size;
 ei_size_t *toplevel_default_min_size;
@@ -63,13 +64,6 @@ void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
     l->head = linked_widget;
 }
 
-void append(ei_widget_t *widget, ei_widget_list_t *l) {
-    ei_linked_widget_t *linked_widget = malloc(sizeof(ei_linked_widget_t));
-    linked_widget->widget = widget;
-    linked_widget->next = NULL;
-
-    append_linked(linked_widget, l);
-}
 
 void append_linked(ei_linked_widget_t *e, ei_widget_list_t *l) {
     // Empty
@@ -430,6 +424,14 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
     ei_point_t point_button = ei_point(widget->screen_location.top_left.x + toplevel->border_width,
                                        widget->screen_location.top_left.y + toplevel->border_width);
     toplevel->button->widget.screen_location.top_left = point_button;
+
+    // Picking
+    widget->pick_color = malloc(sizeof(ei_color_t));
+    widget->pick_id = widget_compt;
+    ei_color_t pick_color = ei_map_rgba_inverse(picking_offscreen, widget->pick_id);
+    *(widget->pick_color) = pick_color;
+    append(&pick_vector, widget);
+    widget_compt++;
 }
 
 /* geomnotifyfunc */

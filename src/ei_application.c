@@ -6,6 +6,7 @@
 #include "stdlib.h"
 #include "widgets.h"
 #include "eventhandler.h"
+#include "vector.h"
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     hw_init();
@@ -60,6 +61,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     default_handle_func = &always_true;
 
     widget_compt = 0;
+    create_vector(&pick_vector, 1);
 
     // root init
     root = frame_allocfunc();
@@ -70,6 +72,9 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     *root_rect = ei_rect(ei_point(0, 0), main_window_size);
     root->widget.screen_location = *root_rect;
     root->widget.content_rect = root_rect;
+    root->widget.pick_id = 0;
+    root->widget.pick_color = malloc(sizeof(ei_color_t));
+    *(root->widget.pick_color) = (ei_color_t) {0, 0, 0, 0};
 
     if (fullscreen == false) {
         main_window = hw_create_window(main_window_size, EI_FALSE);
@@ -89,7 +94,7 @@ void ei_app_free(void) {
         current->widget->wclass->releasefunc(current->widget);
         current = current->next;
     }
-
+    free_vector(&pick_vector);
     // Free classes
     free(frame_class);
     free(button_class);

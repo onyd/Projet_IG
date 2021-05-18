@@ -7,6 +7,7 @@
 #include "ei_types.h"
 #include "ei_event.h"
 #include "draw.h"
+#include "vector.h"
 
 
 typedef struct ei_button_t {
@@ -75,6 +76,7 @@ extern ei_surface_t main_window;
 extern ei_frame_t *root;
 extern ei_surface_t picking_offscreen;
 extern uint32_t widget_compt;
+extern vector pick_vector;
 
 extern ei_size_t *toplevel_default_size;
 extern ei_size_t *toplevel_default_min_size;
@@ -92,8 +94,6 @@ extern ei_rect_t *clipping_window;
 void draw_window(ei_widget_t *current);
 
 void append_left(ei_widget_t *widget, ei_widget_list_t *l);
-
-void append(ei_widget_t *widget, ei_widget_list_t *l);
 
 void append_linked(ei_linked_widget_t *e, ei_widget_list_t *l);
 
