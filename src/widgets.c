@@ -27,6 +27,19 @@ ei_anchor_t *default_anchor;
 
 bool quit_request;
 
+ei_rect_t *clipping_window;
+
+void draw_window(ei_widget_t *current) {
+    if (current != NULL) {
+        while(current != NULL) {
+            ei_placer_run(current);
+            current->wclass->drawfunc(current, main_window, picking_offscreen, clipping_window);
+            draw_window(current->children_head);
+            current = current->next_sibling;
+        }
+    }
+}
+
 
 void append_left(ei_widget_t *widget, ei_widget_list_t *l) {
     ei_linked_widget_t *linked_widget = malloc(sizeof(ei_linked_widget_t));
