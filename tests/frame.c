@@ -46,14 +46,15 @@ int main(int argc, char** argv)
     // text on the frame
 	char *text2 = "Toto";
     ei_anchor_t text_anchor2 = ei_anc_center;
-
 	frame = ei_widget_create("frame", toplevel, NULL, NULL);
 	ei_frame_configure	(frame, &frame_size, &frame_color,
 				 &frame_border_width, &frame_relief, &text2, NULL, NULL, &text_anchor2,
 				 NULL, NULL, NULL);
 	float relative = 0;
 	float rel_size = 1;
+	ei_anchor_t anchor = ei_anc_northwest;
 	ei_place(frame, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &rel_size, &rel_size);
+
 	/* Run the application's main loop. */
 	ei_app_run();
 
