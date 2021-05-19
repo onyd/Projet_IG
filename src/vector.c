@@ -3,54 +3,57 @@
 #include "stdlib.h"
 #include "stdio.h"
 
-void create_vector(vector *a, size_t size) {
-    a->data = calloc(size, sizeof(void *));
-    a->used = 0;
-    a->size = size;
+vector *create_vector(size_t size) {
+    vector *v = calloc(1, sizeof (vector));
+    v->data = calloc(size, sizeof(void *));
+    v->used = 0;
+    v->size = size;
+    return v;
 }
 
 void *get(vector *v, size_t i) {
     return v->data[i];
 }
 
-void append(vector *a, void *element) {
+void append_vector(vector *v, void *element) {
     // Not enough space, up-size the vector
-    if (a->used == a->size) {
-        a->size *= 2;
-        a->data = realloc(a->data, a->size * sizeof(void *));
+    if (v->used == v->size) {
+        v->size *= 2;
+        v->data = realloc(v->data, v->size * sizeof(void *));
     }
-    a->data[a->used++] = element;
+    v->data[v->used++] = element;
 }
 
-size_t delete(vector *a, void *element) {
-    for (uint32_t i = 0; i < a->size; i++) {
-        if (a->data[i] == element) {
-            a->data[i] = NULL;
+size_t remove_vector(vector *v, void *element) {
+    for (uint32_t i = 0; i < v->size; i++) {
+        if (v->data[i] == element) {
+            v->data[i] = NULL;
             // Last element removed => reduce used partition
-            if (a->used == a->size - 1) {
-                a->used--;
+            if (v->used == v->size - 1) {
+                v->used--;
             }
             break;
         }
     }
 
     // Too much space, down-size the vector
-    if (a->used < a->size / 2) {
-        a->size /= 2;
-        a->data = realloc(a->data, a->size * sizeof(void *));
+    if (v->used < v->size / 2) {
+        v->size /= 2;
+        v->data = realloc(v->data, v->size * sizeof(void *));
     }
-    return a->used;
+    return v->used;
 }
 
-void free_vector(vector *a) {
-    free(a->data);
-    a->data = NULL;
-    a->used = a->size = 0;
+void free_vector(vector *v) {
+    free(v->data);
+    v->data = NULL;
+    v->used = v->size = 0;
+    free(v);
 }
 
-void print_vector(vector *a) {
-    for (uint32_t i = 0; i < a->size; i++) {
-        printf("%p\n", a->data[i]);
+void print_vector(vector *v) {
+    for (uint32_t i = 0; i < v->size; i++) {
+        printf("%p\n", v->data[i]);
     }
     printf("\n");
 }

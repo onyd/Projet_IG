@@ -100,14 +100,21 @@ void ei_placer_run(ei_widget_t *widget) {
 
         ei_point_t top_left_point = topleft(ei_point(x, y), widget->content_rect->size, widget->placer_params->anchor);
         ei_rect_t rect = ei_rect(top_left_point, ei_size(w, h));
-        if ((rect.size.width == widget->content_rect->size.width) &&
-            (rect.size.height == widget->content_rect->size.height) &&
-            (rect.top_left.x == widget->content_rect->top_left.x) &&
-            (rect.top_left.y == widget->content_rect->top_left.y)) {
-            return;
+        if (!((rect.size.width == widget->content_rect->size.width) &&
+              (rect.size.height == widget->content_rect->size.height) &&
+              (rect.top_left.x == widget->content_rect->top_left.x) &&
+              (rect.top_left.y == widget->content_rect->top_left.y))) {
+            widget->wclass->geomnotifyfunc(widget, rect);
+
+            // Update
+            ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
+            if (updated_rects == NULL) {
+                updated_rects = new;
+            } else {
+                new->next = updated_rects;
+                updated_rects = new;
+            }
         }
-        widget->wclass->geomnotifyfunc(widget, rect);
-        append_cl(widget, &chainedList);
     }
 
     while (widget != NULL) {
@@ -119,7 +126,7 @@ void ei_placer_run(ei_widget_t *widget) {
 void ei_placer_forget(ei_widget_t *widget) {
     free(widget->placer_params);
     widget->placer_params = NULL;
-    widget_counter = delete(&pick_vector, widget);
+    widget_counter = remove_vector(pick_vector, widget);
 
     ei_widget_t *parent = widget->parent;
     ei_widget_t *current_child = parent->children_head;

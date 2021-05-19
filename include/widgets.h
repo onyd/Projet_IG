@@ -70,8 +70,8 @@ extern ei_surface_t main_window;
 extern ei_frame_t *root;
 extern ei_surface_t pick_surface;
 extern uint32_t widget_counter;
-extern vector pick_vector;
-extern chained_list *chainedList;
+extern vector *pick_vector;
+extern ei_linked_rect_t *updated_rects;
 
 extern ei_size_t *toplevel_default_size;
 extern ei_size_t *toplevel_default_min_size;
@@ -90,7 +90,7 @@ ei_surface_t get_main_window();
 
 ei_surface_t get_pick_surface();
 
-void draw_window(ei_widget_t *root);
+void draw_window();
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
