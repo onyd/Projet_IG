@@ -479,6 +479,12 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             ei_event_set_active_widget(NULL);
             toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
             return true;
+        case ei_ev_keydown:
+            if (ei_event_get_active_widget() == widget){
+                if (event->param.key.modifier_mask == 224 && event->param.key.key_code == 119){
+                    ei_widget_destroy(widget);
+                }
+            }
     }
 
     return toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
