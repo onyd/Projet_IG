@@ -1,6 +1,5 @@
 #include "utils.h"
 #include "stdlib.h"
-#include "widgets.h"
 
 int main() {
     struct table_cote_actif *tca = malloc(sizeof(struct table_cote_actif));
@@ -39,7 +38,7 @@ int main() {
     tc6->next = tc7;
     tc7->next = NULL;
 
-    append_left(tc1, tca);
+    append_left_tca(tc1, tca);
     display(tca);
 
     struct table_cote *tc8 = malloc(sizeof(struct table_cote));
@@ -57,10 +56,10 @@ int main() {
 
     display(tca);
 
-    delete(tc8, tca);
+    delete_y(tc8, tca);
     display(tca);
 
-    delete(tc3, tca);
+    delete_y(tc3, tca);
     display(tca);
 
 

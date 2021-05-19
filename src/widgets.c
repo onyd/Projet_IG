@@ -17,8 +17,8 @@ ei_surface_t main_window;
 ei_frame_t *root;
 ei_surface_t pick_surface;
 uint32_t widget_counter;
-vector pick_vector;
-chained_list *chainedList;
+vector *pick_vector;
+ei_linked_rect_t *updated_rects;
 
 ei_size_t *toplevel_default_size;
 ei_size_t *toplevel_default_min_size;
@@ -41,10 +41,10 @@ ei_surface_t get_pick_surface() {
     return pick_surface;
 }
 
-void draw_window(ei_widget_t *root) {
-    root->wclass->drawfunc(root, get_main_window(), get_pick_surface(), root->content_rect);
+void draw_window() {
+    ei_widget_t *root = ei_app_root_widget();
+    root->wclass->drawfunc(root, get_main_window(), get_pick_surface(), clipping_window);
 }
-
 
 /* allocfunc */
 ei_widget_t *widget_allocfunc() {
@@ -230,6 +230,7 @@ void frame_drawfunc(ei_widget_t *widget,
         draw_rect_triangle(surface, widget->screen_location, darker, clipper, 1 - direction);
         draw_rectangle(surface, inside_frame, color, clipper);
     }
+
     draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper);
     // Text eventually inside the frame
     if (frame->text != NULL) {
@@ -380,7 +381,7 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
     toplevel->button->widget.pick_id = widget_counter;
     ei_color_t pick_color = ei_map_rgba_inverse(pick_surface, toplevel->button->widget.pick_id);
     *(toplevel->button->widget.pick_color) = pick_color;
-    append(&pick_vector, toplevel->button);
+    append_vector(pick_vector, toplevel->button);
     widget_counter++;
 }
 
@@ -519,6 +520,12 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             ei_event_set_active_widget(NULL);
             toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
             return true;
+        case ei_ev_keydown:
+            if (ei_event_get_active_widget() == widget){
+                if (event->param.key.modifier_mask == 224 && event->param.key.key_code == 119){
+                    ei_widget_destroy(widget);
+                }
+            }
     }
 
     return toplevel->button->widget.wclass->handlefunc(toplevel->button, event);

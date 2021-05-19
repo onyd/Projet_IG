@@ -7,7 +7,6 @@
 #include "widgets.h"
 #include "eventhandler.h"
 #include "vector.h"
-#include "chainedlist.h"
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     hw_init();
@@ -61,8 +60,12 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     default_handle_func = malloc(sizeof(ei_default_handle_func_t));
     default_handle_func = &always_true;
 
+    // Picking init
     widget_counter = 0;
-    create_vector(&pick_vector, 1);
+    pick_vector = create_vector(1);
+
+    updated_rects = calloc(1, sizeof(ei_linked_rect_t));
+    updated_rects->rect = ei_rect_zero();
 
     // root init
     root = frame_allocfunc();
@@ -83,7 +86,6 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
         main_window = hw_create_window(ei_size(900, 700), EI_TRUE);
     }
 
-    // offscreen for picking
     pick_surface = hw_surface_create(get_main_window(), hw_surface_get_size(main_window), EI_FALSE);
 }
 
@@ -96,6 +98,8 @@ void ei_app_free(void) {
     }
 
     free_vector(&pick_vector);
+    free(updated_rects);
+
     // Free classes
     free(frame_class);
     free(button_class);
@@ -124,10 +128,9 @@ void ei_app_run(void) {
         if (event.type == ei_ev_keydown) {
             ei_app_quit_request();
         }
-        chained_list *chainedList = create_chained_list();
 
-        // Recursively place children of root widget
-        ei_widget_t *current = root->widget.children_head;
+        // Recursively place children of root widget ie all widgets
+        ei_widget_t *current = ei_app_root_widget()->children_head;
         while (current != NULL) {
             ei_placer_run(current);
             current = current->next_sibling;
@@ -135,12 +138,17 @@ void ei_app_run(void) {
 
         // Draw
         hw_surface_lock(main_window);
-        draw_window(root);
+        draw_window();
 
-        ei_linked_rect_t *rec_to_update = (ei_linked_rect_t *) (chainedList->head);
         hw_surface_unlock(get_main_window());
-        hw_surface_update_rects(get_main_window(), rec_to_update);
-        free_chained_list(chainedList);
+        hw_surface_update_rects(get_main_window(), NULL);
+        ei_linked_rect_t *current_rect = updated_rects->next;
+        while (current_rect != NULL) {
+            ei_linked_rect_t *tmp = current_rect;
+            current_rect = current_rect->next;
+            //free(tmp);
+        }
+        updated_rects->rect = ei_rect_zero();
 
         // Event handling
         hw_event_wait_next(&event);

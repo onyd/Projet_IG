@@ -22,6 +22,12 @@ void event_propagation(ei_widget_t *widget, ei_event_t *event) {
 void handle_event(ei_event_t *event) {
     ei_widget_t *root = ei_app_root_widget();
 
+//    switch (event->type) {
+//        case ei_ev_mouse_move:
+//        case ei_ev_mouse_buttondown :
+//        case ei_ev_mouse_buttonup:
+//            break;
+//    }
     if (active_widget != NULL) {
         event_propagation(active_widget, event);
     } else {
