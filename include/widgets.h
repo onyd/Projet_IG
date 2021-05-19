@@ -43,6 +43,21 @@ typedef struct ei_frame_t {
     ei_anchor_t img_anchor;
 } ei_frame_t;
 
+typedef enum {
+    idle = 0,
+    grabbed ,
+    resized
+} grab_event_type;
+
+typedef struct grab_event_t {
+    grab_event_type grab_type; // Tells what the user do with toplevel
+    struct {
+        ei_point_t active; // Last mouse point
+        ei_rect_t minimize_square; // The ei_rect_t of minimize square for resizing
+        ei_bool_t show_minimize_square;
+    } param;
+} grab_event_t;
+
 typedef struct ei_toplevel_t {
     ei_widget_t widget;
     //Specific field
@@ -54,10 +69,8 @@ typedef struct ei_toplevel_t {
     ei_size_t min_size;
     ei_button_t *button;
     //previous active point for the event
-    ei_point_t active;
-    ei_rect_t *minimize_square;
+    grab_event_t grab_event;
 } ei_toplevel_t;
-
 
 // Class declarations
 extern ei_widgetclass_t *frame_class;

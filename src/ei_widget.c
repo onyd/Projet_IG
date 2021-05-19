@@ -49,7 +49,6 @@ ei_widget_t *ei_widget_pick(ei_point_t *where) {
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(get_pick_surface());
     int width = hw_surface_get_size(get_pick_surface()).width;
     uint32_t current_pick_color = pixels[where->x + width * (where->y)];
-
     return get(pick_vector, current_pick_color);
 }
 
