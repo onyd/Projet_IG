@@ -84,10 +84,7 @@ int main(int argc, char** argv)
 	ei_button_configure	(button, NULL, &button_color, 
 				 &button_border_width, NULL, &button_relief, &button_title, NULL, &button_text_color, NULL,
 				NULL, NULL, NULL, &button_callback, NULL);
-	printf("%i\n", button->requested_size.height);
 	ei_place(button, &button_anchor, &button_x, &button_y, NULL, NULL, &button_rel_x, &button_rel_y, &button_rel_width, NULL);
-    printf("%i\n", button->screen_location.size.height);
-    printf("%i\n", button->screen_location.size.width);
 	/* Run the application's main loop. */
 	ei_app_run();
 

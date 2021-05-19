@@ -90,6 +90,8 @@ ei_surface_t get_main_window();
 
 ei_surface_t get_pick_surface();
 
+ei_rect_t *get_clipper_window();
+
 void draw_window();
 
 /**
