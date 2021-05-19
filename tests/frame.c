@@ -51,8 +51,9 @@ int main(int argc, char** argv)
 	ei_frame_configure	(frame, &frame_size, &frame_color,
 				 &frame_border_width, &frame_relief, &text2, NULL, NULL, &text_anchor2,
 				 NULL, NULL, NULL);
-	int relative = 1.0;
-	ei_place(frame, NULL, NULL, NULL, NULL, NULL, &relative, &relative, &relative, &relative );
+	float relative = 0;
+	float rel_size = 1;
+	ei_place(frame, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &rel_size, &rel_size);
 	/* Run the application's main loop. */
 	ei_app_run();
 

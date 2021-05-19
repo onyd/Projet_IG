@@ -97,7 +97,7 @@ void ei_app_free(void) {
         current = current->next_sibling;
     }
 
-    free_vector(&pick_vector);
+    free_vector(pick_vector);
     free(updated_rects);
 
     // Free classes

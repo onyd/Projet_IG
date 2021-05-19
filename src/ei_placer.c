@@ -66,7 +66,7 @@ void ei_placer_run(ei_widget_t *widget) {
 
         int y = widget->parent->content_rect->top_left.y;
         if (widget->placer_params->ry != NULL) {
-            y += (widget->placer_params->ry_data) * (widget->parent->content_rect->size.width);
+            y += (widget->placer_params->ry_data) * (widget->parent->content_rect->size.height);
         }
         if (widget->placer_params->y != NULL) {
             y += (widget->placer_params->y_data);
@@ -80,7 +80,7 @@ void ei_placer_run(ei_widget_t *widget) {
             if (widget->placer_params->rw != NULL) {
                 w += (widget->placer_params->rw_data) * (widget->parent->content_rect->size.width);
             }
-            if (widget->placer_params->w) {
+            if (widget->placer_params->w != NULL) {
                 w += (widget->placer_params->w_data);
             }
         }
@@ -93,7 +93,7 @@ void ei_placer_run(ei_widget_t *widget) {
             if (widget->placer_params->rh != NULL) {
                 h += (widget->placer_params->rh_data) * (widget->parent->content_rect->size.height);
             }
-            if (widget->placer_params->h) {
+            if (widget->placer_params->h != NULL) {
                 h += (widget->placer_params->h_data);
             }
         }
