@@ -437,8 +437,8 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     union_rect(&rect, &(widget->screen_location), &new->rect);
     new->next = updated_rects;
     updated_rects = new;
-    *widget->content_rect = rect;
 
+    *widget->content_rect = rect;
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     int width, height;
     hw_text_compute_size(toplevel->title, ei_default_font, &width, &height);
