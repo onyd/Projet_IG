@@ -279,6 +279,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
     if (widget == NULL) {
         return;
     }
+    ei_color_t white = {0xf0, 0xf0, 0xff, 0xff};
 
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     ei_color_t color = toplevel->color;
@@ -302,6 +303,11 @@ void toplevel_drawfunc(ei_widget_t *widget,
                                          widget->screen_location.top_left.y);
         ei_draw_text(surface, &point_text, title, ei_default_font, toplevel->color, &clipper_text);
         toplevel->button->widget.wclass->drawfunc(toplevel->button, surface, pick_surface, clipper);
+        uint32_t d = toplevel->button->widget.content_rect->size.width;
+        float sqrt_2 = sqrt(2);
+        draw_cross(surface, ei_rect(ei_point(toplevel->button->widget.content_rect->top_left.x + d * (sqrt_2 - 1) / (2 *
+                sqrt_2), toplevel->button->widget.content_rect->top_left.y + d * (sqrt_2 - 1) / (2 *
+                sqrt_2)), ei_size(d / sqrt(2), d / sqrt_2)), white, clipper, 2);
     }
 
     // Recursively draw children
