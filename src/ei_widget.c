@@ -26,7 +26,7 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
         new_widget->pick_id = widget_counter;
         ei_color_t pick_color = ei_map_rgba_inverse(pick_surface, new_widget->pick_id);
         *(new_widget->pick_color) = pick_color;
-        append(&pick_vector, new_widget);
+        append_vector(pick_vector, new_widget);
         widget_counter++;
         return new_widget;
     }
@@ -46,11 +46,11 @@ void ei_widget_destroy(ei_widget_t *widget) {
 
 
 ei_widget_t *ei_widget_pick(ei_point_t *where) {
-    uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(pick_surface);
-    int width = hw_surface_get_size(pick_surface).width;
+    uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(get_pick_surface());
+    int width = hw_surface_get_size(get_pick_surface()).width;
     uint32_t current_pick_color = pixels[where->x + width * (where->y)];
 
-    return get(&pick_vector, current_pick_color);
+    return get(pick_vector, current_pick_color);
 }
 
 void ei_frame_configure(ei_widget_t *widget,

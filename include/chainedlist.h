@@ -14,16 +14,20 @@ typedef struct chained_list {
 
 chained_list *create_chained_list();
 
-void append_left(chained_cell *widget, chained_list *l);
+void append_left_linked(chained_cell *e, chained_list *l);
 
 void append_linked(chained_cell *e, chained_list *l);
 
-void append_cl(void *element, chained_list *l);
+void append_left_chained_list(void *element, chained_list *l);
+
+void append_chained_list(void *element, chained_list *l);
 
 void move(chained_list *src, chained_list *dst);
 
+void clear(chained_list *l);
+
 void free_chained_list(chained_list *start);
 
-void widget_breadth_list(void *start, chained_list *result);
+ei_linked_rect_t *to_linked_rect(chained_list *l);
 
 #endif //PROJETC_IG_CHAINEDLIST_H
