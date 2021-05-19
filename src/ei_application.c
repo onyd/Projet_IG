@@ -65,7 +65,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     pick_vector = create_vector(1);
 
     updated_rects = calloc(1, sizeof(ei_linked_rect_t));
-    updated_rects->rect = ei_rect_zero();
+    updated_rects->rect = *get_clipper_window();
 
 
     // root init
