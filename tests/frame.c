@@ -39,17 +39,22 @@ int main(int argc, char** argv)
     ei_toplevel_configure(toplevel, &frame_size, NULL,
                            NULL, NULL, NULL, NULL, NULL);
     ei_place(toplevel, NULL, &toplevel_x, &toplevel_y, NULL, NULL, NULL, NULL, NULL, NULL );
-    ei_place(toplevel, NULL, &toplevel_x, &toplevel_y, NULL, NULL, NULL, NULL, NULL, NULL );
+    int width = 300;
+    int height = 200;
+    ei_place(toplevel, NULL, NULL, NULL, &width, &height, NULL, NULL, NULL, NULL );
 	/* Create, configure and place the frame on screen. */
     // text on the frame
 	char *text2 = "Toto";
     ei_anchor_t text_anchor2 = ei_anc_center;
-
 	frame = ei_widget_create("frame", toplevel, NULL, NULL);
 	ei_frame_configure	(frame, &frame_size, &frame_color,
 				 &frame_border_width, &frame_relief, &text2, NULL, NULL, &text_anchor2,
 				 NULL, NULL, NULL);
-	ei_place(frame, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
+	float relative = 0;
+	float rel_size = 1;
+	ei_anchor_t anchor = ei_anc_northwest;
+	ei_place(frame, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &rel_size, &rel_size);
+
 	/* Run the application's main loop. */
 	ei_app_run();
 

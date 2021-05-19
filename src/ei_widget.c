@@ -110,13 +110,10 @@ void ei_button_configure(ei_widget_t *widget,
                          void **user_param) {
     ei_button_t *button = (ei_button_t *) widget;
     widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
-    ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
-    intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
-    widget->content_rect = &widget->screen_location;
 
     button->color = (color != NULL) ? *color : (button->color);
     button->border_width = (border_width != NULL) ? *border_width : button->border_width;
-    button->corner_radius = *corner_radius;
+    button->corner_radius = (corner_radius != NULL) ? *corner_radius : button->corner_radius;
     button->relief = (relief != NULL) ? *relief : button->relief;
     button->callback = (callback != NULL) ? *callback : button->callback;
     button->widget.user_data = (user_param != NULL) ? *user_param : button->widget.user_data;
@@ -146,6 +143,10 @@ void ei_button_configure(ei_widget_t *widget,
             widget->requested_size = ei_size(width, height);
         }
     }
+    ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
+    intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
+    widget->content_rect = &widget->screen_location;
+
     button->text_font = (text_font != NULL) ? *text_font : button->text_font;
     button->text_color = (text_color != NULL) ? *text_color : button->text_color;
     button->text_anchor = (text_anchor != NULL) ? *text_anchor : button->text_anchor;

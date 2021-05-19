@@ -26,28 +26,27 @@ void ei_place(struct ei_widget_t *widget,
         //Default values
         params->anchor_data = ei_anc_northwest;
         params->anchor = &params->anchor_data;
-        params->x = &params->x_data;
-        params->y = &params->y_data;
-        params->rx = &params->rx_data;
-        params->ry = &params->ry_data;
-        params->rw = &params->rw_data;
-        params->rh = &params->rh_data;
-        params->w = &params->w_data;
-        params->h = &params->h_data;
     }
     ei_placer_params_t *params = widget->placer_params;
     params->w_data = used_width;
     params->h_data = used_height;
     params->anchor_data = (anchor != NULL) ? *anchor : params->anchor_data;
     params->x_data = (x != NULL) ? *x : params->x_data;
+    params->x = (x != NULL) ? &params->x_data : params->x;
     params->y_data = (y != NULL) ? *y : params->y_data;
-    params->w_data = (width != NULL) ? *x : params->w_data;
-    params->h_data = (height != NULL) ? *x : params->h_data;
+    params->y = (y != NULL) ? &params->y_data : params->y;
+    params->w_data = (width != NULL) ? *width : params->w_data;
+    params->w = (width != NULL) ? &params->w_data : params->w;
+    params->h_data = (height != NULL) ? *height : params->h_data;
+    params->h = (height != NULL) ? &params->h_data : params->h;
     params->rx_data = (rel_x != NULL) ? *rel_x : params->rx_data;
+    params->rx = (rel_x != NULL) ? &params->rx_data : params->rw;
     params->ry_data = (rel_y != NULL) ? *rel_y : params->ry_data;
+    params->ry = (rel_y != NULL) ? &params->ry_data : params->ry;
     params->rw_data = (rel_width != NULL) ? *rel_width : params->rw_data;
-    params->rw_data = (rel_width != NULL) ? *rel_width : params->rw_data;
+    params->rw = (rel_width != NULL) ? &params->rw_data : params->rw;
     params->rh_data = (rel_height != NULL) ? *rel_height : params->rh_data;
+    params->rh = (rel_height != NULL) ? &params->rh_data : params->rh;
 }
 
 void ei_placer_run(ei_widget_t *widget) {
@@ -66,7 +65,7 @@ void ei_placer_run(ei_widget_t *widget) {
 
         int y = widget->parent->content_rect->top_left.y;
         if (widget->placer_params->ry != NULL) {
-            y += (widget->placer_params->ry_data) * (widget->parent->content_rect->size.width);
+            y += (widget->placer_params->ry_data) * (widget->parent->content_rect->size.height);
         }
         if (widget->placer_params->y != NULL) {
             y += (widget->placer_params->y_data);
@@ -80,7 +79,7 @@ void ei_placer_run(ei_widget_t *widget) {
             if (widget->placer_params->rw != NULL) {
                 w += (widget->placer_params->rw_data) * (widget->parent->content_rect->size.width);
             }
-            if (widget->placer_params->w) {
+            if (widget->placer_params->w != NULL) {
                 w += (widget->placer_params->w_data);
             }
         }
@@ -93,7 +92,7 @@ void ei_placer_run(ei_widget_t *widget) {
             if (widget->placer_params->rh != NULL) {
                 h += (widget->placer_params->rh_data) * (widget->parent->content_rect->size.height);
             }
-            if (widget->placer_params->h) {
+            if (widget->placer_params->h != NULL) {
                 h += (widget->placer_params->h_data);
             }
         }
