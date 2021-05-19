@@ -5,6 +5,7 @@
 #include "geometry.h"
 #include "eventhandler.h"
 #include "ei_application.h"
+#include "SDL_keycode.h"
 
 // Class declarations
 ei_widgetclass_t *frame_class;
@@ -388,18 +389,41 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
 /* geomnotifyfunc */
 
 void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+    // Update
+    ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
+    union_rect(&rect, widget->content_rect, &new->rect);
+    new->next = updated_rects;
+    updated_rects = new;
+
     widget->screen_location = rect;
 }
 
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+    // Update
+    ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
+    union_rect(&rect, widget->content_rect, &new->rect);
+    new->next = updated_rects;
+    updated_rects = new;
+
     widget->screen_location = rect;
 }
 
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+    // Update
+    ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
+    union_rect(&rect, widget->content_rect, &new->rect);
+    new->next = updated_rects;
+    updated_rects = new;
+
     widget->screen_location = rect;
 }
 
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
+    // Update
+    ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
+    union_rect(&rect, widget->content_rect, &new->rect);
+    new->next = updated_rects;
+    updated_rects = new;
     *widget->content_rect = rect;
 
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
@@ -481,11 +505,11 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
             return true;
         case ei_ev_keydown:
-            if (ei_event_get_active_widget() == widget){
-                if (event->param.key.modifier_mask == 224 && event->param.key.key_code == 119){
-                    ei_widget_destroy(widget);
-                }
+            if (event->param.key.modifier_mask == 8 && event->param.key.key_code == 119){
+                ei_widget_destroy(widget);
             }
+            return true;
+
     }
 
     return toplevel->button->widget.wclass->handlefunc(toplevel->button, event);

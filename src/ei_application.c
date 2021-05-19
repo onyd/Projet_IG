@@ -67,6 +67,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     updated_rects = calloc(1, sizeof(ei_linked_rect_t));
     updated_rects->rect = ei_rect_zero();
 
+
     // root init
     root = frame_allocfunc();
     root->widget.wclass = frame_class;
@@ -97,7 +98,7 @@ void ei_app_free(void) {
         current = current->next_sibling;
     }
 
-    free_vector(&pick_vector);
+    free_vector(pick_vector);
     free(updated_rects);
 
     // Free classes
@@ -125,7 +126,7 @@ void ei_app_run(void) {
 
     event.type = ei_ev_none;
     while (quit_request == false) {
-        if (event.type == ei_ev_keydown) {
+        if (event.type == ei_ev_keydown && event.param.key.key_code == 27) {
             ei_app_quit_request();
         }
 
@@ -141,14 +142,15 @@ void ei_app_run(void) {
         draw_window();
 
         hw_surface_unlock(get_main_window());
-        hw_surface_update_rects(get_main_window(), NULL);
+        hw_surface_update_rects(get_main_window(), updated_rects);
         ei_linked_rect_t *current_rect = updated_rects->next;
         while (current_rect != NULL) {
             ei_linked_rect_t *tmp = current_rect;
             current_rect = current_rect->next;
-            //free(tmp);
+            free(tmp);
         }
         updated_rects->rect = ei_rect_zero();
+        updated_rects->next = NULL;
 
         // Event handling
         hw_event_wait_next(&event);

@@ -105,15 +105,6 @@ void ei_placer_run(ei_widget_t *widget) {
               (rect.top_left.x == widget->content_rect->top_left.x) &&
               (rect.top_left.y == widget->content_rect->top_left.y))) {
             widget->wclass->geomnotifyfunc(widget, rect);
-
-            // Update
-            ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
-            if (updated_rects == NULL) {
-                updated_rects = new;
-            } else {
-                new->next = updated_rects;
-                updated_rects = new;
-            }
         }
     }
 
