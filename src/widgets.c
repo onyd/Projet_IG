@@ -321,9 +321,11 @@ void toplevel_drawfunc(ei_widget_t *widget,
         widget = widget->next_sibling;
     }
 
-    if (toplevel->minimize_square != NULL) {
-        draw_rectangle(get_main_window(), *toplevel->minimize_square, *default_color, NULL);
+    if (toplevel->grab_event.param.show_minimize_square) {
+        draw_rectangle(get_main_window(), toplevel->grab_event.param.minimize_square, *default_color, NULL);
     }
+    draw_rectangle(pick_surface, toplevel->grab_event.param.minimize_square, *toplevel->widget.pick_color, NULL);
+
 }
 
 /* setdefaultsfunc */
@@ -409,7 +411,7 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
 
 void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     // Update
-    ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
+    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
     union_rect(&rect, &(widget->screen_location), &new->rect);
     new->next = updated_rects;
     updated_rects = new;
@@ -419,7 +421,7 @@ void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     // Update
-    ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
+    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
     union_rect(&rect, &(widget->screen_location), &new->rect);
     new->next = updated_rects;
     updated_rects = new;
@@ -429,7 +431,7 @@ void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     // Update
-    ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
+    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
     union_rect(&rect, &(widget->screen_location), &new->rect);
     new->next = updated_rects;
     updated_rects = new;
@@ -439,7 +441,7 @@ void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     // Update
-    ei_linked_rect_t *new = calloc(1, sizeof (ei_linked_rect_t));
+    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
     union_rect(&rect, &(widget->screen_location), &new->rect);
     new->next = updated_rects;
     updated_rects = new;
@@ -448,7 +450,7 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     int width, height;
     hw_text_compute_size(toplevel->title, ei_default_font, &width, &height);
-
+    widget->requested_size = rect.size;
     widget->screen_location = ei_rect(ei_point(widget->content_rect->top_left.x - toplevel->border_width,
                                                widget->content_rect->top_left.y - toplevel->border_width - height),
                                       ei_size(widget->content_rect->size.width + 2 * toplevel->border_width,
@@ -488,89 +490,105 @@ ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 
 ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
+
     switch (event->type) {
+        /* Mouse events */
         case ei_ev_mouse_buttondown:
-            ei_event_set_active_widget(toplevel);
-            toplevel->active = event->param.mouse.where;
-            return true;
+            ei_rect_t top_bar = ei_rect(widget->screen_location.top_left,
+                                        ei_size(widget->screen_location.size.width,
+                                                widget->screen_location.size.height -
+                                                widget->content_rect->size.height));
+            toplevel->grab_event.param.active = event->param.mouse.where;
+
+            if (inside(event->param.mouse.where, &top_bar)) {
+                ei_event_set_active_widget(toplevel);
+                toplevel->grab_event.grab_type = grabbed;
+                return true;
+            } else if (inside(event->param.mouse.where, &toplevel->grab_event.param.minimize_square)) {
+                ei_event_set_active_widget(toplevel);
+                toplevel->grab_event.grab_type = resized;
+                return true;
+            }
+            break;
+
         case ei_ev_mouse_move:
             if (ei_event_get_active_widget() == widget) {
-                ei_rect_t minimize_rect = ei_rect(
-                        ei_point(widget->screen_location.top_left.x + widget->screen_location.size.width - 20,
-                                 widget->screen_location.top_left.y + widget->screen_location.size.height - 20),
-                        ei_size(20, 20));
-                ei_rect_t top_bar = ei_rect(widget->screen_location.top_left,
-                                            ei_size(widget->screen_location.size.width,
-                                                    widget->screen_location.size.height-widget->content_rect->size.height));
-                //if the pointer is on the top bar
-                if (inside(event->param.mouse.where, &top_bar)) {
-                    int topleft_x =
-                            widget->content_rect->top_left.x + (event->param.mouse.where.x - toplevel->active.x);
-                    int topleft_y =
-                            widget->content_rect->top_left.y + (event->param.mouse.where.y - toplevel->active.y);
-                    ei_place(toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
-                             NULL, NULL);
-                    toplevel->active = event->param.mouse.where;
-                }
-                //if the pointer is on the minimize_square
-                else {
-                    if (inside(event->param.mouse.where, &minimize_rect))
+                switch (toplevel->grab_event.grab_type) {
+                    case grabbed:
+                        int topleft_x =
+                                widget->content_rect->top_left.x - widget->parent->content_rect->top_left.x +
+                                (event->param.mouse.where.x - toplevel->grab_event.param.active.x);
+                        int topleft_y =
+                                widget->content_rect->top_left.y - widget->parent->content_rect->top_left.y +
+                                (event->param.mouse.where.y - toplevel->grab_event.param.active.y);
+                        printf("%i,%i\n", topleft_x, topleft_y);
+                        toplevel->grab_event.param.active = event->param.mouse.where;
+
+                        ei_place(toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
+                                 NULL, NULL);
+                        break;
+                    case resized:
                         if (toplevel->resizable != ei_axis_none) {
-                            int width = widget->content_rect->size.width + (event->param.mouse.where.x - toplevel->active.x);
-                            int height = widget->content_rect->size.height + (event->param.mouse.where.y - toplevel->active.y);
-                            if (toplevel->min_size.width <= width) {
-                                if (toplevel->resizable == ei_axis_x) {
-                                    ei_place(toplevel, NULL, NULL, NULL, &width, NULL, NULL, NULL,
-                                             NULL, NULL);
-                                }
+                            int width = widget->content_rect->size.width +
+                                        (event->param.mouse.where.x - toplevel->grab_event.param.active.x);
+                            int height = widget->content_rect->size.height +
+                                         (event->param.mouse.where.y - toplevel->grab_event.param.active.y);
+                            toplevel->grab_event.param.active = event->param.mouse.where;
+
+                            // x-resize
+                            if (toplevel->min_size.width <= width && toplevel->resizable == ei_axis_x) {
+                                ei_place(toplevel, NULL, NULL, NULL, &width, NULL, NULL, NULL,
+                                         NULL, NULL);
                             }
-                            if (toplevel->min_size.height <= height) {
-                                if (toplevel->resizable == ei_axis_y) {
-                                    ei_place(toplevel, NULL, NULL, NULL, NULL, &height, NULL, NULL,
-                                             NULL, NULL);
-                                }
+                            // x-resize
+                            if (toplevel->min_size.height <= height && toplevel->resizable == ei_axis_y) {
+                                ei_place(toplevel, NULL, NULL, NULL, NULL, &height, NULL, NULL,
+                                         NULL, NULL);
                             }
-                            if (toplevel->min_size.height <= height && toplevel->min_size.width <= width && toplevel->resizable == ei_axis_both) {
+                            // x and y resize
+                            if (toplevel->min_size.height <= height && toplevel->min_size.width <= width &&
+                                toplevel->resizable == ei_axis_both) {
                                 ei_place(toplevel, NULL, NULL, NULL, &width, &height, NULL, NULL,
                                          NULL, NULL);
                             }
-                            toplevel->active = event->param.mouse.where;
                         }
+                        break;
                 }
             }
+
             //Draw the square to minimize the toplevel
-            ei_rect_t minimize_rect = ei_rect(
+            toplevel->grab_event.param.minimize_square = ei_rect(
                     ei_point(widget->screen_location.top_left.x + widget->screen_location.size.width - 20,
                              widget->screen_location.top_left.y + widget->screen_location.size.height - 20),
                     ei_size(20, 20));
-            if (toplevel->minimize_square == NULL) {
-                if (inside(event->param.mouse.where, &minimize_rect)) {
-                    toplevel->minimize_square = malloc(sizeof(ei_rect_t));
-                    *(toplevel->minimize_square) = minimize_rect;
+            if (toplevel->grab_event.grab_type == idle) {
+                if (!toplevel->grab_event.param.show_minimize_square) {
+                    if (inside(event->param.mouse.where, &toplevel->grab_event.param.minimize_square)) {
+                        toplevel->grab_event.param.show_minimize_square = true;
+                    }
+                } else if (!inside(event->param.mouse.where, &toplevel->grab_event.param.minimize_square)) {
+                    toplevel->grab_event.param.show_minimize_square = false;
                 }
-            } else {
-                if (!inside(event->param.mouse.where, &minimize_rect)) {
-                    free(toplevel->minimize_square);
-                    toplevel->minimize_square = NULL;
-                }
-                else {
-                    *(toplevel->minimize_square) = minimize_rect;
-                }
-            }
-            return true;
-            break;
-        case ei_ev_mouse_buttonup:
-            ei_event_set_active_widget(NULL);
-            toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
-            return true;
-        case ei_ev_keydown:
-            if (event->param.key.modifier_mask == 8 && event->param.key.key_code == 119){
-                ei_widget_destroy(widget);
             }
             return true;
 
+        case ei_ev_mouse_buttonup:
+            ei_event_set_active_widget(NULL);
+            toplevel->grab_event.grab_type = idle;
+            toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
+            return true;
+
+            /* Keydown events*/
+        case ei_ev_keydown:
+            if (ei_event_get_active_widget() == widget) {
+                if (event->param.key.modifier_mask == 224 && event->param.key.key_code == 119) {
+                    ei_widget_destroy(widget);
+                    return true;
+                }
+            }
     }
-    return toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
+
+    return false || toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
 }
 
 
