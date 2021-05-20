@@ -658,7 +658,9 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             break;
     }
     if (treated) {
-        append_updated_rects(widget->screen_location);
+        ei_rect_t clipper;
+        intersection(&widget->screen_location, get_clipper_window(), &clipper);
+        append_updated_rects(clipper);
     }
 
     // Button has to receive event
