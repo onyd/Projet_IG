@@ -36,14 +36,12 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
 }
 
 void ei_widget_destroy(ei_widget_t *widget) {
-    ei_widget_t *current = widget->children_head;
-    while (current != NULL) {
-        ei_placer_forget(current);
-        ei_widget_destroy(current);
-        ei_widget_t *tmp = current;
-        current = current->next_sibling;
-        tmp->wclass->releasefunc(tmp);
+    ei_widget_destroy_rec(widget);
+    if (widget->destructor != NULL) {
+        widget->destructor(widget);
     }
+    ei_placer_forget(widget);
+    widget->wclass->releasefunc(widget);
     if (ei_event_get_active_widget() == widget){
         ei_event_set_active_widget(NULL);
     }

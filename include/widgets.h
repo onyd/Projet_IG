@@ -108,6 +108,13 @@ ei_point_t get_mouse_pos();
 
 ei_point_t get_prev_mouse_pos();
 
+/**
+ * \brief	Allows to recursively destroy a widget of type \ref ei_widget_t.
+ * The function is called by ei_widget_destroy
+ * @param the widget to destroy
+ */
+void ei_widget_destroy_rec(ei_widget_t *widget);
+
 void draw_window();
 
 /**
