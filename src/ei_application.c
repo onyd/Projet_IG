@@ -98,8 +98,9 @@ void ei_app_free(void) {
     // Clear all widgets
     ei_widget_t *current = ei_app_root_widget()->children_head;
     while (current != NULL) {
-        ei_widget_destroy(current);
+        ei_widget_t *tmp = current;
         current = current->next_sibling;
+        ei_widget_destroy(tmp);
     }
 
     free_vector(pick_vector);
@@ -148,7 +149,8 @@ void ei_app_run(void) {
         draw_window();
 
         hw_surface_unlock(get_main_window());
-        hw_surface_update_rects(get_main_window(), NULL);
+        printf("x : %i, y : %i", updated_rects->rect.top_left.x, updated_rects->rect.top_left.y);
+        hw_surface_update_rects(get_main_window(), updated_rects);
         ei_linked_rect_t *current_rect = updated_rects->next;
         while (current_rect != NULL) {
             ei_linked_rect_t *tmp = current_rect;
