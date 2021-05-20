@@ -53,6 +53,7 @@ void handle_event(ei_event_t *event) {
                     ei_toplevel_t *toplevel = toplevel_params->caller;
                     if (!inside(get_mouse_pos(), &toplevel->grab_event.param.minimize_square)) {
                         toplevel->grab_event.param.show_minimize_square = false;
+                        append_updated_rects(toplevel->widget.screen_location);
                         free(user_params->data);
                         free(user_params);
                     }

@@ -44,7 +44,7 @@ typedef struct ei_frame_t {
 
 typedef enum {
     idle = 0,
-    grabbed ,
+    grabbed,
     resized
 } grab_event_type;
 
@@ -216,7 +216,10 @@ void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
+void append_updated_rects(ei_rect_t rect);
+
 void updated_rect_size(ei_widget_t *widget, ei_rect_t rect);
+
 /* handlefunc */
 ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event);
 

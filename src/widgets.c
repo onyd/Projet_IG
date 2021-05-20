@@ -435,15 +435,18 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     updated_rect_size(widget, old_screen_location);
 }
 
+void append_updated_rects(ei_rect_t rect) {
+    ei_linked_rect_t *new = malloc(sizeof(ei_linked_rect_t));
+    new->rect = rect;
+    new->next = updated_rects;
+    updated_rects = new;
+}
+
 void updated_rect_size(ei_widget_t *widget, ei_rect_t rect){
-    ei_rect_t union_rec;
-    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
-    union_rect(&rect, &(widget->screen_location), &union_rec);
-    if (intersection(&union_rec, get_clipper_window(), &new->rect)) {
-        new->next = updated_rects;
-        updated_rects = new;
-    } else {
-        free(new);
+    ei_rect_t update_rect;
+    union_rect(&rect, &(widget->screen_location), &update_rect);
+    if (intersection(&update_rect, get_clipper_window(), &update_rect)) {
+        append_updated_rects(update_rect);
     }
 }
 /* handlefunc */
@@ -605,6 +608,9 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                 treated = true;
             }
             break;
+    }
+    if (treated) {
+        append_updated_rects(widget->screen_location);
     }
 
     // Button has to receive event
