@@ -211,14 +211,13 @@ void button_drawfunc(ei_widget_t *widget,
     }
 
     // Recursively draw children
-    while (widget != NULL) {
-        if (widget->children_head != NULL) {
-            ei_rect_t clipping_widget;
-            intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
-            widget->children_head->wclass->drawfunc(widget->children_head, get_main_window(), get_pick_surface(),
-                                                    clipping_window);
-        }
-        widget = widget->next_sibling;
+    ei_widget_t *current = widget->children_head;
+    while (current != NULL) {
+        ei_rect_t clipping_widget;
+        intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
+        current->wclass->drawfunc(current, get_main_window(), get_pick_surface(),
+                                  clipping_window);
+        current = current->next_sibling;
     }
 }
 
@@ -272,14 +271,13 @@ void frame_drawfunc(ei_widget_t *widget,
     }
 
     // Recursively draw children
-    while (widget != NULL) {
-        if (widget->children_head != NULL) {
-            ei_rect_t clipping_widget;
-            intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
-            widget->children_head->wclass->drawfunc(widget->children_head, get_main_window(), get_pick_surface(),
-                                                    clipping_window);
-        }
-        widget = widget->next_sibling;
+    ei_widget_t *current = widget->children_head;
+    while (current != NULL) {
+        ei_rect_t clipping_widget;
+        intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
+        current->wclass->drawfunc(current, get_main_window(), get_pick_surface(),
+                                  clipping_window);
+        current = current->next_sibling;
     }
 }
 
@@ -324,14 +322,13 @@ void toplevel_drawfunc(ei_widget_t *widget,
     }
 
     // Recursively draw children
-    while (widget != NULL) {
-        if (widget->children_head != NULL) {
-            ei_rect_t clipping_widget;
-            intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
-            widget->children_head->wclass->drawfunc(widget->children_head, get_main_window(), get_pick_surface(),
-                                                    clipping_window);
-        }
-        widget = widget->next_sibling;
+    ei_widget_t *current = widget->children_head;
+    while (current != NULL) {
+        ei_rect_t clipping_widget;
+        intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
+        current->wclass->drawfunc(current, get_main_window(), get_pick_surface(),
+                                  clipping_window);
+        current = current->next_sibling;
     }
 
     // Minimize square
