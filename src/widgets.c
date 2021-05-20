@@ -6,6 +6,7 @@
 #include "eventhandler.h"
 #include "ei_application.h"
 #include "SDL_keycode.h"
+#include "string.h"
 
 // Class declarations
 ei_widgetclass_t *frame_class;
@@ -455,12 +456,15 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
                                                widget->content_rect->top_left.y - toplevel->border_width - height),
                                       ei_size(widget->content_rect->size.width + 2 * toplevel->border_width,
                                               widget->content_rect->size.height + 2 * toplevel->border_width + height));
-    toplevel->button->widget.screen_location.top_left.x = widget->screen_location.top_left.x + toplevel->border_width;
-    toplevel->button->widget.screen_location.top_left.y = widget->screen_location.top_left.y + toplevel->border_width;
+    toplevel->button->widget.screen_location.top_left.x = widget->screen_location.top_left.x + toplevel->border_width + toplevel->border_width;
+    toplevel->button->widget.screen_location.top_left.y = widget->screen_location.top_left.y + toplevel->border_width + toplevel->border_width + height;
 
     toplevel->grab_event.param.minimize_square.top_left = ei_point(
             widget->screen_location.top_left.x + widget->screen_location.size.width - 20,
             widget->screen_location.top_left.y + widget->screen_location.size.height - 20);
+
+    widget->screen_location.top_left = ei_point_add(widget->screen_location.top_left, ei_point(toplevel->border_width, toplevel->border_width + height));
+    widget->content_rect->top_left = ei_point_add(widget->content_rect->top_left, ei_point(toplevel->border_width, toplevel->border_width + height));
 
     // Update
     updated_rect_size(widget, old_screen_location);
@@ -573,10 +577,10 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                 case grabbed:
                     if (ei_event_get_active_widget() == widget) {
                         int topleft_x =
-                                widget->content_rect->top_left.x - widget->parent->content_rect->top_left.x +
+                                widget->screen_location.top_left.x - widget->parent->screen_location.top_left.x +
                                 (event->param.mouse.where.x - get_prev_mouse_pos().x);
                         int topleft_y =
-                                widget->content_rect->top_left.y - widget->parent->content_rect->top_left.y +
+                                widget->screen_location.top_left.y - widget->parent->screen_location.top_left.y +
                                 (event->param.mouse.where.y - get_prev_mouse_pos().y);
                         ei_place(toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
                                  NULL, NULL);

@@ -84,7 +84,7 @@ void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect
     ei_copy_surface(surface, &dst_rect, img, &src_rect, EI_TRUE);
 }
 
-void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t size){
+void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t size) {
     int d = (sqrt(2) / 2) * size;
 
     // First cross
@@ -135,4 +135,37 @@ void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_
 
     ei_draw_polygon(surface, first_point_1, color, clipper);
     ei_draw_polygon(surface, first_point_2, color, clipper);
+}
+
+uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper) {
+    uint8_t result = 15;
+
+    result &= (p.x < clipper->top_left.x);
+    result &= (p.x > clipper->top_left.x + clipper->size.width) << 1;
+    result &= (p.y < clipper->top_left.y) << 2;
+    result &= (p.y > clipper->top_left.y + clipper->size.height) << 3;
+
+    return result;
+}
+
+
+enum clipping_code get_clipping_code(uint8_t code) {
+    switch (code) {
+        case 1:
+            return west_reject;
+        case 2:
+            return east_reject;
+        case 4:
+            return north_reject;
+        case 5:
+            return north_west_reject;
+        case 6:
+            return north_east_reject;
+        case 8:
+            return south_reject;
+        case 9:
+            return south_west_reject;
+        case 10:
+            return south_east_reject;
+    }
 }
