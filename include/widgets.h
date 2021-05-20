@@ -100,6 +100,8 @@ extern ei_rect_t *clipping_window;
 
 ei_surface_t get_main_window();
 
+ei_frame_t *get_root();
+
 ei_surface_t get_pick_surface();
 
 ei_rect_t *get_clipper_window();
@@ -116,6 +118,14 @@ ei_point_t get_prev_mouse_pos();
 void ei_widget_destroy_rec(ei_widget_t *widget);
 
 void draw_window();
+
+
+/**
+ * \brief	search for the first parent of a widget which is a toplevel
+ * @param a widget
+ * @return the first widget's parent which is a toplevel or NULL if it doesn't exist
+ */
+ei_widget_t *search_for_toplevel(ei_widget_t *widget);
 
 /**
  * \brief	Allows to allocate a widget of type \ref ei_button_t to zero.

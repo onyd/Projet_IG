@@ -127,15 +127,25 @@ void ei_placer_forget(ei_widget_t *widget) {
     }
 
     // Pop widget from its parent
-    if (previous_child != NULL) {
-        previous_child->next_sibling = current_child->next_sibling;
-        if (current_child == parent->children_tail) // Update tail
+    //if the widget is the head
+    if (parent->children_tail != parent->children_head) {
+        //if the widget is the head
+        if (previous_child == NULL) {
+            parent->children_head = current_child->next_sibling;
+        }
+        else if (parent->children_tail == current_child) {
+            previous_child->next_sibling = NULL;
             parent->children_tail = previous_child;
-    } else { // head
-        parent->children_head = NULL;
-        if (current_child == parent->children_tail) // 1 child
-            parent->children_tail = NULL;
+        }
+        else {
+            previous_child->next_sibling = widget->next_sibling;
+        }
     }
+    else {
+        parent->children_tail = NULL;
+        parent->children_head = NULL;
+    }
+    widget->next_sibling = NULL;
     widget->parent = NULL;
 }
 

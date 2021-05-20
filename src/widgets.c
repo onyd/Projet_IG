@@ -39,6 +39,10 @@ ei_surface_t get_main_window() {
     return main_window;
 }
 
+ei_frame_t *get_root() {
+    return root;
+}
+
 ei_surface_t get_pick_surface() {
     return pick_surface;
 }
@@ -76,6 +80,10 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
 void draw_window() {
     ei_widget_t *root = ei_app_root_widget();
     root->wclass->drawfunc(root, get_main_window(), get_pick_surface(), clipping_window);
+}
+
+ei_widget_t *search_for_toplevel(ei_widget_t *widget) {
+
 }
 
 /* allocfunc */
