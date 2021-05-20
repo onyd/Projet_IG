@@ -318,7 +318,6 @@ int ei_copy_surface(ei_surface_t destination,
                 inside(ei_point(x2, y2), dst_rect)) {
                 if (!alpha) {
                     dst_pixels[x2 + dst_size.width * y2] = src_pixels[x1 + src_size.width * y1];
-                    printf("%i, %i | %x\n", x1, y1, src_pixels[x1 + src_size.width * y1]);
                 } else {
                     int ir, ig, ib, ia;
                     hw_surface_get_channel_indices(destination, &ir, &ig, &ib, &ia);

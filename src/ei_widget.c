@@ -23,21 +23,23 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
             parent->children_tail->next_sibling = new_widget;
             parent->children_tail = new_widget;
         }
-        new_widget->pick_id = widget_counter;
+
+        // Picking params
+
+        new_widget->pick_id = append_vector(pick_vector, new_widget);
         ei_color_t pick_color = ei_map_rgba_inverse(pick_surface, new_widget->pick_id);
         *(new_widget->pick_color) = pick_color;
-        append_vector(pick_vector, new_widget);
-        widget_counter++;
+
         return new_widget;
     }
     return NULL;
 }
 
 void ei_widget_destroy(ei_widget_t *widget) {
-    ei_widget_t *current = widget;
+    ei_widget_t *current = widget->children_head;
     while (current != NULL) {
         ei_placer_forget(current);
-        ei_widget_destroy(widget->children_head);
+        ei_widget_destroy(current);
         ei_widget_t *tmp = current;
         current = current->next_sibling;
         tmp->wclass->releasefunc(tmp);

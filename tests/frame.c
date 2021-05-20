@@ -34,7 +34,6 @@ int main(int argc, char** argv)
 	/*create a toplevel */
     int		toplevel_x			= 100;
     int		toplevel_y			= 150;
-    ei_size_t	toplevel_size		= {500,400};
 	ei_widget_t *toplevel = ei_widget_create("toplevel", ei_app_root_widget(), NULL, NULL);
     ei_toplevel_configure(toplevel, &frame_size, NULL,
                            NULL, NULL, NULL, NULL, NULL);
@@ -54,6 +53,15 @@ int main(int argc, char** argv)
 	float rel_size = 1;
 	ei_anchor_t anchor = ei_anc_northwest;
 	ei_place(frame, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &rel_size, &rel_size);
+
+	/*second toplevel */
+    int		toplevel_x_2			= 200;
+    int		toplevel_y_2			= 300;
+    ei_widget_t *toplevel_2 = ei_widget_create("toplevel", ei_app_root_widget(), NULL, NULL);
+    ei_toplevel_configure(toplevel_2, &frame_size, NULL,
+                          NULL, NULL, NULL, NULL, NULL);
+    ei_place(toplevel_2, NULL, &toplevel_x_2, &toplevel_y_2, NULL, NULL, NULL, NULL, NULL, NULL );
+
 
 	/* Run the application's main loop. */
 	ei_app_run();

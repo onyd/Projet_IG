@@ -116,7 +116,7 @@ void ei_placer_run(ei_widget_t *widget) {
 void ei_placer_forget(ei_widget_t *widget) {
     free(widget->placer_params);
     widget->placer_params = NULL;
-    widget_counter = remove_vector(pick_vector, widget);
+    remove_vector(pick_vector, widget);
 
     ei_widget_t *parent = widget->parent;
     ei_widget_t *current_child = parent->children_head;

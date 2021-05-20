@@ -4,6 +4,7 @@
 
 ei_default_handle_func_t default_handle_func;
 ei_widget_t *active_widget = NULL;
+ei_event_t *last_event;
 
 ei_bool_t event_propagation(ei_widget_t *widget, ei_event_t *event) {
     if (widget->wclass->handlefunc(widget, event)) {
@@ -26,12 +27,13 @@ void handle_event(ei_event_t *event) {
 
     switch (event->type) {
         case ei_ev_mouse_move:
+            *prev_mouse_pos = *mouse_pos;
             *mouse_pos = event->param.mouse.where;
         case ei_ev_mouse_buttondown :
         case ei_ev_mouse_buttonup:
             if (active_widget != NULL) {
                 if (active_widget->wclass->handlefunc(active_widget, event))
-                    (*default_handle_func)(event);
+                    (*ei_event_get_default_handle_func())(event);
             } else {
                 ei_widget_t *picked = ei_widget_pick(&event->param.mouse.where);
                 if (picked->wclass->handlefunc(picked, event))
@@ -45,7 +47,7 @@ void handle_event(ei_event_t *event) {
             break;
         case ei_ev_app:
             switch (((user_param_t *) event->param.application.user_param)->app_event_type) {
-                case toplevel_param:
+                case toplevel_param: {
                     user_param_t *user_params = event->param.application.user_param;
                     toplevel_app_event_t *toplevel_params = ((user_param_t *) event->param.application.user_param)->data;
                     ei_toplevel_t *toplevel = toplevel_params->caller;
@@ -55,8 +57,8 @@ void handle_event(ei_event_t *event) {
                         free(user_params);
                     }
                     toplevel->grab_event.param.unshow_minimize_square_event_sent = false;
-
                     break;
+                }
                 case user_param:
                     break;
             }
