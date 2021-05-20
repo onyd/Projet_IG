@@ -497,6 +497,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 
     switch (event->type) {
         case ei_ev_mouse_buttondown:
+        {
             ei_rect_t top_bar = ei_rect(widget->screen_location.top_left,
                                         ei_size(widget->screen_location.size.width,
                                                 widget->screen_location.size.height -
@@ -504,6 +505,29 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             if (inside(event->param.mouse.where, &top_bar)) {
                 ei_event_set_active_widget(toplevel);
                 toplevel->grab_event.grab_type = grabbed;
+
+                //The top level is at the first plan
+                ei_widget_t *current_child = widget->parent->children_head;
+                ei_widget_t *previous_child = current_child;
+                if (widget->parent->children_head != widget->parent->children_tail && widget != widget->parent->children_tail) {
+                    while (current_child != widget) {
+                        previous_child = current_child;
+                        current_child = current_child->next_sibling;
+                    }
+                    //if the widget is the head
+                    if (current_child == previous_child) {
+                        widget->parent->children_head = widget->next_sibling;
+                        widget->next_sibling = NULL;
+                        widget->parent->children_tail->next_sibling = widget;
+                        widget->parent->children_tail = widget;
+                    }
+                    else {
+                        previous_child->next_sibling = widget->next_sibling;
+                        widget->next_sibling = NULL;
+                        widget->parent->children_tail->next_sibling = widget;
+                        widget->parent->children_tail = widget;
+                    }
+                }
                 return true;
             } else if (inside(event->param.mouse.where, &toplevel->grab_event.param.minimize_square)) {
                 ei_event_set_active_widget(toplevel);
@@ -511,6 +535,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                 return true;
             }
             break;
+        }
 
         case ei_ev_mouse_move:
             switch (toplevel->grab_event.grab_type) {
@@ -527,7 +552,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                         return true;
                     }
                     break;
-                case resized:
+                case resized: {
                     ei_bool_t treated = false;
                     if (ei_event_get_active_widget() == widget && toplevel->resizable != ei_axis_none) {
                         int width = widget->content_rect->size.width +
@@ -566,7 +591,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                         treated = true;
                     }
                     return treated;
-
+                }
                 case idle:
                     //Draw the square to minimize the toplevel
                     if (!toplevel->grab_event.param.show_minimize_square) {
