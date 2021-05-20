@@ -4,7 +4,7 @@
 #include "ei_utils.h"
 #include "hw_interface.h"
 
-void append_left_tca(struct table_cote *e, struct table_cote_actif *tca) {
+void append_left_tca(struct linked_edges *e, struct linked_acive_edges *tca) {
     if (tca->head == NULL) {
         tca->head = e;
         return;
@@ -13,14 +13,14 @@ void append_left_tca(struct table_cote *e, struct table_cote_actif *tca) {
     tca->head = e;
 }
 
-void delete_y(int y, struct table_cote_actif *tca) {
+void delete_y(int y, struct linked_acive_edges *tca) {
     if (tca->head == NULL) {
         return;
     }
 
-    struct table_cote *previous = tca->head;
+    struct linked_edges *previous = tca->head;
     while (previous != NULL && previous->ymax == y) {
-        struct table_cote *tmp = previous;
+        struct linked_edges *tmp = previous;
         previous = previous->next;
         free(tmp);
     }
@@ -29,7 +29,7 @@ void delete_y(int y, struct table_cote_actif *tca) {
         return;
     }
 
-    struct table_cote *current = tca->head->next;
+    struct linked_edges *current = tca->head->next;
     while (current != NULL) {
         if (current->ymax == y) {
             previous->next = current->next;
@@ -42,8 +42,8 @@ void delete_y(int y, struct table_cote_actif *tca) {
     }
 }
 
-void display(struct table_cote_actif *tca) {
-    struct table_cote *current = tca->head;
+void display(struct linked_acive_edges *tca) {
+    struct linked_edges *current = tca->head;
     while (current != NULL) {
         printf("[%i, %i]->", current->ymax, current->x_ymin);
         current = current->next;
@@ -75,13 +75,13 @@ struct ei_linked_point_t *y_argmin(struct ei_linked_point_t *a, struct ei_linked
     }
 }
 
-void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
+void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *tca) {
     if (tca->head == NULL) {
         tca->head = tc;
         return;
     }
-    struct table_cote *previous = tca->head;
-    struct table_cote *current = previous;
+    struct linked_edges *previous = tca->head;
+    struct linked_edges *current = previous;
     while (current != NULL) {
         // à savoir: il ne peut pas y avoir plus de deux côtés qui ont le même x_ymin
         if (current->x_ymin == tc->x_ymin) {
@@ -122,8 +122,8 @@ void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca) {
     }
 }
 
-void tc_free(struct table_cote *tc) {
-    struct table_cote *next_tc = tc;
+void tc_free(struct linked_edges *tc) {
+    struct linked_edges *next_tc = tc;
     while (tc != NULL) {
         next_tc = tc->next;
         free(tc);
@@ -131,7 +131,7 @@ void tc_free(struct table_cote *tc) {
     }
 }
 
-void tca_free(struct table_cote_actif *tca) {
+void tca_free(struct linked_acive_edges *tca) {
     tc_free(tca->head);
     free(tca);
 }

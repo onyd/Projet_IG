@@ -67,6 +67,10 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     updated_rects = calloc(1, sizeof(ei_linked_rect_t));
     updated_rects->rect = *get_clipper_window();
 
+    mouse_pos = calloc(1, sizeof(ei_point_t));
+    *mouse_pos = ei_point_zero();
+
+    last_event = malloc(sizeof(ei_event_t));
 
     // root init
     root = frame_allocfunc();
@@ -101,6 +105,7 @@ void ei_app_free(void) {
 
     free_vector(pick_vector);
     free(updated_rects);
+    free(mouse_pos);
 
     // Free classes
     free(frame_class);

@@ -127,8 +127,8 @@ void ei_draw_polygon(ei_surface_t surface,
     }
 
     // TC/TCA initialization
-    struct table_cote **TC = calloc(ymax - ymin, sizeof(struct table_cote *));
-    struct table_cote_actif *TCA = malloc(sizeof(struct table_cote_actif));
+    struct linked_edges **TC = calloc(ymax - ymin, sizeof(struct linked_edges *));
+    struct linked_acive_edges *TCA = malloc(sizeof(struct linked_acive_edges));
     TCA->head = NULL;
 
     // Build TC
@@ -144,7 +144,7 @@ void ei_draw_polygon(ei_surface_t surface,
         float inv_p = (float) dx / dy;
         // Ignore horizontal edges
         if (dy != 0) {
-            struct table_cote *edge = malloc(sizeof(struct table_cote));
+            struct linked_edges *edge = malloc(sizeof(struct linked_edges));
             edge->ymax = p_max->point.y;
             edge->x_ymin = p_min->point.x;
             edge->x_ymax = p_max->point.x;
@@ -169,14 +169,14 @@ void ei_draw_polygon(ei_surface_t surface,
 
         // Add current scanline starting edges while keeping TCA sorted
         while (TC[i] != NULL) {
-            struct table_cote *tc = TC[i];
+            struct linked_edges *tc = TC[i];
             TC[i] = tc->next;
             tc->next = NULL;
             sorting_insert(tc, TCA);
         }
 
         // Draw pixels
-        struct table_cote *current = TCA->head;
+        struct linked_edges *current = TCA->head;
         while (current != NULL && current->next != NULL) {
             int x1 = current->x_ymin;
             current = current->next;

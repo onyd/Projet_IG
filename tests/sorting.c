@@ -2,16 +2,16 @@
 #include "stdlib.h"
 
 int main() {
-    struct table_cote_actif *tca = malloc(sizeof(struct table_cote_actif));
+    struct linked_acive_edges *tca = malloc(sizeof(struct linked_acive_edges));
     tca->head = NULL;
 
-    struct table_cote *tc1 = malloc(sizeof(struct table_cote));
-    struct table_cote *tc2 = malloc(sizeof(struct table_cote));
-    struct table_cote *tc3 = malloc(sizeof(struct table_cote));
-    struct table_cote *tc4 = malloc(sizeof(struct table_cote));
-    struct table_cote *tc5 = malloc(sizeof(struct table_cote));
-    struct table_cote *tc6 = malloc(sizeof(struct table_cote));
-    struct table_cote *tc7 = malloc(sizeof(struct table_cote));
+    struct linked_edges *tc1 = malloc(sizeof(struct linked_edges));
+    struct linked_edges *tc2 = malloc(sizeof(struct linked_edges));
+    struct linked_edges *tc3 = malloc(sizeof(struct linked_edges));
+    struct linked_edges *tc4 = malloc(sizeof(struct linked_edges));
+    struct linked_edges *tc5 = malloc(sizeof(struct linked_edges));
+    struct linked_edges *tc6 = malloc(sizeof(struct linked_edges));
+    struct linked_edges *tc7 = malloc(sizeof(struct linked_edges));
 
     tc1->x_ymax = -1;
     tc2->x_ymax = 1;
@@ -41,7 +41,7 @@ int main() {
     append_left_tca(tc1, tca);
     display(tca);
 
-    struct table_cote *tc8 = malloc(sizeof(struct table_cote));
+    struct linked_edges *tc8 = malloc(sizeof(struct linked_edges));
     tc8->x_ymax = -2;
     tc8->x_ymin = -1;
     tc8->next = NULL;
@@ -49,7 +49,7 @@ int main() {
 
     display(tca);
 
-    struct table_cote *tc9 = malloc(sizeof(struct table_cote));
+    struct linked_edges *tc9 = malloc(sizeof(struct linked_edges));
     tc9->x_ymax = 2;
     tc9->next = NULL;
     sorting_insert(tc9, tca);

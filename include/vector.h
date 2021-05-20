@@ -5,7 +5,8 @@
 
 typedef struct {
     void **data;
-    size_t used;
+    size_t last_idx;
+    size_t current_idx;
     size_t size;
 } vector;
 
