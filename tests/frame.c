@@ -62,7 +62,6 @@ int main(int argc, char** argv)
                           NULL, NULL, NULL, NULL, NULL);
     ei_place(toplevel_2, NULL, &toplevel_x_2, &toplevel_y_2, NULL, NULL, NULL, NULL, NULL, NULL );
 
-
 	/* Run the application's main loop. */
 	ei_app_run();
 

@@ -56,6 +56,23 @@ ei_point_t get_prev_mouse_pos() {
     return *prev_mouse_pos;
 }
 
+void ei_widget_destroy_rec(ei_widget_t *widget) {
+    ei_widget_t *current = widget->children_head;
+    while (current != NULL) {
+        if (current->destructor != NULL) {
+            current->destructor(current);
+        }
+        ei_placer_forget(current);
+        ei_widget_destroy_rec(current);
+        ei_widget_t *tmp = current;
+        current = current->next_sibling;
+        tmp->wclass->releasefunc(tmp);
+    }
+    if (ei_event_get_active_widget() == widget){
+        ei_event_set_active_widget(NULL);
+    }
+}
+
 
 void draw_window() {
     ei_widget_t *root = ei_app_root_widget();

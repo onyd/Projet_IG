@@ -4,7 +4,6 @@
 
 ei_default_handle_func_t default_handle_func;
 ei_widget_t *active_widget = NULL;
-ei_event_t *last_event;
 
 ei_bool_t event_propagation(ei_widget_t *widget, ei_event_t *event) {
     if (widget->wclass->handlefunc(widget, event)) {
