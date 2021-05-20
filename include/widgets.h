@@ -252,6 +252,7 @@ void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
+void updated_rect_size(ei_widget_t *widget, ei_rect_t rect);
 /* handlefunc */
 
 ei_bool_t widget_handlefunc(ei_widget_t *widget, ei_event_t *event);

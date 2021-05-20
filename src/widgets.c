@@ -412,6 +412,7 @@ void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     // Update
     ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
     union_rect(&rect, &(widget->screen_location), &new->rect);
+    intersection(&new->rect, get_clipper_window(), &new->rect);
     new->next = updated_rects;
     updated_rects = new;
 
@@ -419,31 +420,23 @@ void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 }
 
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
-    // Update
-    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
-    union_rect(&rect, &(widget->screen_location), &new->rect);
-    new->next = updated_rects;
-    updated_rects = new;
-
+    ei_rect_t old_screen_location = widget->screen_location;
     widget->screen_location = rect;
+
+    // Update
+    updated_rect_size(widget, old_screen_location);
 }
 
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
-    // Update
-    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
-    union_rect(&rect, &(widget->screen_location), &new->rect);
-    new->next = updated_rects;
-    updated_rects = new;
-
+    ei_rect_t old_screen_location = widget->screen_location;
     widget->screen_location = rect;
+
+    // Update
+    updated_rect_size(widget, old_screen_location);
 }
 
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
-    // Update
-    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
-    union_rect(&rect, &(widget->screen_location), &new->rect);
-    new->next = updated_rects;
-    updated_rects = new;
+    ei_rect_t old_screen_location = widget->screen_location;
 
     *widget->content_rect = rect;
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
@@ -460,8 +453,22 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     toplevel->grab_event.param.minimize_square.top_left = ei_point(
             widget->screen_location.top_left.x + widget->screen_location.size.width - 20,
             widget->screen_location.top_left.y + widget->screen_location.size.height - 20);
+
+    // Update
+    updated_rect_size(widget, old_screen_location);
 }
 
+void updated_rect_size(ei_widget_t *widget, ei_rect_t rect){
+    ei_rect_t union_rec;
+    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
+    union_rect(&rect, &(widget->screen_location), &union_rec);
+    if (intersection(&union_rec, get_clipper_window(), &new->rect)) {
+        new->next = updated_rects;
+        updated_rects = new;
+    } else {
+        free(new);
+    }
+}
 /* handlefunc */
 
 ei_bool_t widget_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
@@ -588,7 +595,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             return true;
 
         case ei_ev_keydown:
-            if (event->param.key.modifier_mask == 224 && event->param.key.key_code == 119) {
+            if (event->param.key.modifier_mask == 8 && event->param.key.key_code == 119) {
                 ei_widget_destroy(widget);
                 return true;
             }

@@ -148,7 +148,6 @@ void ei_app_run(void) {
         draw_window();
 
         hw_surface_unlock(get_main_window());
-        printf("x : %i, y : %i", updated_rects->rect.top_left.x, updated_rects->rect.top_left.y);
         hw_surface_update_rects(get_main_window(), updated_rects);
         ei_linked_rect_t *current_rect = updated_rects->next;
         while (current_rect != NULL) {
