@@ -26,12 +26,13 @@ void handle_event(ei_event_t *event) {
 
     switch (event->type) {
         case ei_ev_mouse_move:
+            *prev_mouse_pos = *mouse_pos;
             *mouse_pos = event->param.mouse.where;
         case ei_ev_mouse_buttondown :
         case ei_ev_mouse_buttonup:
             if (active_widget != NULL) {
                 if (active_widget->wclass->handlefunc(active_widget, event))
-                    (*default_handle_func)(event);
+                    (*ei_event_get_default_handle_func())(event);
             } else {
                 ei_widget_t *picked = ei_widget_pick(&event->param.mouse.where);
                 if (picked->wclass->handlefunc(picked, event))
@@ -55,7 +56,6 @@ void handle_event(ei_event_t *event) {
                         free(user_params);
                     }
                     toplevel->grab_event.param.unshow_minimize_square_event_sent = false;
-
                     break;
                 case user_param:
                     break;

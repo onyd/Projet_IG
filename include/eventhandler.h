@@ -4,8 +4,6 @@
 #include "ei_event.h"
 #include "widgets.h"
 
-ei_event_t *last_event;
-
 typedef enum {
     toplevel_param = 0,
     user_param

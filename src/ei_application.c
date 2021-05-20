@@ -61,7 +61,6 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     default_handle_func = &always_true;
 
     // Picking init
-    widget_counter = 0;
     pick_vector = create_vector(1);
 
     updated_rects = calloc(1, sizeof(ei_linked_rect_t));
@@ -70,7 +69,8 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     mouse_pos = calloc(1, sizeof(ei_point_t));
     *mouse_pos = ei_point_zero();
 
-    last_event = malloc(sizeof(ei_event_t));
+    prev_mouse_pos = calloc(1, sizeof(ei_point_t));
+    *prev_mouse_pos = ei_point_zero();
 
     // root init
     root = frame_allocfunc();
@@ -105,6 +105,7 @@ void ei_app_free(void) {
     free_vector(pick_vector);
     free(updated_rects);
     free(mouse_pos);
+    free(prev_mouse_pos);
 
     // Free classes
     free(frame_class);

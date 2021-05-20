@@ -52,7 +52,6 @@ typedef enum {
 typedef struct grab_event_t {
     grab_event_type grab_type; // Tells what the user do with toplevel
     struct param {
-        ei_point_t active; // Last mouse point
         ei_rect_t minimize_square; // The ei_rect_t of minimize square for resizing
         ei_bool_t show_minimize_square;
         ei_bool_t unshow_minimize_square_event_sent;
@@ -83,10 +82,10 @@ extern ei_widgetclass_t *toplevel_class;
 extern ei_surface_t main_window;
 extern ei_frame_t *root;
 extern ei_surface_t pick_surface;
-extern uint32_t widget_counter;
 extern vector *pick_vector;
 extern ei_linked_rect_t *updated_rects;
 extern ei_point_t *mouse_pos;
+extern ei_point_t *prev_mouse_pos;
 
 extern ei_size_t *toplevel_default_size;
 extern ei_size_t *toplevel_default_min_size;
@@ -108,6 +107,8 @@ ei_surface_t get_pick_surface();
 ei_rect_t *get_clipper_window();
 
 ei_point_t get_mouse_pos();
+
+ei_point_t get_prev_mouse_pos();
 
 void draw_window();
 

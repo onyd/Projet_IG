@@ -15,7 +15,7 @@ vector *create_vector(size_t size);
 
 void *get(vector *v, size_t i);
 
-void append_vector(vector *a, void *element);
+size_t append_vector(vector *a, void *element);
 
 size_t remove_vector(vector *a, void *element);
 
