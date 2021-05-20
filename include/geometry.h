@@ -22,6 +22,6 @@ ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *resu
 
 ei_bool_t inside(ei_point_t p, const ei_rect_t *r);
 
-ei_bool_t union_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result);
+void union_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result);
 
 #endif //PROJETC_IG_GEOMETRY_H

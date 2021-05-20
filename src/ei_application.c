@@ -12,17 +12,14 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     hw_init();
     quit_request = false;
     // Class init
-    widget_class = malloc(sizeof(ei_widgetclass_t));
     button_class = malloc(sizeof(ei_widgetclass_t));
     frame_class = malloc(sizeof(ei_widgetclass_t));
     toplevel_class = malloc(sizeof(ei_widgetclass_t));
 
-    strcpy(widget_class->name, "widget");
     strcpy(button_class->name, "button");
     strcpy(frame_class->name, "frame");
     strcpy(toplevel_class->name, "toplevel");
 
-    ei_widgetclass_register(widget_class);
     ei_widgetclass_register(button_class);
     ei_widgetclass_register(frame_class);
     ei_widgetclass_register(toplevel_class);
@@ -111,7 +108,6 @@ void ei_app_free(void) {
     // Free classes
     free(frame_class);
     free(button_class);
-    free(widget_class);
     free(toplevel_class);
 
     // Free defaults
@@ -150,6 +146,7 @@ void ei_app_run(void) {
 
         hw_surface_unlock(get_main_window());
         hw_surface_update_rects(get_main_window(), NULL);
+        hw_surface_update_rects(get_main_window(), updated_rects);
         ei_linked_rect_t *current_rect = updated_rects->next;
         while (current_rect != NULL) {
             ei_linked_rect_t *tmp = current_rect;

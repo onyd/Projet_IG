@@ -8,7 +8,6 @@
 #include "ei_event.h"
 #include "draw.h"
 #include "vector.h"
-#include "chainedlist.h"
 
 
 typedef struct ei_button_t {
@@ -75,7 +74,6 @@ typedef struct ei_toplevel_t {
 // Class declarations
 extern ei_widgetclass_t *frame_class;
 extern ei_widgetclass_t *button_class;
-extern ei_widgetclass_t *widget_class;
 extern ei_widgetclass_t *toplevel_class;
 
 // Default declaration
@@ -120,11 +118,6 @@ void ei_widget_destroy_rec(ei_widget_t *widget);
 void draw_window();
 
 /**
- * \brief	Allows to allocate a widget of type \ref ei_widget_t to zero.
- */
-ei_widget_t *widget_allocfunc();
-
-/**
  * \brief	Allows to allocate a widget of type \ref ei_button_t to zero.
  */
 ei_widget_t *button_allocfunc();
@@ -138,13 +131,6 @@ ei_widget_t *frame_allocfunc();
  * \brief	Allows to allocate a widget of type \ref ei_toplevel_t to zero.
  */
 ei_widget_t *toplevel_allocfunc();
-
-/**
- * \brief	Allow to free a widget of type \ref ei_widget_t to zero.
- *
- * @param	widget		The widget which resources are to be freed.
- */
-void widget_releasefunc(ei_widget_t *widget);
 
 /**
  * \brief	Allow to free a widget of type \ref ei_button_t to zero.
@@ -167,19 +153,6 @@ void frame_releasefunc(ei_widget_t *widget);
  * @param	widget		The widget which resources are to be freed.
  */
 void toplevel_releasefunc(ei_widget_t *widget);
-
-/**
- * \brief	Allow to draw a widget of type \ref ei_widget_t to zero.
- *
- * @param	widget		The widget we want to draw.
- * @param	surface		The surface on which we want to draw.
- * @param	pick_surface		The picking surface.
- * @param	clipper		The clipper that restrain the drawing.
- */
-void widget_drawfunc(ei_widget_t *widget,
-                     ei_surface_t surface,
-                     ei_surface_t pick_surface,
-                     ei_rect_t *clipper);
 
 /**
  * \brief	Allow to draw a widget of type \ref ei_button_t to zero.
@@ -222,13 +195,6 @@ void toplevel_drawfunc(ei_widget_t *widget,
                        ei_rect_t *clipper);
 
 /**
- * \brief	Allow to apply defaults values to a widget of type \ref ei_widget_t.
- *
- * @param	widget		The widget which we want to set.
- */
-void widget_setdefaultsfunc(ei_widget_t *widget);
-
-/**
  * \brief	Allow to apply defaults values to a widget of type \ref ei_button_t.
  *
  * @param	widget		The widget which we want to set.
@@ -251,19 +217,14 @@ void frame_setdefaultsfunc(ei_widget_t *widget);
 void toplevel_setdefaultsfunc(ei_widget_t *widget);
 
 /* geomnotifyfunc */
-
-void widget_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
-
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
+void updated_rect_size(ei_widget_t *widget, ei_rect_t rect);
 /* handlefunc */
-
-ei_bool_t widget_handlefunc(ei_widget_t *widget, ei_event_t *event);
-
 ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
 ei_bool_t frame_handlefunc(ei_widget_t *widget, ei_event_t *event);

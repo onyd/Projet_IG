@@ -192,21 +192,21 @@ ei_bool_t inside(ei_point_t p, const ei_rect_t *r) {
     return false;
 }
 
-ei_bool_t union_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result){
+void union_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result){
+    if (r1 == NULL) {
+        *result = ei_rect(ei_point(r2->top_left.x, r2->top_left.y), ei_size(r2->size.width, r2->size.height));
+    }
+    if (r2 == NULL) {
+        *result = ei_rect(ei_point(r1->top_left.x, r1->top_left.y), ei_size(r1->size.width, r1->size.height));
+    }
+
     int top_left_x = min(r1->top_left.x, r2->top_left.x);
     int top_left_y = min(r1->top_left.y, r2->top_left.y);
     int width = max(r1->top_left.x + r1->size.width, r2->top_left.x + r2->size.width) - min(r1->top_left.x, r2->top_left.x);
     int height = max(r1->top_left.y + r1->size.height, r2->top_left.y + r2->size.height) - min(r1->top_left.y, r2->top_left.y);
-    if (top_left_x >= 4){
-        result->top_left.x = top_left_x - 4;
-    } else {
-        result->top_left.x = top_left_x;
-    }
-    if (top_left_y >= 4){
-        result->top_left.y = top_left_y - 4;
-    } else {
-        result->top_left.y = top_left_y;
-    }
-    result->size.width = width + 8;
-    result->size.height = height + 8;
+
+    result->top_left.x = top_left_x;
+    result->top_left.y = top_left_y;
+    result->size.width = width;
+    result->size.height = height;
 }
