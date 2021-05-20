@@ -460,8 +460,8 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     toplevel->button->widget.screen_location.top_left.y = widget->screen_location.top_left.y + toplevel->border_width + toplevel->border_width + height;
 
     toplevel->grab_event.param.minimize_square.top_left = ei_point(
-            widget->screen_location.top_left.x + widget->screen_location.size.width - 20,
-            widget->screen_location.top_left.y + widget->screen_location.size.height - 20);
+            widget->screen_location.top_left.x + widget->screen_location.size.width - 20 + toplevel->border_width,
+            widget->screen_location.top_left.y + widget->screen_location.size.height - 20 + toplevel->border_width + height);
 
     widget->screen_location.top_left = ei_point_add(widget->screen_location.top_left, ei_point(toplevel->border_width, toplevel->border_width + height));
     widget->content_rect->top_left = ei_point_add(widget->content_rect->top_left, ei_point(toplevel->border_width, toplevel->border_width + height));
@@ -577,10 +577,10 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                 case grabbed:
                     if (ei_event_get_active_widget() == widget) {
                         int topleft_x =
-                                widget->screen_location.top_left.x - widget->parent->screen_location.top_left.x +
+                                widget->screen_location.top_left.x - widget->parent->content_rect->top_left.x +
                                 (event->param.mouse.where.x - get_prev_mouse_pos().x);
                         int topleft_y =
-                                widget->screen_location.top_left.y - widget->parent->screen_location.top_left.y +
+                                widget->screen_location.top_left.y - widget->parent->content_rect->top_left.y +
                                 (event->param.mouse.where.y - get_prev_mouse_pos().y);
                         ei_place(toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
                                  NULL, NULL);
