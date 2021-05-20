@@ -6,18 +6,20 @@ ei_default_handle_func_t default_handle_func;
 ei_widget_t *active_widget = NULL;
 
 ei_bool_t event_propagation(ei_widget_t *widget, ei_event_t *event) {
-    if (widget->wclass->handlefunc(widget, event)) {
-        return true;
-    }
+    ei_widget_list_t l = {NULL, NULL};
+    inverse_depth_widget_list(widget, &l);
 
     // Event propagation on children
-    ei_widget_t *current = widget->children_head;
+    ei_linked_widget_t *current = l.head;
     while (current != NULL) {
-        if (event_propagation(current, event))
+        if (current->widget->wclass->handlefunc(current->widget, event)) {
+            free_linked_widget(l.head);
             return true;
-        current = current->next_sibling;
+        }
+        current = current->next;
     }
 
+    free_linked_widget(l.head);
     return false;
 }
 
@@ -75,3 +77,33 @@ void destroy_widget_callback(ei_widget_t *widget,
 ei_bool_t always_true(ei_event_t *event) {
     return true;
 }
+
+void inverse_depth_widget_list(ei_widget_t *widget, struct ei_widget_list_t *result) {
+    // Add current
+    ei_linked_widget_t *current = calloc(1, sizeof(ei_linked_widget_t));
+    current->widget = widget;
+    if (result->tail == NULL) {
+        result->head = current;
+        result->tail = current;
+    } else {
+        current->next = result->head;
+        result->head = current;
+    }
+
+    // Recursively add children
+    ei_widget_t *current_child = widget->children_head;
+    while (current_child != NULL) {
+        inverse_depth_widget_list(current_child, result);
+        current_child = current_child->next_sibling;
+    }
+}
+
+void free_linked_widget(struct ei_linked_widget_t *l) {
+    ei_linked_widget_t *current = l;
+    while (current != NULL) {
+        ei_linked_widget_t *tmp = current;
+        current = current->next;
+        free(tmp);
+    }
+}
+
