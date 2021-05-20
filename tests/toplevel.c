@@ -56,10 +56,17 @@ int main(int argc, char** argv)
     int		toplevel_x_2			= 200;
     int		toplevel_y_2			= 300;
     ei_widget_t *toplevel_2 = ei_widget_create("toplevel", ei_app_root_widget(), NULL, NULL);
-    ei_toplevel_configure(toplevel_2, &frame_size, NULL,
-                          NULL, NULL, NULL, NULL, NULL);
     ei_place(toplevel_2, NULL, &toplevel_x_2, &toplevel_y_2, NULL, NULL, NULL, NULL, NULL, NULL );
 
+    float rel_3 = 0;
+    float rel_size_3 = 1;
+    ei_widget_t *toplevel_3 = ei_widget_create("toplevel", toplevel_2, NULL, NULL);
+    ei_size_t toplevel_size_3 = {100, 50};
+    ei_size_t **min_size = malloc(sizeof(ei_size_t *));
+    *min_size = &toplevel_size_3;
+    ei_toplevel_configure(toplevel_3, &toplevel_size_3, NULL,
+                          NULL, NULL, NULL, NULL, min_size);
+    ei_place(toplevel_3, NULL, NULL, NULL, NULL, NULL, &rel_3, &rel_3, NULL, NULL );
 	/* Run the application's main loop. */
 	ei_app_run();
 

@@ -352,7 +352,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
         ei_rect_t clipping_widget;
         intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
         current->wclass->drawfunc(current, get_main_window(), get_pick_surface(),
-                                  clipping_window);
+                                  &clipping_widget);
         current = current->next_sibling;
     }
 
