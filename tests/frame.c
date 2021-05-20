@@ -27,9 +27,7 @@ int main(int argc, char** argv)
 
 	/* Create the application and change the color of the background. */
 	ei_app_create(screen_size, EI_FALSE);
-	char *text = "Tout va bien Yannick !";
-	ei_anchor_t text_anchor = ei_anc_south;
-	ei_frame_configure(ei_app_root_widget(), NULL, &root_bgcol, NULL, NULL, &text, NULL, NULL, &text_anchor, NULL, NULL, NULL);
+	ei_frame_configure(ei_app_root_widget(), NULL, &root_bgcol, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 	/*create a toplevel */
     int		toplevel_x			= 100;

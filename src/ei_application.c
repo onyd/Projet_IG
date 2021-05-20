@@ -145,7 +145,7 @@ void ei_app_run(void) {
         draw_window();
 
         hw_surface_unlock(get_main_window());
-        hw_surface_update_rects(get_main_window(), NULL);
+        hw_surface_update_rects(get_main_window(), updated_rects);
         ei_linked_rect_t *current_rect = updated_rects->next;
         while (current_rect != NULL) {
             ei_linked_rect_t *tmp = current_rect;
