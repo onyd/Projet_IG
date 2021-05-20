@@ -483,6 +483,7 @@ void updated_rect_size(ei_widget_t *widget, ei_rect_t rect){
 /* handlefunc */
 ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
     ei_button_t *button = (ei_button_t *) widget;
+    ei_bool_t treated = false;
     switch (event->type) {
         case ei_ev_mouse_buttondown:
             if (inside(event->param.mouse.where, button->widget.content_rect)) {
@@ -491,18 +492,21 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
                 if (toplevel != NULL) {
                     toplevel->wclass->handlefunc(toplevel, event);
                 }
-                return true;
+                treated = true;
             }
             break;
         case ei_ev_mouse_buttonup:
             button->relief = ei_relief_raised;
             if (button->callback != NULL && inside(event->param.mouse.where, button->widget.content_rect)) {
                 button->callback(widget->parent, event, NULL);
-                return true;
+                treated = true;
             }
             break;
     }
-    return false;
+    if (treated) {
+        append_updated_rects(widget->screen_location);
+    }
+    return treated || false;
 }
 
 ei_bool_t frame_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
