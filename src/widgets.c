@@ -580,11 +580,9 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 
             /* Keydown events*/
         case ei_ev_keydown:
-            if (ei_event_get_active_widget() == widget) {
-                if (event->param.key.modifier_mask == 224 && event->param.key.key_code == 119) {
-                    ei_widget_destroy(widget);
-                    return true;
-                }
+            if (event->param.key.modifier_mask == 8 && event->param.key.key_code == 119) {
+                ei_widget_destroy(widget);
+                return true;
             }
     }
 

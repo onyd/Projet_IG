@@ -42,6 +42,9 @@ void ei_widget_destroy(ei_widget_t *widget) {
         current = current->next_sibling;
         tmp->wclass->releasefunc(tmp);
     }
+    if (ei_event_get_active_widget() == widget){
+        ei_event_set_active_widget(NULL);
+    }
 }
 
 
