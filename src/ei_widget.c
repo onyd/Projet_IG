@@ -2,7 +2,7 @@
 #include "widgets.h"
 #include "string.h"
 #include "utils.h"
-#include "chainedlist.h"
+#include "eventhandler.h"
 
 ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *parent, void *user_data,
                               ei_widget_destructor_t destructor) {
@@ -190,4 +190,21 @@ void ei_toplevel_configure(ei_widget_t *widget,
             toplevel->min_size = *toplevel_default_min_size;
         }
     }
+
+    // Toplevel's button default settings
+    int button_width = 2;
+    ei_size_t size = ei_size(20, 20);
+    int corner_size = 10;
+    ei_color_t color_button = {200, 0, 0, 255};
+    ei_callback_t close_callback = destroy_widget_callback;
+    ei_button_configure((ei_widget_t *) toplevel->button, &size, &color_button, &button_width,
+                        &corner_size, NULL, NULL, NULL, NULL,
+                        NULL, NULL, NULL, NULL, &close_callback, NULL);
+    ei_point_t point_button = ei_point(widget->screen_location.top_left.x + toplevel->border_width,
+                                       widget->screen_location.top_left.y + toplevel->border_width);
+    toplevel->button->widget.screen_location.top_left = point_button;
+    toplevel->grab_event.param.minimize_square = ei_rect(ei_point_add(widget->screen_location.top_left,
+                                                                      ei_point(widget->screen_location.size.width - 20,
+                                                                               widget->screen_location.size.height -
+                                                                               20)), ei_size(20, 20));
 }

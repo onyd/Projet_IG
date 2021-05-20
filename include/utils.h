@@ -5,7 +5,7 @@
 #include "ei_types.h"
 #include "hw_interface.h"
 
-struct table_cote {
+struct linked_edges {
     int ymax;
     int x_ymin;
     int x_ymax;
@@ -13,35 +13,35 @@ struct table_cote {
     int dx;
     int dy;
     int sign_dx;
-    struct table_cote *next;
+    struct linked_edges *next;
 };
 
-struct table_cote_actif {
-    struct table_cote *head;
+struct linked_acive_edges {
+    struct linked_edges *head;
 };
 
 
-void append_left_tca(struct table_cote *e, struct table_cote_actif *tca);
+void append_left_tca(struct linked_edges *e, struct linked_acive_edges *tca);
 
-void delete_y(int y, struct table_cote_actif *tca);
+void delete_y(int y, struct linked_acive_edges *tca);
 
-void display(struct table_cote_actif *tac);
+void display(struct linked_acive_edges *tac);
 
-void sorting_insert(struct table_cote *tc, struct table_cote_actif *tca);
-
-/**
- * \brief	free the structure table_cote
- *
- * @param	 	struct table_cote*.
- */
-void tc_free(struct table_cote *);
+void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *tca);
 
 /**
- * \brief	free the structure table_cote_actif
+ * \brief	free the structure linked_edges
  *
- * @param	 	struct table_cote_actif*.
+ * @param	 	struct linked_edges*.
  */
-void tca_free(struct table_cote_actif *);
+void tc_free(struct linked_edges *);
+
+/**
+ * \brief	free the structure linked_acive_edges
+ *
+ * @param	 	struct linked_acive_edges*.
+ */
+void tca_free(struct linked_acive_edges *);
 
 /**
  * \brief	Swap the variable content pointed by a and b

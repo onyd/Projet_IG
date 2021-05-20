@@ -25,8 +25,7 @@
  *		\ref hw_text_create_surface and \ref hw_image_load.
  */
 
-typedef void* ei_surface_t;
-
+typedef void *ei_surface_t;
 
 
 /**
@@ -40,7 +39,6 @@ void hw_init(void);
  * 		resources.
  */
 void hw_quit(void);
-
 
 
 /**
@@ -72,9 +70,9 @@ ei_surface_t hw_create_window(ei_size_t size, const ei_bool_t fullScreen);
  *				should be freed by calling \ref hw_surface_free.
  */
 
-ei_surface_t hw_surface_create (const ei_surface_t	root,
-				ei_size_t		size,
-				ei_bool_t		force_alpha);
+ei_surface_t hw_surface_create(const ei_surface_t root,
+                               ei_size_t size,
+                               ei_bool_t force_alpha);
 
 /**
  * @brief 	Frees a surface allocated by \ref hw_surface_create.
@@ -112,7 +110,7 @@ void hw_surface_unlock(ei_surface_t surface);
  * @param	rects		The list of rectangle to be updated on screen.
  *				If NULL, them the entire surface is updated.
  */
-void hw_surface_update_rects(ei_surface_t surface, const ei_linked_rect_t* rects);
+void hw_surface_update_rects(ei_surface_t surface, const ei_linked_rect_t *rects);
 
 /**
  * @brief 	Returns the R, G, B, and Alpha channel indices of a surface.
@@ -124,7 +122,7 @@ void hw_surface_update_rects(ei_surface_t surface, const ei_linked_rect_t* rects
  * @param 	ir, ig, ib, ia	Where to store the resulting indices.
  */
 
-void hw_surface_get_channel_indices(ei_surface_t surface, int* ir, int* ig, int* ib, int* ia);
+void hw_surface_get_channel_indices(ei_surface_t surface, int *ir, int *ig, int *ib, int *ia);
 
 /** 
  * @brief	Sets the coordinates of the first pixel of the surface's memory.
@@ -150,7 +148,7 @@ void hw_surface_set_origin(ei_surface_t surface, const ei_point_t origin);
  *
  * @param 	surface		The surface from which the pixel address is returned.
  */
-uint8_t* hw_surface_get_buffer(const ei_surface_t surface);
+uint8_t *hw_surface_get_buffer(const ei_surface_t surface);
 
 /**
  * @brief	Returns the size of a surface.
@@ -190,9 +188,10 @@ ei_bool_t hw_surface_has_alpha(ei_surface_t surface);
  *
  * @return			The font.
  */
-ei_font_t hw_text_font_create		(const char*		filename,
-					 ei_fontstyle_t		style,
-					 int			size);
+ei_font_t hw_text_font_create(const char *filename,
+                              ei_fontstyle_t style,
+                              int size);
+
 /**
  * @brief	Frees a font created by \ref hw_text_font_create.
  *
@@ -208,10 +207,10 @@ void hw_text_font_free(ei_font_t font);
  * @param	width, height	Addresses where to store the computed width and height of the text
  *				surface.
  */
-void hw_text_compute_size		(const char*		text,
-					 const ei_font_t	font,
-					 int*			width,
-					 int*			height);
+void hw_text_compute_size(const char *text,
+                          const ei_font_t font,
+                          int *width,
+                          int *height);
 
 /**
  * @brief	Creates a surface containing a text. The size of the created surface is just big
@@ -229,10 +228,9 @@ void hw_text_compute_size		(const char*		text,
  *				alpha channel of the surface: pixels on the text's boundaries have
  *				some transparency.
  */
-ei_surface_t hw_text_create_surface	(const char*		text,
-					 const ei_font_t	font,
-					 ei_color_t		color);
-
+ei_surface_t hw_text_create_surface(const char *text,
+                                    const ei_font_t font,
+                                    ei_color_t color);
 
 
 /**
@@ -248,9 +246,8 @@ ei_surface_t hw_text_create_surface	(const char*		text,
  *
  * @return			A new unlocked surface containing the image.
  */
-ei_surface_t hw_image_load		(const char*		filename,
-					 ei_surface_t		channels);
-
+ei_surface_t hw_image_load(const char *filename,
+                           ei_surface_t channels);
 
 
 struct ei_event_t;
@@ -262,8 +259,7 @@ struct ei_event_t;
  *				caller.	On return, the structure is filled with information about
  *				the new event.
  */
-void hw_event_wait_next(struct ei_event_t* event);
-
+void hw_event_wait_next(struct ei_event_t *event);
 
 
 /**
@@ -272,8 +268,7 @@ void hw_event_wait_next(struct ei_event_t* event);
  *
  * @param	user_param	The user parameter that will be retrievable in the event.
  */
-int hw_event_post_app(void* user_param);
-
+int hw_event_post_app(void *user_param);
 
 
 /**
@@ -284,8 +279,7 @@ int hw_event_post_app(void* user_param);
  *				posted in the event queue.
  * @param	user_param	The user parameter that will be retrievable in the event.
  */
-void hw_event_schedule_app(int ms_delay, void* user_param);
-
+void hw_event_schedule_app(int ms_delay, void *user_param);
 
 
 /**
