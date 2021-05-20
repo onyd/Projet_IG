@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 	int		window_border_width	= 2;
 	ei_bool_t	window_closable		= EI_TRUE;
 	ei_axis_set_t	window_resizable	= ei_axis_both;
-	ei_point_t	window_position		= {30, 10};
+	ei_point_t	window_position		= {30, 30};
 
 	
 	/* Create the application and change the color of the background. */
@@ -85,7 +85,8 @@ int main(int argc, char** argv)
 				 &button_border_width, NULL, &button_relief, &button_title, NULL, &button_text_color, NULL,
 				NULL, NULL, NULL, &button_callback, NULL);
 	ei_place(button, &button_anchor, &button_x, &button_y, NULL, NULL, &button_rel_x, &button_rel_y, &button_rel_width, NULL);
-	/* Run the application's main loop. */
+
+    /* Run the application's main loop. */
 	ei_app_run();
 
 	ei_app_free();
