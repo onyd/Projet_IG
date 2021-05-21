@@ -137,6 +137,34 @@ void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_
     ei_draw_polygon(surface, first_point_2, color, clipper);
 }
 
+void draw_blank_rect (ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t w, int32_t d){
+    ei_linked_point_t first_point[7];
+    ei_linked_point_t *current = first_point;
+    current->point.x = rect.top_left.x;
+    current->point.y = rect.top_left.y;
+    current->next = &first_point[1];
+    current->point.x =rect.top_left.x + d;
+    current->point.y = rect.top_left.y;
+    current->next = &first_point[2];
+    current->point.x = rect.top_left.x +d + w;
+    current->point.y = rect.top_left.y;
+    current->next = &first_point[3];
+    current->point.x = rect.top_left.x + rect.size.width;
+    current->point.y = rect.top_left.y;
+    current->next = &first_point[4];
+    current->point.x = rect.top_left.x + rect.size.width;
+    current->point.y = rect.top_left.y + rect.size.height;
+    current->next = &first_point[5];
+    current->point.x = rect.top_left.x;
+    current->point.y = rect.top_left.y + rect.size.height;
+    current->next = &first_point[6];
+    current->point.x = rect.top_left.x;
+    current->point.y = rect.top_left.y;
+    current->next = NULL;
+
+    ei_draw_polyline(surface, first_point, color, clipper);
+}
+
 uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper) {
     uint8_t result = 0;
 

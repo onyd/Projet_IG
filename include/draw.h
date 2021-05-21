@@ -49,6 +49,8 @@ void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect
 
 void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t size);
 
+void draw_blank_rect (ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t w, int32_t d);
+
 uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper);
 
 enum clipping_code get_clipping_code(uint8_t code);

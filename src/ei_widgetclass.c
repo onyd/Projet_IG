@@ -27,6 +27,14 @@ void ei_widgetclass_register(ei_widgetclass_t *widgetclass) {
         widgetclass->geomnotifyfunc = &toplevel_geomnotifyfunc;
         widgetclass->handlefunc = &toplevel_handlefunc;
     }
+    if (strcmp(widgetclass->name, "radiobutton") == 0) {
+        widgetclass->allocfunc = &radiobutton_allocfunc;
+        widgetclass->releasefunc = &radiobutton_releasefunc;
+        widgetclass->drawfunc = &radiobutton_drawfunc;
+        widgetclass->setdefaultsfunc = &radiobutton_setdefaultsfunc;
+        widgetclass->geomnotifyfunc = &radiobutton_geomnotifyfunc;
+        widgetclass->handlefunc = &radiobutton_handlefunc;
+    }
 }
 
 
@@ -39,5 +47,8 @@ ei_widgetclass_t *ei_widgetclass_from_name(ei_widgetclass_name_t name) {
     }
     if (strcmp(name, "toplevel") == 0) {
         return toplevel_class;
+    }
+    if (strcmp(name, "radiobutton") == 0) {
+        return radiobutton_class;
     }
 }

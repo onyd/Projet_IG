@@ -42,6 +42,12 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     default_anchor = malloc((sizeof(ei_anchor_t)));
     *default_anchor = ei_anc_center;
 
+    default_button_color = malloc(sizeof(ei_color_t));
+    *default_button_color = (ei_color_t) {200, 200, 200, 255};
+
+    default_selectioned_color = malloc(sizeof(ei_color_t));
+    *default_selectioned_color = (ei_color_t) {255, 0, 0, 255};
+
     toplevel_default_size = malloc(sizeof(ei_size_t));
     *toplevel_default_size = ei_size(320, 240);
 
@@ -116,6 +122,8 @@ void ei_app_free(void) {
     free(default_size);
     free(default_relief);
     free(default_anchor);
+    free(default_button_color);
+    free(default_selectioned_color);
     free(toplevel_default_border_width);
     free(toplevel_default_min_size);
     free(toplevel_default_size);

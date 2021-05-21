@@ -7,7 +7,7 @@
 ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *parent, void *user_data,
                               ei_widget_destructor_t destructor) {
     if (strcmp(class_name, "frame") == 0 || strcmp(class_name, "button") == 0 || strcmp(class_name, "widget") == 0
-        || strcmp(class_name, "toplevel") == 0) {
+        || strcmp(class_name, "toplevel") == 0 || strcmp(class_name, "radiobutton") == 0) {
         ei_widgetclass_t *class = ei_widgetclass_from_name(class_name);
         ei_widget_t *new_widget = class->allocfunc();
         new_widget->pick_color = malloc(sizeof(ei_color_t));

@@ -12,6 +12,7 @@
 ei_widgetclass_t *frame_class;
 ei_widgetclass_t *button_class;
 ei_widgetclass_t *toplevel_class;
+ei_widgetclass_t *radiobutton_class;
 
 // Default declaration
 ei_surface_t main_window;
@@ -31,6 +32,8 @@ ei_color_t *default_text_color;
 ei_size_t *default_size;
 ei_relief_t *default_relief;
 ei_anchor_t *default_anchor;
+ei_color_t *default_button_color;
+ei_color_t *default_selectioned_color;
 
 bool quit_request;
 
@@ -128,6 +131,12 @@ ei_widget_t *toplevel_allocfunc() {
     return widget;
 }
 
+ei_widget_t *radiobutton_allocfunc(){
+    ei_widget_t *widget = (ei_radiobutton_t *) calloc(1, sizeof(ei_radiobutton_t));
+    ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget;
+    return widget;
+}
+
 /* releasefunc */
 void widget_releasefunc(struct ei_widget_t *widget) {
     free(widget);
@@ -162,6 +171,13 @@ void toplevel_releasefunc(ei_widget_t *widget) {
     }
     if (widget->content_rect != NULL) {
         free(widget->content_rect);
+    }
+}
+
+void radiobutton_releasefunc(ei_widget_t *widget){
+    ei_radiobutton_t *to_release = (ei_radiobutton_t*) widget;
+    if (to_release->text != NULL){
+        free(to_release->text);
     }
 }
 
@@ -365,6 +381,23 @@ void toplevel_drawfunc(ei_widget_t *widget,
 
 }
 
+void radiobutton_drawfunc(ei_widget_t *widget,
+                          ei_surface_t surface,
+                          ei_surface_t pick_surface,
+                          ei_rect_t *clipper){
+    ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget;
+    draw_rectangle(surface, *(widget->content_rect), radiobutton->background_color, clipper);
+    ei_point_t where = ei_point(widget->content_rect->top_left.x + 105, widget->content_rect->top_left.y);
+    ei_draw_text(surface, &where, radiobutton->text, ei_default_font, radiobutton->text_color, clipper);
+    draw_blank_rect(surface, *(widget->content_rect), radiobutton->text_color, clipper, 10, 100);
+    for (uint32_t i = 0; i <= radiobutton->button_tab->last_idx; i++){
+        if (get(radiobutton->button_tab, i) != NULL){
+            button_drawfunc(get(radiobutton->button_tab, i), surface, NULL, clipper);
+        }
+    }
+    return;
+}
+
 /* setdefaultsfunc */
 void button_setdefaultsfunc(ei_widget_t *widget) {
     ei_button_configure(widget,
@@ -425,6 +458,18 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
     *(toplevel->button->widget.pick_color) = pick_color;
 }
 
+void radiobutton_setdefaultsfunc(ei_widget_t *widget){
+    ei_radiobutton_configure(widget,
+                            default_size,
+                            default_color,
+                            default_button_color,
+                            default_selectioned_color,
+                            NULL,
+                            &ei_default_font,
+                            default_text_color,
+                            NULL
+    );
+}
 /* geomnotifyfunc */
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     ei_rect_t old_screen_location = widget->screen_location;
@@ -467,6 +512,10 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
     // Update
     updated_rect_size(widget, old_screen_location);
+}
+
+void radiobutton_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect){
+    return;
 }
 
 void append_updated_rects(ei_rect_t rect) {
@@ -668,6 +717,34 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
 
     // Button has to receive event
     return treated || toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
+}
+
+ei_bool_t radiobutton_handlefunc(ei_widget_t *widget, ei_event_t *event){
+    return EI_TRUE;
+}
+
+void ei_radiobutton_configure(ei_widget_t *widget,
+                              ei_size_t *requested_size,
+                              ei_color_t *background_color,
+                              ei_color_t *button_color,
+                              ei_color_t *selectioned_color,
+                              char **text,
+                              ei_font_t *text_font,
+                              ei_color_t *text_color,
+                              ei_anchor_t *text_anchor){
+    ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget;
+    widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
+    radiobutton->background_color = (background_color != NULL) ? *background_color : radiobutton->background_color;
+    radiobutton->button_color = (button_color != NULL) ? *button_color : radiobutton->button_color;
+    radiobutton->selectioned_color = (selectioned_color != NULL) ? *selectioned_color : radiobutton->selectioned_color;
+    radiobutton->text_font = (text_font != NULL) ? *text_font : radiobutton->text_font;
+    radiobutton->text_color = (text_color != NULL) ? *text_color : radiobutton->text_color;
+    radiobutton->text_anchor = (text_anchor != NULL) ? *text_anchor : radiobutton->text_anchor;
+    if (text != NULL) {
+        free(radiobutton->text);
+        radiobutton->text = calloc(strlen(*text) + 1, sizeof(char));
+        strcpy(radiobutton->text, *text);
+    }
 }
 
 

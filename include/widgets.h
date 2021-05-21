@@ -71,10 +71,28 @@ typedef struct ei_toplevel_t {
     grab_event_t grab_event;
 } ei_toplevel_t;
 
+typedef struct ei_radiobutton_t {
+    ei_widget_t widget;
+    // Specific field
+    uint32_t compt;
+    ei_color_t background_color;
+    ei_color_t button_color;
+    ei_color_t selectioned_color;
+    char *text;
+    ei_font_t text_font;
+    ei_color_t text_color;
+    ei_anchor_t text_anchor;
+    vector *button_tab; // List of buttons
+    vector *text_tab;
+    int selectioned_button_idx;
+
+} ei_radiobutton_t;
+
 // Class declarations
 extern ei_widgetclass_t *frame_class;
 extern ei_widgetclass_t *button_class;
 extern ei_widgetclass_t *toplevel_class;
+extern ei_widgetclass_t *radiobutton_class;
 
 // Default declaration
 extern ei_surface_t main_window;
@@ -94,6 +112,8 @@ extern ei_size_t *default_size;
 extern ei_relief_t *default_relief;
 extern ei_anchor_t *default_anchor;
 extern bool quit_request;
+extern ei_color_t *default_button_color;
+extern ei_color_t *default_selectioned_color;
 
 //Rectangle of the main window for the clipping
 extern ei_rect_t *clipping_window;
@@ -143,6 +163,11 @@ ei_widget_t *frame_allocfunc();
 ei_widget_t *toplevel_allocfunc();
 
 /**
+ * \brief	Allows to allocate a widget of type \ref ei_radiobutton_t to zero.
+ */
+ei_widget_t *radiobutton_allocfunc();
+
+/**
  * \brief	Allow to free a widget of type \ref ei_button_t to zero.
  *
  * @param	widget		The widget which resources are to be freed.
@@ -163,6 +188,13 @@ void frame_releasefunc(ei_widget_t *widget);
  * @param	widget		The widget which resources are to be freed.
  */
 void toplevel_releasefunc(ei_widget_t *widget);
+
+/**
+ * \brief	Allow to free a widget of type \ref ei_radiobutton_t to zero.
+ *
+ * @param	widget		The widget which resources are to be freed.
+ */
+void radiobutton_releasefunc(ei_widget_t *widget);
 
 /**
  * \brief	Allow to draw a widget of type \ref ei_button_t to zero.
@@ -205,6 +237,19 @@ void toplevel_drawfunc(ei_widget_t *widget,
                        ei_rect_t *clipper);
 
 /**
+ * \brief	Allow to draw a widget of type \ref ei_radiobutton_t to zero.
+ *
+ * @param	widget		The widget we want to draw.
+ * @param	surface		The surface on which we want to draw.
+ * @param	pick_surface		The picking surface.
+ * @param	clipper		The clipper that restrain the drawing.
+ */
+void radiobutton_drawfunc(ei_widget_t *widget,
+                          ei_surface_t surface,
+                          ei_surface_t pick_surface,
+                          ei_rect_t *clipper);
+
+/**
  * \brief	Allow to apply defaults values to a widget of type \ref ei_button_t.
  *
  * @param	widget		The widget which we want to set.
@@ -226,12 +271,21 @@ void frame_setdefaultsfunc(ei_widget_t *widget);
  */
 void toplevel_setdefaultsfunc(ei_widget_t *widget);
 
+/**
+ * \brief	Allow to apply defaults values to a widget of type \ref ei_radiobutton_t.
+ *
+ * @param	widget		The widget which we want to set.
+ */
+void radiobutton_setdefaultsfunc(ei_widget_t *widget);
+
 /* geomnotifyfunc */
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
+
+void radiobutton_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
 void append_updated_rects(ei_rect_t rect);
 
@@ -244,4 +298,17 @@ ei_bool_t frame_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
 ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event);
 
+ei_bool_t radiobutton_handlefunc(ei_widget_t *widget, ei_event_t *event);
+
+/* radiobutton configure */
+void ei_radiobutton_configure(ei_widget_t *widget,
+                              ei_size_t *requested_size,
+                            ei_color_t *background_color,
+                            ei_color_t *button_color,
+                            ei_color_t *selectioned_color,
+                            char **text,
+                            ei_font_t *text_font,
+                            ei_color_t *text_color,
+                            ei_anchor_t *text_anchor
+                            );
 #endif //PROJETC_IG_WIDGETS_H
