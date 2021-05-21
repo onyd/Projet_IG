@@ -4,6 +4,7 @@
 #include "ei_event.h"
 #include "hw_interface.h"
 #include "ei_widget.h"
+#include "ei_utils.h"
 
 static char*			k_default_image_filename	= "misc/klimt.jpg";
 
@@ -35,10 +36,10 @@ int main(int argc, char** argv)
     ei_surface_t img = hw_image_load(k_default_image_filename, ei_app_root_surface());
     ei_anchor_t anchor = ei_anc_center;
 
-    frame = ei_widget_create("frame", ei_app_root_widget(), NULL, NULL);
-    ei_frame_configure	(frame, &frame_size, &frame_color,
-                           &frame_border_width, &frame_relief, NULL, NULL, NULL, NULL,
-                           &img, NULL, &anchor);
+    frame = ei_widget_create("button", ei_app_root_widget(), NULL, NULL);
+    ei_button_configure(frame, &frame_size, &frame_color,
+                           &frame_border_width, NULL, NULL, NULL, NULL, NULL,
+                           NULL, &img, NULL,NULL, NULL, NULL);
     ei_place(frame, NULL, &frame_x, &frame_y, NULL, NULL, NULL, NULL, NULL, NULL );
 
     /* Run the application's main loop. */

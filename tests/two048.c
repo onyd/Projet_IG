@@ -144,6 +144,7 @@ void create_window(game_t* g)
 		tile_bg_pos.x	= 2 * g->tile_bd;
 		
 		for (x = 0; x < g->nb_tile_x; x++) {
+            tile_bg_pos.x	= 2 * g->tile_bd;
 			tile_bg		= ei_widget_create("frame", g->toplevel, NULL, NULL);
 			ei_frame_configure(tile_bg, &tile_bg_size, &g_bg_col, &tile_bg_borderwidth, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 			ei_place(tile_bg, &anchor, &tile_bg_pos.x, &tile_bg_pos.y, NULL, NULL, NULL, NULL, NULL, NULL);

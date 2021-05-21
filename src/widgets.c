@@ -195,7 +195,7 @@ void button_drawfunc(ei_widget_t *widget,
     inside_button.top_left.y = widget->screen_location.top_left.y + border_size;
     inside_button.size.width = widget->screen_location.size.width - 2 * border_size;
     inside_button.size.height = widget->screen_location.size.height - 2 * border_size;
-    radius = radius - border_size;
+    radius = (radius <= border_size) ? 0 : radius-border_size;
     ei_linked_point_t *points_button = rounded_frame(inside_button, radius, 15, 0);
 
     if (button->relief == ei_relief_raised) {
@@ -227,7 +227,7 @@ void button_drawfunc(ei_widget_t *widget,
     }
     // Image eventually inside the button
     if (button->img != NULL) {
-        ei_size_t img_size = (button->img_rect != NULL) ? (*button->img_rect)->size : hw_surface_get_size(button->img);
+        ei_size_t img_size = (*button->img_rect != NULL) ? (*button->img_rect)->size : hw_surface_get_size(button->img);
         ei_point_t topleft = anchor_target_pos(button->text_anchor, img_size, widget->screen_location);
         ei_rect_t clipper_img;
         // We crop image in the button
