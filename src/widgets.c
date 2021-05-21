@@ -39,12 +39,20 @@ bool quit_request;
 
 ei_rect_t *clipping_window;
 
-ei_surface_t get_main_window() {
-    return main_window;
+ei_bool_t is_button(ei_widget_t *widget) {
+    return strcmp(widget->wclass->name, "button");
 }
 
-ei_frame_t *get_root() {
-    return root;
+ei_bool_t is_frame(ei_widget_t *widget) {
+    return strcmp(widget->wclass->name, "frame");
+}
+
+ei_bool_t is_toplevel(ei_widget_t *widget) {
+    return strcmp(widget->wclass->name, "toplevel");
+}
+
+ei_surface_t get_main_window() {
+    return main_window;
 }
 
 ei_surface_t get_pick_surface() {
@@ -75,7 +83,7 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
         current = current->next_sibling;
         tmp->wclass->releasefunc(tmp);
     }
-    if (ei_event_get_active_widget() == widget){
+    if (ei_event_get_active_widget() == widget) {
         ei_event_set_active_widget(NULL);
     }
 }
@@ -88,8 +96,8 @@ void draw_window() {
 
 ei_widget_t *search_for_toplevel(ei_widget_t *widget) {
     ei_widget_t *current = widget->parent;
-    ei_widget_t *root_widget = (ei_widget_t *) get_root();
-    while(current != root_widget && strcmp(current->wclass->name, "toplevel") != 0) {
+    ei_widget_t *root_widget = ei_app_root_widget();
+    while (current != root_widget && !is_toplevel(widget)) {
         current = current->parent;
     }
     current = (current != root_widget) ? current : NULL;
@@ -209,7 +217,7 @@ void button_drawfunc(ei_widget_t *widget,
     inside_button.top_left.y = widget->screen_location.top_left.y + border_size;
     inside_button.size.width = widget->screen_location.size.width - 2 * border_size;
     inside_button.size.height = widget->screen_location.size.height - 2 * border_size;
-    radius = (radius <= border_size) ? 0 : radius-border_size;
+    radius = (radius <= border_size) ? 0 : radius - border_size;
     ei_linked_point_t *points_button = rounded_frame(inside_button, radius, 15, 0);
 
     if (button->relief == ei_relief_raised) {
@@ -241,7 +249,8 @@ void button_drawfunc(ei_widget_t *widget,
     }
     // Image eventually inside the button
     if (button->img != NULL) {
-        ei_rect_t rect = (button->img_rect != NULL) ? (*button->img_rect) : ei_rect(ei_point_zero(), hw_surface_get_size(button->img));
+        ei_rect_t rect = (button->img_rect != NULL) ? (*button->img_rect) : ei_rect(ei_point_zero(),
+                                                                                    hw_surface_get_size(button->img));
         ei_point_t topleft = anchor_target_pos(button->img_anchor, rect.size, widget->screen_location);
         ei_rect_t clipper_img;
         // We crop image in the button
@@ -301,7 +310,8 @@ void frame_drawfunc(ei_widget_t *widget,
     }
     // Image eventually inside the frame
     if (frame->img != NULL) {
-        ei_rect_t rect = (frame->img_rect != NULL) ? (*frame->img_rect) : ei_rect(ei_point_zero(), hw_surface_get_size(frame->img));
+        ei_rect_t rect = (frame->img_rect != NULL) ? (*frame->img_rect) : ei_rect(ei_point_zero(),
+                                                                                  hw_surface_get_size(frame->img));
         ei_point_t topleft = anchor_target_pos(frame->img_anchor, rect.size, widget->screen_location);
         ei_rect_t clipper_img;
         // We crop image in the button
@@ -499,16 +509,21 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
                                                widget->content_rect->top_left.y - toplevel->border_width - height),
                                       ei_size(widget->content_rect->size.width + 2 * toplevel->border_width,
                                               widget->content_rect->size.height + 2 * toplevel->border_width + height));
-    toplevel->button->widget.screen_location.top_left.x = widget->screen_location.top_left.x + toplevel->border_width + toplevel->border_width;
-    toplevel->button->widget.screen_location.top_left.y = widget->screen_location.top_left.y + toplevel->border_width + toplevel->border_width + height;
+    toplevel->button->widget.screen_location.top_left.x =
+            widget->screen_location.top_left.x + toplevel->border_width + toplevel->border_width;
+    toplevel->button->widget.screen_location.top_left.y =
+            widget->screen_location.top_left.y + toplevel->border_width + toplevel->border_width + height;
 
     toplevel->grab_event.param.minimize_square.top_left = ei_point(
             widget->screen_location.top_left.x + widget->screen_location.size.width - 20 + toplevel->border_width,
-            widget->screen_location.top_left.y + widget->screen_location.size.height - 20 + toplevel->border_width + height);
+            widget->screen_location.top_left.y + widget->screen_location.size.height - 20 + toplevel->border_width +
+            height);
 
     // Translation
-    widget->screen_location.top_left = ei_point_add(widget->screen_location.top_left, ei_point(toplevel->border_width, toplevel->border_width + height));
-    widget->content_rect->top_left = ei_point_add(widget->content_rect->top_left, ei_point(toplevel->border_width, toplevel->border_width + height));
+    widget->screen_location.top_left = ei_point_add(widget->screen_location.top_left,
+                                                    ei_point(toplevel->border_width, toplevel->border_width + height));
+    widget->content_rect->top_left = ei_point_add(widget->content_rect->top_left,
+                                                  ei_point(toplevel->border_width, toplevel->border_width + height));
 
     // Update
     updated_rect_size(widget, old_screen_location);
@@ -525,13 +540,14 @@ void append_updated_rects(ei_rect_t rect) {
     updated_rects = new;
 }
 
-void updated_rect_size(ei_widget_t *widget, ei_rect_t rect){
+void updated_rect_size(ei_widget_t *widget, ei_rect_t rect) {
     ei_rect_t update_rect;
     union_rect(&rect, &(widget->screen_location), &update_rect);
     if (intersection_rect(&update_rect, get_clipper_window(), &update_rect)) {
         append_updated_rects(update_rect);
     }
 }
+
 /* handlefunc */
 ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
     ei_button_t *button = (ei_button_t *) widget;
@@ -579,8 +595,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     ei_bool_t treated = false;
 
     switch (event->type) {
-        case ei_ev_mouse_buttondown:
-        {
+        case ei_ev_mouse_buttondown: {
             ei_rect_t top_bar = ei_rect(widget->screen_location.top_left,
                                         ei_size(widget->screen_location.size.width,
                                                 widget->screen_location.size.height -
@@ -597,7 +612,8 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             //The top level is at the first plan
             ei_widget_t *current_child = widget->parent->children_head;
             ei_widget_t *previous_child = current_child;
-            if (widget->parent->children_head != widget->parent->children_tail && widget != widget->parent->children_tail) {
+            if (widget->parent->children_head != widget->parent->children_tail &&
+                widget != widget->parent->children_tail) {
                 while (current_child != widget) {
                     previous_child = current_child;
                     current_child = current_child->next_sibling;
@@ -608,8 +624,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                     widget->next_sibling = NULL;
                     widget->parent->children_tail->next_sibling = widget;
                     widget->parent->children_tail = widget;
-                }
-                else {
+                } else {
                     previous_child->next_sibling = widget->next_sibling;
                     widget->next_sibling = NULL;
                     widget->parent->children_tail->next_sibling = widget;
@@ -661,28 +676,29 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                                      NULL, NULL);
                             treated = true;
                         }
-                    }
 
-                    if (!toplevel->grab_event.param.unshow_minimize_square_event_sent) {
-                        user_param_t *event = calloc(1, sizeof(user_param_t));
-                        event->app_event_type = toplevel_param;
-                        toplevel_app_event_t *data = calloc(1, sizeof(toplevel_app_event_t));
-                        data->caller = toplevel;
-                        event->data = data;
-                        hw_event_schedule_app(200, event);
-                        toplevel->grab_event.param.unshow_minimize_square_event_sent = true;
-                        treated = true;
+
+                        if (!toplevel->grab_event.param.unshow_minimize_square_event_sent) {
+                            user_param_t *event = calloc(1, sizeof(user_param_t));
+                            event->app_event_type = toplevel_param;
+                            toplevel_app_event_t *data = calloc(1, sizeof(toplevel_app_event_t));
+                            data->caller = toplevel;
+                            event->data = data;
+                            hw_event_schedule_app(200, event);
+                            toplevel->grab_event.param.unshow_minimize_square_event_sent = true;
+                            treated = true;
+                        }
                     }
                     return treated;
                 }
                 case idle:
                     //Draw the square to minimize the toplevel
-                    if (!toplevel->grab_event.param.show_minimize_square) {
+                    if (toplevel->resizable != ei_axis_none && !toplevel->grab_event.param.show_minimize_square) {
                         if (inside(event->param.mouse.where, &toplevel->grab_event.param.minimize_square)) {
                             toplevel->grab_event.param.show_minimize_square = true;
                             treated = true;
                         }
-                    } else if (!toplevel->grab_event.param.unshow_minimize_square_event_sent) {
+                    } else if (toplevel->resizable != ei_axis_none && !toplevel->grab_event.param.unshow_minimize_square_event_sent) {
                         user_param_t *event = calloc(1, sizeof(user_param_t));
                         event->app_event_type = toplevel_param;
                         toplevel_app_event_t *data = calloc(1, sizeof(toplevel_app_event_t));

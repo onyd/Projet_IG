@@ -2,8 +2,8 @@
 #include "stdlib.h"
 
 int main() {
-    struct linked_acive_edges *tca = malloc(sizeof(struct linked_acive_edges));
-    tca->head = NULL;
+    struct linked_acive_edges *lae = malloc(sizeof(struct linked_acive_edges));
+    lae->head = NULL;
 
     struct linked_edges *tc1 = malloc(sizeof(struct linked_edges));
     struct linked_edges *tc2 = malloc(sizeof(struct linked_edges));
@@ -38,29 +38,29 @@ int main() {
     tc6->next = tc7;
     tc7->next = NULL;
 
-    append_left_tca(tc1, tca);
-    display(tca);
+    append_left_lae(tc1, lae);
+    display(lae);
 
     struct linked_edges *tc8 = malloc(sizeof(struct linked_edges));
     tc8->x_ymax = -2;
     tc8->x_ymin = -1;
     tc8->next = NULL;
-    sorting_insert(tc8, tca);
+    sorting_insert(tc8, lae);
 
-    display(tca);
+    display(lae);
 
     struct linked_edges *tc9 = malloc(sizeof(struct linked_edges));
     tc9->x_ymax = 2;
     tc9->next = NULL;
-    sorting_insert(tc9, tca);
+    sorting_insert(tc9, lae);
 
-    display(tca);
+    display(lae);
 
-    delete_y(tc8, tca);
-    display(tca);
+    delete_y(tc8, lae);
+    display(lae);
 
-    delete_y(tc3, tca);
-    display(tca);
+    delete_y(tc3, lae);
+    display(lae);
 
 
 }

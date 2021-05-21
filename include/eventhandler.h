@@ -15,8 +15,8 @@ typedef struct ei_widget_list_t {
 } ei_widget_list_t;
 
 typedef enum {
-    toplevel_param = 0,
-    user_param
+    user_param = 0,
+    toplevel_param ,
 } user_param_type_t;
 
 typedef struct user_param_t {

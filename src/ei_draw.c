@@ -221,7 +221,7 @@ void ei_draw_polygon(ei_surface_t surface,
         }
     }
 
-    tca_free(TCA);
+    lae_free(TCA);
 }
 
 void ei_draw_text(ei_surface_t surface,

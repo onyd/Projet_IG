@@ -1,6 +1,7 @@
 #include "draw.h"
 #include "ei_utils.h"
 #include "geometry.h"
+#include "utils.h"
 
 void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper) {
     ei_linked_point_t first_point[5];
@@ -200,7 +201,7 @@ enum clipping_code get_clipping_code(uint8_t code) {
 }
 
 ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipped1, ei_point_t *clipped2, float *error,
-                            ei_rect_t *clipper) {
+                                 ei_rect_t *clipper) {
     *error += 0;
     if (clipper == NULL) {
         *clipped1 = p1;
@@ -339,15 +340,47 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
 }
 
 void polygon_analytic_clipping(ei_linked_point_t *points, vector *clipped, vector *errors, ei_rect_t *clipper) {
+    vector *input = create_vector(2);
+
     clipped = create_vector(2);
+    append_vector(clipped, points);
     errors = create_vector(2);
 
-    ei_linked_point_t *previous = points;
-    ei_linked_point_t *current = points->next;
-    // Go through all edges
-    while (current != NULL) {
+    ei_point_t topleft = clipper->top_left;
+    ei_point_t topright = ei_point(clipper->top_left.x + clipper->size.width, clipper->top_left.y);
+    ei_point_t botleft = ei_point(clipper->top_left.x, clipper->top_left.y + clipper->size.height);
+    ei_point_t botright = ei_point(clipper->top_left.x + clipper->size.width,
+                                   clipper->top_left.y + clipper->size.height);
+    // TODO do this for all clipping edges
+    copy(clipped, input);
+    clear(clipped, NULL);
+    // Go through all polygon to clip
+    for (uint32_t i = 0; i < input->last_idx; i++) {
+        if (get(input, i) == NULL) {
+            continue;
+        }
+        // Go through all polygon's edges
+        ei_linked_point_t *previous = get(input, i);
+        ei_linked_point_t *current = previous->next;
+        while (current != NULL) {
+            ei_point_t intersection;
+            vertical_line_intersection_rect(previous->point, current->point, topleft.x,
+                                                          &intersection);
+            if (!is_left(current->point, topleft, botleft)) {
+                if (is_left(previous->point, topleft, botleft)) {
+                    ei_linked_point_t *linked_intersection = calloc(1, sizeof(ei_linked_point_t));
+                    linked_intersection->point = intersection;
+                    append_linked_point(linked_intersection, get(clipped, i));
+                }
+                append_linked_point(current, get(clipped, i));
+            } else if (!is_left(previous->point, topleft, botleft)) {
+                ei_linked_point_t *linked_intersection = calloc(1, sizeof(ei_linked_point_t));
+                linked_intersection->point = intersection;
+                append_linked_point(linked_intersection, get(clipped, i));
+            }
 
-        previous = current;
-        current = current->next;
+            previous = current;
+            current = current->next;
+        }
     }
 }

@@ -20,7 +20,7 @@ size_t append_vector(vector *v, void *element) {
     // Not enough space, up-size the vector
     if (v->last_idx == v->size) {
         v->size *= 2;
-        v->data = realloc(v->data, v->size * sizeof(void *));
+        resize(v, v->size);
     }
 
     // Same idx => move both
@@ -59,11 +59,56 @@ size_t remove_vector(vector *v, void *element) {
     }
 
     // Too much space, down-size the vector
-    if (v->last_idx < v->size / 2) {
+    if (v->last_idx < v->size / 4) {
         v->size /= 2;
-        v->data = realloc(v->data, v->size * sizeof(void *));
+        resize(v, v->size);
     }
     return v->last_idx;
+}
+
+void concatenation(vector *a, vector *b) {
+    for (uint32_t i = 0; i < b->last_idx; i++) {
+        append_vector(a, get(b, i));
+    }
+}
+
+void copy(vector *a, vector *b) {
+    resize(b, a->size);
+    b->last_idx = a->last_idx;
+    b->size = a->size;
+    b->current_idx = a->current_idx;
+
+    for (uint32_t i = 0; i < b->last_idx; i++) {
+        b->data[i] = a->data[i];
+    }
+}
+
+void clear(vector *v, size_t *size) {
+    if (size != NULL) {
+        resize(v, *size);
+    }
+    for (uint32_t i = 0; i < v->last_idx; i++) {
+        v->data[i] = NULL;
+    }
+    v->last_idx = 0;
+    v->current_idx = 0;
+    v->size = *size;
+}
+
+void resize(vector *v, size_t size) {
+    v->data = realloc(v->data, size * sizeof(void *));
+    v->size = size;
+}
+
+void upsize(vector *v, uint32_t i) {
+    while (v->size <= i) {
+        v->size *= 2;
+        resize(v, v->size);
+    }
+}
+
+void downsize(vector *v) {
+
 }
 
 void free_vector(vector *v) {

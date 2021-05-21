@@ -118,9 +118,13 @@ extern ei_color_t *default_selectioned_color;
 //Rectangle of the main window for the clipping
 extern ei_rect_t *clipping_window;
 
-ei_surface_t get_main_window();
+ei_bool_t is_button(ei_widget_t *widget);
 
-ei_frame_t *get_root();
+ei_bool_t is_frame(ei_widget_t *widget);
+
+ei_bool_t is_toplevel(ei_widget_t *widget);
+
+ei_surface_t get_main_window();
 
 ei_surface_t get_pick_surface();
 

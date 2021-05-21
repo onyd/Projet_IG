@@ -48,6 +48,7 @@ void handle_event(ei_event_t *event) {
             break;
         case ei_ev_app:
             switch (((user_param_t *) event->param.application.user_param)->app_event_type) {
+                // Used for minimize_square unshow
                 case toplevel_param: {
                     user_param_t *user_params = event->param.application.user_param;
                     toplevel_app_event_t *toplevel_params = ((user_param_t *) event->param.application.user_param)->data;

@@ -19,6 +19,16 @@ size_t append_vector(vector *a, void *element);
 
 size_t remove_vector(vector *a, void *element);
 
+void concatenation(vector *a, vector *b);
+
+void copy(vector *a, vector *b);
+
+void clear(vector *v, size_t *size);
+
+void resize(vector *v, size_t size);
+
+void upsize(vector *v, uint32_t i);
+
 void free_vector(vector *a);
 
 void print_vector(vector *a);

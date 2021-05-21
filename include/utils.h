@@ -21,27 +21,27 @@ struct linked_acive_edges {
 };
 
 
-void append_left_tca(struct linked_edges *e, struct linked_acive_edges *tca);
+void append_left_lae(struct linked_edges *e, struct linked_acive_edges *lae);
 
-void delete_y(int y, struct linked_acive_edges *tca);
+void delete_y(int y, struct linked_acive_edges *lae);
 
-void display(struct linked_acive_edges *tac);
+void display(struct linked_acive_edges *lae);
 
-void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *tca);
+void sorting_insert(struct linked_edges *le, struct linked_acive_edges *lae);
 
 /**
  * \brief	free the structure linked_edges
  *
  * @param	 	struct linked_edges*.
  */
-void tc_free(struct linked_edges *);
+void le_free(struct linked_edges *);
 
 /**
  * \brief	free the structure linked_acive_edges
  *
  * @param	 	struct linked_acive_edges*.
  */
-void tca_free(struct linked_acive_edges *);
+void lae_free(struct linked_acive_edges *);
 
 /**
  * \brief	Swap the variable content pointed by a and b
@@ -60,6 +60,8 @@ struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked
  * @param	b   struct ei_linked_point_t the other point.
  */
 struct ei_linked_point_t *y_argmin(struct ei_linked_point_t *a, struct ei_linked_point_t *b);
+
+void append_linked_point(struct ei_linked_point_t *p, struct ei_linked_point_t *l);
 
 ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *anchor);
 

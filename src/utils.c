@@ -4,32 +4,32 @@
 #include "ei_utils.h"
 #include "hw_interface.h"
 
-void append_left_tca(struct linked_edges *e, struct linked_acive_edges *tca) {
-    if (tca->head == NULL) {
-        tca->head = e;
+void append_left_lae(struct linked_edges *e, struct linked_acive_edges *lae) {
+    if (lae->head == NULL) {
+        lae->head = e;
         return;
     }
-    e->next = tca->head;
-    tca->head = e;
+    e->next = lae->head;
+    lae->head = e;
 }
 
-void delete_y(int y, struct linked_acive_edges *tca) {
-    if (tca->head == NULL) {
+void delete_y(int y, struct linked_acive_edges *lae) {
+    if (lae->head == NULL) {
         return;
     }
 
-    struct linked_edges *previous = tca->head;
+    struct linked_edges *previous = lae->head;
     while (previous != NULL && previous->ymax == y) {
         struct linked_edges *tmp = previous;
         previous = previous->next;
         free(tmp);
     }
-    tca->head = previous;
-    if (tca->head == NULL) {
+    lae->head = previous;
+    if (lae->head == NULL) {
         return;
     }
 
-    struct linked_edges *current = tca->head->next;
+    struct linked_edges *current = lae->head->next;
     while (current != NULL) {
         if (current->ymax == y) {
             previous->next = current->next;
@@ -42,8 +42,8 @@ void delete_y(int y, struct linked_acive_edges *tca) {
     }
 }
 
-void display(struct linked_acive_edges *tca) {
-    struct linked_edges *current = tca->head;
+void display(struct linked_acive_edges *lae) {
+    struct linked_edges *current = lae->head;
     while (current != NULL) {
         printf("[%i, %i]->", current->ymax, current->x_ymin);
         current = current->next;
@@ -75,12 +75,12 @@ struct ei_linked_point_t *y_argmin(struct ei_linked_point_t *a, struct ei_linked
     }
 }
 
-void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *tca) {
-    if (tca->head == NULL) {
-        tca->head = tc;
+void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *lae) {
+    if (lae->head == NULL) {
+        lae->head = tc;
         return;
     }
-    struct linked_edges *previous = tca->head;
+    struct linked_edges *previous = lae->head;
     struct linked_edges *current = previous;
     while (current != NULL) {
         // à savoir: il ne peut pas y avoir plus de deux côtés qui ont le même x_ymin
@@ -88,7 +88,7 @@ void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *tca) {
             //si c'est à la tête:
             if (current == previous) {
                 if (current->x_ymax > tc->x_ymax) {
-                    append_left_tca(tc, tca);
+                    append_left_lae(tc, lae);
                 } else {
                     tc->next = current->next;
                     current->next = tc;
@@ -107,7 +107,7 @@ void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *tca) {
         if (current->x_ymin > tc->x_ymin) {
             //si c'est la tete
             if (current == previous) {
-                append_left_tca(tc, tca);
+                append_left_lae(tc, lae);
             } else {
                 previous->next = tc;
                 tc->next = current;
@@ -122,7 +122,17 @@ void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *tca) {
     }
 }
 
-void tc_free(struct linked_edges *tc) {
+void append_linked_point(struct ei_linked_point_t *p, struct ei_linked_point_t *l) {
+    if (l == NULL) {
+        l = p;
+        return;
+    }
+
+    p->next = l;
+    l = p;
+}
+
+void le_free(struct linked_edges *tc) {
     struct linked_edges *next_tc = tc;
     while (tc != NULL) {
         next_tc = tc->next;
@@ -131,9 +141,9 @@ void tc_free(struct linked_edges *tc) {
     }
 }
 
-void tca_free(struct linked_acive_edges *tca) {
-    tc_free(tca->head);
-    free(tca);
+void lae_free(struct linked_acive_edges *lae) {
+    le_free(lae->head);
+    free(lae);
 }
 
 
