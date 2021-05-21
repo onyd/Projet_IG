@@ -54,6 +54,7 @@ int main(int argc, char** argv)
 	ei_color_t	button_text_color	= {0x00, 0x00, 0x00, 0xff};
 	ei_relief_t	button_relief		= ei_relief_raised;
 	int		button_border_width	= 6;
+	ei_anchor_t text_anchor = ei_anc_northwest;
 	ei_callback_t	button_callback 	= button_press;
 
 	/* Create the application and change the color of the background. */
@@ -64,7 +65,7 @@ int main(int argc, char** argv)
 	/* Create, configure and place the button on screen. */
 	button = ei_widget_create("button", ei_app_root_widget(), NULL, NULL);
 	ei_button_configure	(button, &button_size, &button_color,
-				 &button_border_width, &button_corner_radius, &button_relief, &button_title, NULL, &button_text_color, NULL,
+				 &button_border_width, &button_corner_radius, &button_relief, &button_title, NULL, &button_text_color, &text_anchor,
 				 NULL, NULL, NULL, &button_callback, NULL);
 	ei_place(button, NULL, &button_x, &button_y, NULL, NULL, NULL, NULL, NULL, NULL );
 

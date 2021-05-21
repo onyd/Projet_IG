@@ -45,8 +45,23 @@ void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_r
  */
 void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int direction);
 
+
+/** @brief Allows to draw an image on a surface
+ * @param the surface on which we want to draw
+ * @param the surface of the image
+ * @param the position of the topleft of the image
+ * @param the img_rect of the widget
+ * @param the clipper
+ */
 void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect_t *img_rect, ei_rect_t *clipper);
 
+/** @brief Allows to draw a cross on a surface
+ * @param the surface on which we want to draw
+ * @param the rectangle in where we want to draw
+ * @param the color of the cross
+ * @param the clipper
+ * @param the thickness of the cross
+ */
 void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t size);
 
 void draw_blank_rect (ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t w, int32_t d);
