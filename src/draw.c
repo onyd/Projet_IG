@@ -75,7 +75,7 @@ void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect
     if (img_rect != NULL) {
         dst_rect = ei_rect(*pos, img_rect->size);
         // Crop the image in the clipper according to img_rect
-        intersection(&dst_rect, clipper, &dst_rect);
+        intersection_rect(&dst_rect, clipper, &dst_rect);
     } else {
         dst_rect = *clipper;
     }
@@ -151,6 +151,8 @@ uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper) {
 
 enum clipping_code get_clipping_code(uint8_t code) {
     switch (code) {
+        case 0:
+            return center_reject;
         case 1:
             return west_reject;
         case 2:
@@ -168,4 +170,74 @@ enum clipping_code get_clipping_code(uint8_t code) {
         case 10:
             return south_east_reject;
     }
+}
+
+ei_bool_t analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipped1, ei_point_t *clipped2, float *E,
+                       ei_rect_t *clipper) {
+    uint8_t c1 = cohen_sutherland_code(p1, clipper);
+    uint8_t c2 = cohen_sutherland_code(p2, clipper);
+    *E = 0;
+
+    // Trivial case
+    if (c1 | c2 == 0) {
+        clipped1 = &p1;
+        clipped2 = &p2;
+        *E = 0;
+        return true;
+    } else if (c1 & c2 != 0) {
+        return false;
+    }
+
+    switch (get_clipping_code(c1)) {
+        case center_reject:
+            clipped1 = &p1;
+            break;
+        case north_east_reject:
+        case north_west_reject:
+        case south_east_reject:
+        case south_west_reject:
+            // Try horizontal intersection_rects
+            *clipped1 = horizontal_line_intersection_rect(p1, p2, clipper->top_left.y, E);
+            
+            // Bad horizontal intersection_rect => vertical intersection_rect
+            if (clipped1->x < clipper->top_left.x || clipped1->x > clipper->top_left.x + clipper->size.width) {
+                *clipped1 = vertical_line_intersection_rect(p1, p2, clipper->top_left.x, E);
+            }
+            return true; // Corner implies other point is in the clipper
+        case north_reject:
+        case south_reject:
+            *clipped1 = horizontal_line_intersection_rect(p1, p2, clipper->top_left.y, E);
+            break;
+        case east_reject:
+        case west_reject:
+            *clipped1 = vertical_line_intersection_rect(p1, p2, clipper->top_left.x, E);
+            break;
+    }
+
+    switch (get_clipping_code(c2)) {
+        case center_reject:
+            clipped2 = &p2;
+            break;
+        case north_east_reject:
+        case north_west_reject:
+        case south_east_reject:
+        case south_west_reject:
+            // Try horizontal intersection_rects
+            *clipped2 = horizontal_line_intersection_rect(p1, p2, clipper->top_left.y, E);
+
+            // Bad horizontal intersection_rect => vertical intersection_rect
+            if (clipped2->x < clipper->top_left.x || clipped2->x > clipper->top_left.x + clipper->size.width) {
+                *clipped2 = vertical_line_intersection_rect(p1, p2, clipper->top_left.x, E);
+            }
+            break;
+        case north_reject:
+        case south_reject:
+            *clipped2 = horizontal_line_intersection_rect(p1, p2, clipper->top_left.y, E);
+            break;
+        case east_reject:
+        case west_reject:
+            *clipped2 = vertical_line_intersection_rect(p1, p2, clipper->top_left.x, E);
+            break;
+    }
+    return true;
 }

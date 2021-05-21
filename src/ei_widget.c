@@ -72,7 +72,7 @@ void ei_frame_configure(ei_widget_t *widget,
     widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
     if (widget->parent != NULL) {
         ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
-        intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
+        intersection_rect(&rect, &widget->parent->screen_location, &widget->screen_location);
         widget->content_rect = &widget->screen_location;
     } else { // Then it is root widget
         widget->screen_location = ei_rect(ei_point_zero(), widget->requested_size);
@@ -147,7 +147,7 @@ void ei_button_configure(ei_widget_t *widget,
         }
     }
     ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
-    intersection(&rect, &widget->parent->screen_location, &widget->screen_location);
+    intersection_rect(&rect, &widget->parent->screen_location, &widget->screen_location);
     widget->content_rect = &widget->screen_location;
 
     button->text_font = (text_font != NULL) ? *text_font : button->text_font;

@@ -222,7 +222,7 @@ void button_drawfunc(ei_widget_t *widget,
         ei_point_t topleft = anchor_target_pos(button->text_anchor, ei_size(width, height), widget->screen_location);
         ei_rect_t clipper_text;
         // We crop text in the button
-        intersection(&widget->screen_location, clipper, &clipper_text);
+        intersection_rect(&widget->screen_location, clipper, &clipper_text);
         ei_draw_text(surface, &topleft, button->text, button->text_font, button->text_color, &clipper_text);
     }
     // Image eventually inside the button
@@ -231,7 +231,7 @@ void button_drawfunc(ei_widget_t *widget,
         ei_point_t topleft = anchor_target_pos(button->text_anchor, img_size, widget->screen_location);
         ei_rect_t clipper_img;
         // We crop image in the button
-        intersection(&widget->screen_location, clipper, &clipper_img);
+        intersection_rect(&widget->screen_location, clipper, &clipper_img);
         draw_image(surface, button->img, &topleft, *button->img_rect, &clipper_img);
     }
 
@@ -239,7 +239,7 @@ void button_drawfunc(ei_widget_t *widget,
     ei_widget_t *current = widget->children_head;
     while (current != NULL) {
         ei_rect_t clipping_widget;
-        intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
+        intersection_rect(get_clipper_window(), widget->content_rect, &clipping_widget);
         current->wclass->drawfunc(current, get_main_window(), get_pick_surface(),
                                   clipping_window);
         current = current->next_sibling;
@@ -282,7 +282,7 @@ void frame_drawfunc(ei_widget_t *widget,
         ei_point_t topleft = anchor_target_pos(frame->text_anchor, ei_size(width, height), widget->screen_location);
         ei_rect_t clipper_text;
         //in case the clipper is NULL, clipper_text must be widget->screen_location to avoid having the text outside the button
-        intersection(&widget->screen_location, clipper, &clipper_text);
+        intersection_rect(&widget->screen_location, clipper, &clipper_text);
         ei_draw_text(surface, &topleft, frame->text, frame->text_font, frame->text_color, &clipper_text);
     }
     // Image eventually inside the frame
@@ -291,7 +291,7 @@ void frame_drawfunc(ei_widget_t *widget,
         ei_point_t topleft = anchor_target_pos(frame->text_anchor, img_size, widget->screen_location);
         ei_rect_t clipper_img;
         //in case the clipper is NULL, clipper_text must be widget->screen_location to avoid having the text outside the button
-        intersection(&widget->screen_location, clipper, &clipper_img);
+        intersection_rect(&widget->screen_location, clipper, &clipper_img);
         draw_image(surface, frame->img, &topleft, *frame->img_rect, &clipper_img);
     }
 
@@ -299,7 +299,7 @@ void frame_drawfunc(ei_widget_t *widget,
     ei_widget_t *current = widget->children_head;
     while (current != NULL) {
         ei_rect_t clipping_widget;
-        intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
+        intersection_rect(get_clipper_window(), widget->content_rect, &clipping_widget);
         current->wclass->drawfunc(current, get_main_window(), get_pick_surface(),
                                   clipping_window);
         current = current->next_sibling;
@@ -327,7 +327,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
 
 
     ei_rect_t clipper_text;
-    intersection(&widget->screen_location, clipper, &clipper_text);
+    intersection_rect(&widget->screen_location, clipper, &clipper_text);
     if (toplevel->closable == EI_FALSE) {
         ei_point_t point_text = ei_point(widget->screen_location.top_left.x + toplevel->border_width,
                                          widget->screen_location.top_left.y);
@@ -350,7 +350,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
     ei_widget_t *current = widget->children_head;
     while (current != NULL) {
         ei_rect_t clipping_widget;
-        intersection(get_clipper_window(), widget->content_rect, &clipping_widget);
+        intersection_rect(get_clipper_window(), widget->content_rect, &clipping_widget);
         current->wclass->drawfunc(current, get_main_window(), get_pick_surface(),
                                   &clipping_widget);
         current = current->next_sibling;
@@ -358,7 +358,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
 
     // Minimize square
     ei_rect_t clipping_square;
-    intersection(get_clipper_window(), toplevel->widget.content_rect, &clipping_square);
+    intersection_rect(get_clipper_window(), toplevel->widget.content_rect, &clipping_square);
     if (toplevel->grab_event.param.show_minimize_square) {
         draw_rectangle(get_main_window(), toplevel->grab_event.param.minimize_square, *default_color, &clipping_square);
     }
@@ -463,6 +463,7 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
             widget->screen_location.top_left.x + widget->screen_location.size.width - 20 + toplevel->border_width,
             widget->screen_location.top_left.y + widget->screen_location.size.height - 20 + toplevel->border_width + height);
 
+    // Translation
     widget->screen_location.top_left = ei_point_add(widget->screen_location.top_left, ei_point(toplevel->border_width, toplevel->border_width + height));
     widget->content_rect->top_left = ei_point_add(widget->content_rect->top_left, ei_point(toplevel->border_width, toplevel->border_width + height));
 
@@ -480,7 +481,7 @@ void append_updated_rects(ei_rect_t rect) {
 void updated_rect_size(ei_widget_t *widget, ei_rect_t rect){
     ei_rect_t update_rect;
     union_rect(&rect, &(widget->screen_location), &update_rect);
-    if (intersection(&update_rect, get_clipper_window(), &update_rect)) {
+    if (intersection_rect(&update_rect, get_clipper_window(), &update_rect)) {
         append_updated_rects(update_rect);
     }
 }
@@ -663,7 +664,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     }
     if (treated) {
         ei_rect_t clipper;
-        intersection(&widget->screen_location, get_clipper_window(), &clipper);
+        intersection_rect(&widget->screen_location, get_clipper_window(), &clipper);
         append_updated_rects(clipper);
     }
 

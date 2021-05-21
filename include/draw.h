@@ -17,7 +17,8 @@ typedef enum clipping_code {
     south_east_reject,
     south_reject,
     south_west_reject,
-    west_reject
+    west_reject,
+    center_reject
 } clipping_code;
 
 /** @brief Allows to draw a rectangle
@@ -45,5 +46,8 @@ void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_
 uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper);
 
 enum clipping_code get_clipping_code(uint8_t code);
+
+ei_bool_t analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipped1, ei_point_t *clipped2, float *E,
+                       ei_rect_t *clipper);
 
 #endif //PROJETC_IG_DRAW_H

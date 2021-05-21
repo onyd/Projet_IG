@@ -153,7 +153,7 @@ void free_rounded_frame(ei_linked_point_t *points) {
     free(points);
 }
 
-ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {
+ei_bool_t intersection_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {
     if (r1 == NULL) {
         *result = ei_rect(ei_point(r2->top_left.x, r2->top_left.y), ei_size(r2->size.width, r2->size.height));
         return true;
@@ -177,6 +177,75 @@ ei_bool_t intersection(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *resu
     return true;
 }
 
+void union_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {
+    if (r1 == NULL) {
+        *result = ei_rect(ei_point(r2->top_left.x, r2->top_left.y), ei_size(r2->size.width, r2->size.height));
+    }
+    if (r2 == NULL) {
+        *result = ei_rect(ei_point(r1->top_left.x, r1->top_left.y), ei_size(r1->size.width, r1->size.height));
+    }
+
+    int top_left_x = min(r1->top_left.x, r2->top_left.x);
+    int top_left_y = min(r1->top_left.y, r2->top_left.y);
+    int width =
+            max(r1->top_left.x + r1->size.width, r2->top_left.x + r2->size.width) - min(r1->top_left.x, r2->top_left.x);
+    int height = max(r1->top_left.y + r1->size.height, r2->top_left.y + r2->size.height) -
+                 min(r1->top_left.y, r2->top_left.y);
+
+    result->top_left.x = top_left_x;
+    result->top_left.y = top_left_y;
+    result->size.width = width;
+    result->size.height = height;
+}
+
+ei_point_t vertical_line_intersection_rect(ei_point_t first, ei_point_t second, float x, float *error) {
+    float x1 = (float) first.x;
+    float x2 = (float) second.x;
+    float y1 = (float) first.y;
+    float y2 = (float) second.y;
+
+    // Line parmeters
+    float a = (y2 - y1) / (x2 - x1);
+    float b = y1 - a * x1;
+
+    float y = a * x + b;
+    int int_y = (int) y;
+    *error = y - (float) int_y;
+    return ei_point(x, int_y);
+}
+
+ei_point_t horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, float y, float *error) {
+    float x1 = (float) first.x;
+    float x2 = (float) second.x;
+    float y1 = (float) first.y;
+    float y2 = (float) second.y;
+
+    // Vertical
+    if (x1 == x2) {
+        *error = 0;
+        return ei_point(x1, y);
+    }
+
+    // Line parmeters
+    float a = (y2 - y1) / (x2 - x1);
+    float b = y1 - a * x1;
+
+    float x = (y - b) / a;
+    int int_x = (int) x;
+    *error = x - (float) int_x;
+    return ei_point(int_x, y);
+}
+
+float cross_product(ei_point_t v1, ei_point_t v2) {
+    return v1.x * v2.y - v1.y * v2.x;
+}
+
+ei_bool_t is_left(ei_point_t p, ei_point_t p1, ei_point_t p2) {
+    ei_point_t v1 = ei_point_sub(p, p1);
+    ei_point_t v2 = ei_point_sub(p2, p1);
+    return cross_product(v1, v2) > 0;
+}
+
 ei_bool_t inside(ei_point_t p, const ei_rect_t *r) {
     if (r == NULL) {
         return true;
@@ -192,21 +261,4 @@ ei_bool_t inside(ei_point_t p, const ei_rect_t *r) {
     return false;
 }
 
-void union_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result){
-    if (r1 == NULL) {
-        *result = ei_rect(ei_point(r2->top_left.x, r2->top_left.y), ei_size(r2->size.width, r2->size.height));
-    }
-    if (r2 == NULL) {
-        *result = ei_rect(ei_point(r1->top_left.x, r1->top_left.y), ei_size(r1->size.width, r1->size.height));
-    }
 
-    int top_left_x = min(r1->top_left.x, r2->top_left.x);
-    int top_left_y = min(r1->top_left.y, r2->top_left.y);
-    int width = max(r1->top_left.x + r1->size.width, r2->top_left.x + r2->size.width) - min(r1->top_left.x, r2->top_left.x);
-    int height = max(r1->top_left.y + r1->size.height, r2->top_left.y + r2->size.height) - min(r1->top_left.y, r2->top_left.y);
-
-    result->top_left.x = top_left_x;
-    result->top_left.y = top_left_y;
-    result->size.width = width;
-    result->size.height = height;
-}

@@ -107,9 +107,10 @@ void ei_placer_run(ei_widget_t *widget) {
         }
     }
 
-    while (widget != NULL) {
-        ei_placer_run(widget->children_head);
-        widget = widget->next_sibling;
+    ei_widget_t *current = widget->children_head;
+    while (current != NULL) {
+        ei_placer_run(current);
+        current = current->next_sibling;
     }
 }
 

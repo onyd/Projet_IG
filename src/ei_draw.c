@@ -6,6 +6,7 @@
 #include "stdlib.h"
 #include "ei_utils.h"
 #include "geometry.h"
+#include "draw.h"
 
 uint32_t ei_map_rgba(ei_surface_t surface, ei_color_t color) {
     int ir, ig, ib, ia;
@@ -33,28 +34,34 @@ void ei_draw_polyline(ei_surface_t surface,
 
     // Draw all lines between points
     while (first != NULL && second != NULL) {
-        /* Bresenham */
         int dx = second->point.x - first->point.x;
         int dy = second->point.y - first->point.y;
-        int x = first->point.x;
-        int y = first->point.y;
 
+        // Clipping
+        ei_point_t clipped1, clipped2;
+        float error;
+        if (!analytic_clipping(first->point, second->point, &clipped1, &clipped2, &error, clipper)) { return; }
+
+        int x = clipped1.x;
+        int y = clipped1.y;
+
+        /* Bresenham */
         int sign_dx = (dx > 0) ? 1 : -1;
         int sign_dy = (dy > 0) ? 1 : -1;
 
         // Vertical and horizontal case
-        if (dx == 0 &&
-            (clipper == NULL || x >= clipper->top_left.x && x <= clipper->top_left.x + clipper->size.width)) {
-            while (sign_dy * y <= sign_dy * second->point.y) {
-                if (clipper == NULL || y >= clipper->top_left.y && y <= clipper->top_left.y + clipper->size.height) {
-                    pixels[x + size.width * y] = c;
-                }
-                y += sign_dy;
+        //if (dx == 0 &&
+        //  (clipper == NULL || x >= clipper->top_left.x && x <= clipper->top_left.x + clipper->size.width)) {
+        while (sign_dy * y <= sign_dy * second->point.y) {
+            //    if (clipper == NULL || y >= clipper->top_left.y && y <= clipper->top_left.y + clipper->size.height) {
+            pixels[x + size.width * y] = c;
+            //  }
+            y += sign_dy;
             }
             first = second;
             second = second->next;
             continue;
-        }
+        //}
         if (dy == 0 &&
             (clipper == NULL || y >= clipper->top_left.y && y <= clipper->top_left.y + clipper->size.height)) {
             while (sign_dx * x <= sign_dx * second->point.x) {
@@ -100,6 +107,7 @@ void ei_draw_polyline(ei_surface_t surface,
         first = second;
         second = second->next;
     }
+
 }
 
 
@@ -191,7 +199,7 @@ void ei_draw_polygon(ei_surface_t surface,
 
         y++;
 
-        // Bresenham iterations for next intersections
+        // Bresenham iterations for next intersection_rects
         current = TCA->head;
         while (current != NULL) {
             // y-directed
@@ -232,15 +240,15 @@ void ei_draw_text(ei_surface_t surface,
     const ei_rect_t dst_rect = ei_rect(*where, size_dst_rect);
 
     if (clipper != NULL) {
-        ei_rect_t intersection_rect;
-        if (intersection(&dst_rect, clipper, &intersection_rect)) {
+        ei_rect_t intersection_rect_rect;
+        if (intersection_rect(&dst_rect, clipper, &intersection_rect_rect)) {
             const ei_rect_t dst_rect_clipped = ei_rect(
-                    ei_point(intersection_rect.top_left.x, intersection_rect.top_left.y),
-                    ei_size(intersection_rect.size.width, intersection_rect.size.height));
-            intersection_rect.top_left.x = intersection_rect.top_left.x - (where->x);
-            intersection_rect.top_left.y = intersection_rect.top_left.y - (where->y);
+                    ei_point(intersection_rect_rect.top_left.x, intersection_rect_rect.top_left.y),
+                    ei_size(intersection_rect_rect.size.width, intersection_rect_rect.size.height));
+            intersection_rect_rect.top_left.x = intersection_rect_rect.top_left.x - (where->x);
+            intersection_rect_rect.top_left.y = intersection_rect_rect.top_left.y - (where->y);
 
-            ei_copy_surface(surface, &dst_rect_clipped, new_surface, &intersection_rect, true);
+            ei_copy_surface(surface, &dst_rect_clipped, new_surface, &intersection_rect_rect, true);
         }
     } else {
         ei_copy_surface(surface, &dst_rect, new_surface, &src_rect, true);
@@ -314,32 +322,29 @@ int ei_copy_surface(ei_surface_t destination,
         int x2 = dst_first_x;
         while (x1 < src_first_x + src_size_x) {
             // Draw pixel in the buffer
-            if (inside(ei_point(x1, y1), src_rect) &&
-                inside(ei_point(x2, y2), dst_rect)) {
-                if (!alpha) {
-                    dst_pixels[x2 + dst_size.width * y2] = src_pixels[x1 + src_size.width * y1];
-                } else {
-                    int ir, ig, ib, ia;
-                    hw_surface_get_channel_indices(destination, &ir, &ig, &ib, &ia);
-                    ia = 6 - (ir + ib + ig);
-                    uint32_t src_r, src_g, src_b, src_a = 0;
-                    uint32_t dst_r, dst_g, dst_b = 0;
-                    uint32_t dst_a = 255 << 8 * ia;
-                    //We take the RGB color of the source and the destination
-                    src_r = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ir));
-                    src_g = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ig));
-                    src_b = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ib));
-                    src_a = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ia));
-                    dst_r = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ir));
-                    dst_g = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ig));
-                    dst_b = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ib));
-                    // apply the transparancy
-                    dst_r = ((src_a * src_r + (255 - src_a) * dst_r) / 255) << (8 * ir);
-                    dst_g = ((src_a * src_g + (255 - src_a) * dst_g) / 255) << (8 * ig);
-                    dst_b = ((src_a * src_b + (255 - src_a) * dst_b) / 255) << (8 * ib);
-                    uint32_t color = dst_r | dst_g | dst_b | dst_a;
-                    dst_pixels[x2 + dst_size.width * y2] = color;
-                }
+            if (!alpha) {
+                dst_pixels[x2 + dst_size.width * y2] = src_pixels[x1 + src_size.width * y1];
+            } else {
+                int ir, ig, ib, ia;
+                hw_surface_get_channel_indices(destination, &ir, &ig, &ib, &ia);
+                ia = 6 - (ir + ib + ig);
+                uint32_t src_r, src_g, src_b, src_a = 0;
+                uint32_t dst_r, dst_g, dst_b = 0;
+                uint32_t dst_a = 255 << 8 * ia;
+                //We take the RGB color of the source and the destination
+                src_r = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ir));
+                src_g = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ig));
+                src_b = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ib));
+                src_a = (uint8_t) (src_pixels[x1 + src_size.width * y1] >> (8 * ia));
+                dst_r = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ir));
+                dst_g = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ig));
+                dst_b = (uint8_t) (dst_pixels[x2 + dst_size.width * y2] >> (8 * ib));
+                // apply the transparancy
+                dst_r = ((src_a * src_r + (255 - src_a) * dst_r) / 255) << (8 * ir);
+                dst_g = ((src_a * src_g + (255 - src_a) * dst_g) / 255) << (8 * ig);
+                dst_b = ((src_a * src_b + (255 - src_a) * dst_b) / 255) << (8 * ib);
+                uint32_t color = dst_r | dst_g | dst_b | dst_a;
+                dst_pixels[x2 + dst_size.width * y2] = color;
             }
             x1++;
             x2++;
