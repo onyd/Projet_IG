@@ -35,11 +35,13 @@ int main(int argc, char** argv)
     // text on the frame
     ei_surface_t img = hw_image_load(k_default_image_filename, ei_app_root_surface());
     ei_anchor_t anchor = ei_anc_center;
+    ei_rect_t img_rect = ei_rect(ei_point(0,0), ei_size(20,20));
+    ei_rect_t *img_rect_ptr = &img_rect;
+    frame = ei_widget_create("button", ei_app_root_widget(), NULL, NULL);
+    ei_button_configure(frame, &frame_size, &frame_color,
+                        &frame_border_width, NULL, NULL, NULL, NULL, NULL,
+                        NULL, &img, &img_rect_ptr,NULL, NULL, NULL);
 
-    frame = ei_widget_create("frame", ei_app_root_widget(), NULL, NULL);
-    ei_frame_configure	(frame, &frame_size, &frame_color,
-                           &frame_border_width, &frame_relief, NULL, NULL, NULL, NULL,
-                           &img, NULL, &anchor);
     ei_place(frame, NULL, &frame_x, &frame_y, NULL, NULL, NULL, NULL, NULL, NULL );
 
 

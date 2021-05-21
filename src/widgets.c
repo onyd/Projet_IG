@@ -501,9 +501,9 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
         case ei_ev_mouse_buttonup:
             button->relief = ei_relief_raised;
             if (button->callback != NULL && inside(event->param.mouse.where, button->widget.content_rect)) {
-                button->callback(widget->parent, event, NULL);
-                treated = true;
+                button->callback(widget->parent, event, button->widget.user_data);
             }
+            treated = true;
             break;
     }
     if (treated) {
