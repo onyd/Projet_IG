@@ -91,7 +91,11 @@ void ei_frame_configure(ei_widget_t *widget,
     frame->text_color = (text_color != NULL) ? (*text_color) : frame->text_color;
     frame->text_anchor = (text_anchor != NULL) ? *text_anchor : frame->text_anchor;
 
-    frame->img = (img != NULL) ? *img : frame->img;
+    if (img != NULL) {
+        ei_surface_t copy_img = hw_surface_create(*img, hw_surface_get_size(*img), EI_TRUE);
+        ei_copy_surface(copy_img, NULL, *img, NULL, EI_TRUE);
+        frame->img = copy_img;
+    }
     *(frame->img_rect) = (img_rect != NULL) ? *img_rect : *frame->img_rect;
     frame->img_anchor = (img_anchor != NULL) ? *img_anchor : frame->img_anchor;
 }
@@ -113,22 +117,20 @@ void ei_button_configure(ei_widget_t *widget,
                          void **user_param) {
     ei_button_t *button = (ei_button_t *) widget;
     widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
-
     button->color = (color != NULL) ? *color : (button->color);
     button->border_width = (border_width != NULL) ? *border_width : button->border_width;
     button->corner_radius = (corner_radius != NULL) ? *corner_radius : button->corner_radius;
     button->relief = (relief != NULL) ? *relief : button->relief;
     button->callback = (callback != NULL) ? *callback : button->callback;
     button->widget.user_data = (user_param != NULL) ? *user_param : button->widget.user_data;
-
     // Auto-size image
     if (img != NULL) {
-        button->img = *img;
+        ei_surface_t copy_img = hw_surface_create(*img, hw_surface_get_size(*img), EI_TRUE);
+        ei_copy_surface(copy_img, NULL, *img, NULL, EI_TRUE);
+        button->img = copy_img;
 
         if (requested_size == NULL) {
-            int width, height;
-            hw_text_compute_size(button->text, button->text_font, &width, &height);
-            widget->requested_size = ei_size(width, height);
+            widget->requested_size = hw_surface_get_size(*img);
         }
     }
     *(button->img_rect) = (img_rect != NULL) ? *img_rect : *button->img_rect;

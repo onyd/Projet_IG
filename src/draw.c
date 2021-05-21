@@ -72,6 +72,7 @@ void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, 
 void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect_t *img_rect, ei_rect_t *clipper) {
 
     ei_rect_t dst_rect;
+    ei_size_t test = hw_surface_get_size(img);
     if (img_rect != NULL) {
         dst_rect = ei_rect(*pos, img_rect->size);
         // Crop the image in the clipper according to img_rect
