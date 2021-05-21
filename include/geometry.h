@@ -24,9 +24,9 @@ ei_bool_t intersection_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t 
 
 void union_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result);
 
-ei_point_t vertical_line_intersection_rect(ei_point_t first, ei_point_t second, float x, float *error);
+float vertical_line_intersection_rect(ei_point_t first, ei_point_t second, float x, ei_point_t *clipped);
 
-ei_point_t horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, float y, float *error);
+float horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, float y, ei_point_t *clipped);
 
 float cross_product(ei_point_t v1, ei_point_t v2);
 

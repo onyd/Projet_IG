@@ -198,7 +198,7 @@ void union_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {
     result->size.height = height;
 }
 
-ei_point_t vertical_line_intersection_rect(ei_point_t first, ei_point_t second, float x, float *error) {
+float vertical_line_intersection_rect(ei_point_t first, ei_point_t second, float x, ei_point_t *clipped) {
     float x1 = (float) first.x;
     float x2 = (float) second.x;
     float y1 = (float) first.y;
@@ -210,11 +210,12 @@ ei_point_t vertical_line_intersection_rect(ei_point_t first, ei_point_t second, 
 
     float y = a * x + b;
     int int_y = (int) y;
-    *error = y - (float) int_y;
-    return ei_point(x, int_y);
+    *clipped = ei_point(x, int_y);
+
+    return y - (float) int_y;
 }
 
-ei_point_t horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, float y, float *error) {
+float horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, float y, ei_point_t *clipped) {
     float x1 = (float) first.x;
     float x2 = (float) second.x;
     float y1 = (float) first.y;
@@ -222,8 +223,8 @@ ei_point_t horizontal_line_intersection_rect(ei_point_t first, ei_point_t second
 
     // Vertical
     if (x1 == x2) {
-        *error = 0;
-        return ei_point(x1, y);
+        *clipped = ei_point(x1, y);
+        return 0;
     }
 
     // Line parmeters
@@ -232,8 +233,9 @@ ei_point_t horizontal_line_intersection_rect(ei_point_t first, ei_point_t second
 
     float x = (y - b) / a;
     int int_x = (int) x;
-    *error = x - (float) int_x;
-    return ei_point(int_x, y);
+    *clipped = ei_point(int_x, y);
+
+    return x - (float) int_x;
 }
 
 float cross_product(ei_point_t v1, ei_point_t v2) {

@@ -92,11 +92,10 @@ void ei_frame_configure(ei_widget_t *widget,
     frame->text_anchor = (text_anchor != NULL) ? *text_anchor : frame->text_anchor;
 
     if (img != NULL) {
-        ei_surface_t copy_img = hw_surface_create(*img, hw_surface_get_size(*img), EI_TRUE);
-        ei_copy_surface(copy_img, NULL, *img, NULL, EI_TRUE);
-        frame->img = copy_img;
+        frame->img = hw_surface_create(*img, hw_surface_get_size(*img), EI_TRUE);
+        ei_copy_surface(frame->img, NULL, *img, NULL, EI_TRUE);
     }
-    *(frame->img_rect) = (img_rect != NULL) ? *img_rect : *frame->img_rect;
+    *(frame->img_rect) = (img_rect != NULL) ? **img_rect : *frame->img_rect;
     frame->img_anchor = (img_anchor != NULL) ? *img_anchor : frame->img_anchor;
 }
 
@@ -125,15 +124,14 @@ void ei_button_configure(ei_widget_t *widget,
     button->widget.user_data = (user_param != NULL) ? *user_param : button->widget.user_data;
     // Auto-size image
     if (img != NULL) {
-        ei_surface_t copy_img = hw_surface_create(*img, hw_surface_get_size(*img), EI_TRUE);
-        ei_copy_surface(copy_img, NULL, *img, NULL, EI_TRUE);
-        button->img = copy_img;
+        button->img = hw_surface_create(*img, hw_surface_get_size(*img), EI_TRUE);
+        ei_copy_surface(button->img, NULL, *img, NULL, EI_TRUE);
 
         if (requested_size == NULL) {
             widget->requested_size = hw_surface_get_size(*img);
         }
     }
-    *(button->img_rect) = (img_rect != NULL) ? *img_rect : *button->img_rect;
+    *(button->img_rect) = (img_rect != NULL) ? **img_rect : *button->img_rect;
     button->img_anchor = (img_anchor != NULL) ? *img_anchor : button->img_anchor;
 
     // Auto-size text

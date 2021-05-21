@@ -40,7 +40,11 @@ void ei_draw_polyline(ei_surface_t surface,
         // Clipping
         ei_point_t clipped1, clipped2;
         float error;
-        if (!analytic_clipping(first->point, second->point, &clipped1, &clipped2, &error, clipper)) { return; }
+        if (!line_analytic_clipping(first->point, second->point, &clipped1, &clipped2, &error, clipper)) {
+            first = second;
+            second = second->next;
+            continue;
+        }
 
         int x = clipped1.x;
         int y = clipped1.y;
@@ -50,24 +54,18 @@ void ei_draw_polyline(ei_surface_t surface,
         int sign_dy = (dy > 0) ? 1 : -1;
 
         // Vertical and horizontal case
-        //if (dx == 0 &&
-        //  (clipper == NULL || x >= clipper->top_left.x && x <= clipper->top_left.x + clipper->size.width)) {
-        while (sign_dy * y <= sign_dy * second->point.y) {
-            //    if (clipper == NULL || y >= clipper->top_left.y && y <= clipper->top_left.y + clipper->size.height) {
-            pixels[x + size.width * y] = c;
-            //  }
-            y += sign_dy;
+        if (dx == 0) {
+            while (sign_dy * y <= sign_dy * second->point.y) {
+                pixels[x + size.width * y] = c;
+                y += sign_dy;
             }
             first = second;
             second = second->next;
             continue;
-        //}
-        if (dy == 0 &&
-            (clipper == NULL || y >= clipper->top_left.y && y <= clipper->top_left.y + clipper->size.height)) {
+        }
+        if (dy == 0) {
             while (sign_dx * x <= sign_dx * second->point.x) {
-                if (clipper == NULL || x >= clipper->top_left.x && x <= clipper->top_left.x + clipper->size.width) {
-                    pixels[x + size.width * y] = c;
-                }
+                pixels[x + size.width * y] = c;
                 x += sign_dx;
             }
             first = second;
@@ -77,8 +75,8 @@ void ei_draw_polyline(ei_surface_t surface,
 
         // Swap variable for y-directed line
         bool swapped = abs(dx) < abs(dy);
-        int x2 = second->point.x;
-        int y2 = second->point.y;
+        int x2 = clipped2.x;
+        int y2 = clipped2.y;
 
         if (swapped) {
             swap(&x, &y);
@@ -86,7 +84,7 @@ void ei_draw_polyline(ei_surface_t surface,
             swap(&sign_dx, &sign_dy);
             swap(&x2, &y2);
         }
-        int E = 0;
+        int E = error * abs(dx);
 
         while (sign_dx * x < sign_dx * x2) {
             x += sign_dx;
@@ -97,9 +95,9 @@ void ei_draw_polyline(ei_surface_t surface,
                 E -= abs(dx);
             }
             // Draw pixel in the buffer
-            if (!swapped && inside(ei_point(x, y), clipper)) {
+            if (!swapped) {
                 pixels[x + size.width * y] = c;
-            } else if (swapped && inside(ei_point(x, y), clipper)) {
+            } else {
                 pixels[y + size.width * x] = c;
             }
         }

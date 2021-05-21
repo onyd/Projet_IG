@@ -77,12 +77,12 @@ void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect
         dst_rect = ei_rect(*pos, img_rect->size);
         // Crop the image in the clipper according to img_rect
         intersection_rect(&dst_rect, clipper, &dst_rect);
-    } else {
-        dst_rect = *clipper;
-    }
 
-    ei_rect_t src_rect = ei_rect(ei_point_zero(), dst_rect.size);
-    ei_copy_surface(surface, &dst_rect, img, &src_rect, EI_TRUE);
+        ei_copy_surface(surface, &dst_rect, img, img_rect, EI_TRUE);
+    } else {
+        ei_rect_t src_rect = ei_rect(ei_point_zero(), dst_rect.size);
+        ei_copy_surface(surface, clipper, img, &src_rect, EI_TRUE);
+    }
 }
 
 void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t size) {
@@ -139,16 +139,15 @@ void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_
 }
 
 uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper) {
-    uint8_t result = 15;
+    uint8_t result = 0;
 
-    result &= (p.x < clipper->top_left.x);
-    result &= (p.x > clipper->top_left.x + clipper->size.width) << 1;
-    result &= (p.y < clipper->top_left.y) << 2;
-    result &= (p.y > clipper->top_left.y + clipper->size.height) << 3;
+    result |= (p.x < clipper->top_left.x);
+    result |= (p.x > clipper->top_left.x + clipper->size.width) << 1;
+    result |= (p.y < clipper->top_left.y) << 2;
+    result |= (p.y > clipper->top_left.y + clipper->size.height) << 3;
 
     return result;
 }
-
 
 enum clipping_code get_clipping_code(uint8_t code) {
     switch (code) {
@@ -173,72 +172,155 @@ enum clipping_code get_clipping_code(uint8_t code) {
     }
 }
 
-ei_bool_t analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipped1, ei_point_t *clipped2, float *E,
-                       ei_rect_t *clipper) {
+ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipped1, ei_point_t *clipped2, float *error,
+                            ei_rect_t *clipper) {
+    *error += 0;
+    if (clipper == NULL) {
+        *clipped1 = p1;
+        *clipped2 = p2;
+        return true;
+    }
+
     uint8_t c1 = cohen_sutherland_code(p1, clipper);
     uint8_t c2 = cohen_sutherland_code(p2, clipper);
-    *E = 0;
 
     // Trivial case
-    if (c1 | c2 == 0) {
-        clipped1 = &p1;
-        clipped2 = &p2;
-        *E = 0;
+    if ((c1 | c2) == 0) {
+        *clipped1 = p1;
+        *clipped2 = p2;
         return true;
-    } else if (c1 & c2 != 0) {
+    } else if ((c1 & c2) != 0) {
         return false;
     }
 
+    int x_min = clipper->top_left.x;
+    int x_max = clipper->top_left.x + clipper->size.width;
+    int y_min = clipper->top_left.y;
+    int y_max = clipper->top_left.y + clipper->size.height;
+
+    float e = 0;
     switch (get_clipping_code(c1)) {
         case center_reject:
-            clipped1 = &p1;
+            *clipped1 = p1;
             break;
         case north_east_reject:
+            // Try horizontal intersection_rects
+            e = horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
+
+            // Bad horizontal intersection_rect => vertical intersection_rect
+            if (clipped1->x < x_min || clipped1->x > x_max) {
+                e = vertical_line_intersection_rect(p1, p2, x_max, clipped1);
+            }
+            *error += e;
+            return true; // Corner implies other point is in the clipper
         case north_west_reject:
+            // Try horizontal intersection_rects
+            e = horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
+
+            // Bad horizontal intersection_rect => vertical intersection_rect
+            if (clipped1->x < x_min || clipped1->x > x_max) {
+                e = vertical_line_intersection_rect(p1, p2, x_min, clipped1);
+            }
+            return true; // Corner implies other point is in the clipper
         case south_east_reject:
+            // Try horizontal intersection_rects
+            e = horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
+
+            // Bad horizontal intersection_rect => vertical intersection_rect
+            if (clipped1->x < x_min || clipped1->x > x_max) {
+                e = vertical_line_intersection_rect(p1, p2, x_max, clipped1);
+            }
+            return true; // Corner implies other point is in the clipper
         case south_west_reject:
             // Try horizontal intersection_rects
-            *clipped1 = horizontal_line_intersection_rect(p1, p2, clipper->top_left.y, E);
-            
+            e = horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
+
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped1->x < clipper->top_left.x || clipped1->x > clipper->top_left.x + clipper->size.width) {
-                *clipped1 = vertical_line_intersection_rect(p1, p2, clipper->top_left.x, E);
+            if (clipped1->x < x_min || clipped1->x > x_max) {
+                e = vertical_line_intersection_rect(p1, p2, x_min, clipped1);
             }
             return true; // Corner implies other point is in the clipper
         case north_reject:
+            *error += horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
         case south_reject:
-            *clipped1 = horizontal_line_intersection_rect(p1, p2, clipper->top_left.y, E);
+            *error += horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
             break;
         case east_reject:
+            *error += vertical_line_intersection_rect(p1, p2, x_max, clipped1);
+            break;
         case west_reject:
-            *clipped1 = vertical_line_intersection_rect(p1, p2, clipper->top_left.x, E);
+            *error += vertical_line_intersection_rect(p1, p2, x_min, clipped1);
             break;
     }
+    *error += e;
 
     switch (get_clipping_code(c2)) {
         case center_reject:
-            clipped2 = &p2;
+            *clipped2 = p2;
             break;
         case north_east_reject:
-        case north_west_reject:
-        case south_east_reject:
-        case south_west_reject:
             // Try horizontal intersection_rects
-            *clipped2 = horizontal_line_intersection_rect(p1, p2, clipper->top_left.y, E);
+            e = horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped2->x < clipper->top_left.x || clipped2->x > clipper->top_left.x + clipper->size.width) {
-                *clipped2 = vertical_line_intersection_rect(p1, p2, clipper->top_left.x, E);
+            if (clipped2->x < x_min || clipped2->x > x_max) {
+                e = vertical_line_intersection_rect(p1, p2, x_max, clipped2);
+            }
+            break;
+        case north_west_reject:
+            // Try horizontal intersection_rects
+            e = horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
+
+            // Bad horizontal intersection_rect => vertical intersection_rect
+            if (clipped2->x < x_min || clipped2->x > x_max) {
+                e = vertical_line_intersection_rect(p1, p2, x_min, clipped2);
+            }
+            break;
+        case south_east_reject:
+            // Try horizontal intersection_rects
+            e = horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
+
+            // Bad horizontal intersection_rect => vertical intersection_rect
+            if (clipped2->x < x_min || clipped2->x > x_max) {
+                e = vertical_line_intersection_rect(p1, p2, x_min, clipped2);
+            }
+            break;
+        case south_west_reject:
+            // Try horizontal intersection_rects
+            e = horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
+
+            // Bad horizontal intersection_rect => vertical intersection_rect
+            if (clipped2->x < x_min || clipped2->x > x_max) {
+                e = vertical_line_intersection_rect(p1, p2, x_max, clipped2);
             }
             break;
         case north_reject:
+            *error += horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
         case south_reject:
-            *clipped2 = horizontal_line_intersection_rect(p1, p2, clipper->top_left.y, E);
+            *error += horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
             break;
         case east_reject:
+            *error += vertical_line_intersection_rect(p1, p2, x_max, clipped2);
+            break;
         case west_reject:
-            *clipped2 = vertical_line_intersection_rect(p1, p2, clipper->top_left.x, E);
+            *error += vertical_line_intersection_rect(p1, p2, x_min, clipped2);
             break;
     }
+
+    *error += e;
     return true;
+}
+
+void polygon_analytic_clipping(ei_linked_point_t *points, vector *clipped, vector *errors, ei_rect_t *clipper) {
+    clipped = create_vector(2);
+    errors = create_vector(2);
+
+    ei_linked_point_t *previous = points;
+    ei_linked_point_t *current = points->next;
+    // Go through all edges
+    while (current != NULL) {
+
+        previous = current;
+        current = current->next;
+    }
 }

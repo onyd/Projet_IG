@@ -9,7 +9,6 @@
 #include "geometry.h"
 #include <time.h>
 #include "draw.h"
-#include "utils.h"
 
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -43,8 +42,7 @@ void test_line(ei_surface_t surface, ei_rect_t *clipper) {
  *	algorithm that draws a polyline in each of the possible octants, that is,
  *	in each quadrant with dx>dy (canonical) and dy>dx (steep).
  */
-void test_octogone(ei_surface_t surface, ei_rect_t *clipper) {
-    ei_color_t color = {0, 255, 0, 255};
+void test_octogone(ei_surface_t surface, ei_color_t color, ei_rect_t *clipper) {
     ei_linked_point_t pts[9];
     int i, xdiff, ydiff;
 
@@ -74,7 +72,7 @@ void test_octogone(ei_surface_t surface, ei_rect_t *clipper) {
 }
 
 void test_polygone(ei_surface_t surface, ei_rect_t *clipper) {
-    ei_color_t color = {0, 255, 0, 255};
+    ei_color_t color = {50, 60, 100, 255};
     ei_linked_point_t pts[9];
     int i, xdiff, ydiff;
 
@@ -113,34 +111,34 @@ void test_polygone(ei_surface_t surface, ei_rect_t *clipper) {
  *	algorithm for the special cases of horizontal and vertical lines, where
  *	dx or dy are zero
  */
-void test_square(ei_surface_t surface, ei_rect_t *clipper) {
+void test_rect(ei_surface_t surface, ei_rect_t *rect) {
     ei_color_t color = {255, 0, 0, 255};
     ei_linked_point_t pts[5];
-    int i, xdiff, ydiff;
 
     /* Initialisation */
-    pts[0].point.x = 300;
-    pts[0].point.y = 400;
+    pts[0].point.x = rect->top_left.x;
+    pts[0].point.y = rect->top_left.y;
 
-    /* Draw the square */
-    for (i = 1; i <= 4; i++) {
-        /*	Add or remove 200 pixels or 0 for next point
-            The first term of this formula gives the sign + or - of the operation
-            The second term is 0 or 1, according to which coordinate grows
-            The third term is simply the side of the square */
-        xdiff = pow(-1, i / 2) * (i % 2) * 200;
-        ydiff = pow(-1, i / 2) * (i % 2 == 0) * 200;
+    pts[1].point.x = rect->top_left.x + rect->size.width;
+    pts[1].point.y = rect->top_left.y;
+    pts[0].next = &(pts[1]);
 
-        pts[i].point.x = pts[i - 1].point.x + xdiff;
-        pts[i].point.y = pts[i - 1].point.y + ydiff;
-        pts[i - 1].next = &(pts[i]);
-    }
+    pts[2].point.x = rect->top_left.x + rect->size.width;
+    pts[2].point.y = rect->top_left.y + rect->size.height;
+    pts[1].next = &(pts[2]);
 
-    /* End the linked list */
-    pts[i - 1].next = NULL;
+    pts[3].point.x = rect->top_left.x;
+    pts[3].point.y = rect->top_left.y + rect->size.height;
+    pts[2].next = &(pts[3]);
+
+    pts[4].point.x = rect->top_left.x;
+    pts[4].point.y = rect->top_left.y;
+    pts[3].next = &(pts[4]);
+
+    pts[4].next = NULL;
 
     /* Draw the form with polygon */
-    ei_draw_polygon(surface, pts, color, clipper);
+    ei_draw_polyline(surface, pts, color, NULL);
 }
 
 
@@ -262,10 +260,10 @@ int main(int argc, char **argv) {
     ei_rect_t *clipper_ptr = NULL;
 
     ei_rect_t clipper_test;
-    clipper_test.top_left.x = 0;
+    clipper_test.top_left.x = 300;
     clipper_test.top_left.y = 0;
-    clipper_test.size.width = 400;
-    clipper_test.size.height = 600;
+    clipper_test.size.width = 200;
+    clipper_test.size.height = 300;
 
 //	ei_rect_t		clipper		= ei_rect(ei_point(200, 150), ei_size(400, 300));
 //	clipper_ptr		= &clipper;
@@ -278,10 +276,12 @@ int main(int argc, char **argv) {
     /* Lock the drawing surface, paint it white. */
     hw_surface_lock(main_window);
     ei_fill(main_window, &white, clipper_ptr);
-           /* Draw polylines and plygon. */
-//      test_line(main_window, clipper_ptr);
-//	    test_octogone	(main_window, clipper_ptr);
-//      test_octogone(main_window, &clipper_test);
+    /* Draw polylines and plygon. */
+    test_rect(main_window, &clipper_test);
+    test_line(main_window, &clipper_test);
+
+    test_octogone(main_window, (ei_color_t) {255, 0, 0, 255}, clipper_ptr);
+    test_octogone(main_window, (ei_color_t) {50, 60, 100, 255}, &clipper_test);
 //	    test_square	(main_window, clipper_ptr);
 //	    test_dot	(main_window, clipper_ptr);
 //      test_polygone(main_window, clipper_ptr);
@@ -290,22 +290,6 @@ int main(int argc, char **argv) {
 
     /* Rounded polygon */
 //    test_rounded_frame(main_window, clipper_ptr);
-
-    /* test button */
-    /*
-    hw_surface_unlock(main_window);
-    bool etat = true;
-    test_draw_button(main_window, clipper_ptr, etat);
-    hw_surface_update_rects(main_window, NULL);
-    event.type = ei_ev_none;
-    while (event.type != ei_ev_mouse_buttondown)
-        hw_event_wait_next(&event);
-    etat = !etat;
-    hw_surface_lock(main_window);
-    test_draw_button(main_window, clipper_ptr, etat);
-    hw_surface_unlock(main_window);
-    hw_surface_update_rects(main_window, NULL);
-     */
 
     /* Draw text. */
     //test_ei_draw_text(main_window, clipper_ptr);

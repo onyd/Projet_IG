@@ -2,6 +2,7 @@
 #define PROJETC_IG_DRAW_H
 
 #include "ei_draw.h"
+#include "vector.h"
 
 typedef enum trivial_clipping_code {
     trivial_accept = 0,
@@ -20,6 +21,11 @@ typedef enum clipping_code {
     west_reject,
     center_reject
 } clipping_code;
+
+typedef struct ei_linked_errors {
+    float error;
+    struct ei_linked_errors *next;
+} ei_linked_errors;
 
 /** @brief Allows to draw a rectangle
  * @param the surface on which we want to draw
@@ -47,7 +53,9 @@ uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper);
 
 enum clipping_code get_clipping_code(uint8_t code);
 
-ei_bool_t analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipped1, ei_point_t *clipped2, float *E,
-                       ei_rect_t *clipper);
+ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipped1, ei_point_t *clipped2, float *error,
+                            ei_rect_t *clipper);
+
+void polygon_analytic_clipping(ei_linked_point_t *points, vector *clipped, vector *errors, ei_rect_t *clipper);
 
 #endif //PROJETC_IG_DRAW_H
