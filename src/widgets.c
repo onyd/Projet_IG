@@ -102,7 +102,6 @@ ei_widget_t *widget_allocfunc() {
 ei_widget_t *button_allocfunc() {
     ei_widget_t *widget = (ei_button_t *) calloc(1, sizeof(ei_button_t));
     ei_button_t *button = (ei_button_t *) widget;
-    button->img_rect = calloc(1, sizeof(ei_rect_t *));
     button->callback = NULL;
     return widget;
 }
@@ -110,7 +109,6 @@ ei_widget_t *button_allocfunc() {
 ei_widget_t *frame_allocfunc() {
     ei_widget_t *widget = (ei_frame_t *) calloc(1, sizeof(ei_frame_t));
     ei_frame_t *frame = (ei_frame_t *) widget;
-    frame->img_rect = calloc(1, sizeof(ei_rect_t *));
     return widget;
 }
 
