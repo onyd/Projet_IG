@@ -66,6 +66,10 @@ void append_linked_point(ei_linked_point_t *p, ei_linked_point_t *l);
 
 void free_linked_point(ei_linked_point_t *l);
 
+void append_linked_rect(ei_rect_t rect, ei_linked_rect_t *l);
+
+void free_linked_rect(ei_linked_rect_t *l);
+
 void free_linked_widget(ei_linked_widget_t *l);
 
 ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *anchor);

@@ -157,6 +157,22 @@ void free_linked_point(ei_linked_point_t *l) {
     }
 }
 
+void append_linked_rect(ei_rect_t rect, ei_linked_rect_t *l) {
+    ei_linked_rect_t *new = malloc(sizeof(ei_linked_rect_t));
+    new->rect = rect;
+    new->next = l;
+    l = new;
+}
+
+void free_linked_rect(ei_linked_rect_t *l) {
+    ei_linked_rect_t *current_rect = l;
+    while (current_rect != NULL) {
+        ei_linked_rect_t *tmp = current_rect;
+        current_rect = current_rect->next;
+        free(tmp);
+    }
+}
+
 void free_linked_widget(ei_linked_widget_t *l) {
     ei_linked_widget_t *current = l;
     while (current != NULL) {

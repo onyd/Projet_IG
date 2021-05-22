@@ -98,7 +98,7 @@ ei_color_t *get_default_button_color() {
     return &_default_button_color;
 }
 
-ei_color_t *get_default_selectioned_color() {
+ei_color_t *get_default_selected_color() {
     return &_default_selectioned_color;
 }
 

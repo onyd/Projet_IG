@@ -40,7 +40,7 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
 
 void ei_widget_destroy(ei_widget_t *widget) {
     ei_widget_destroy_rec(widget);
-    append_updated_rects(widget->screen_location);
+    append_linked_rect(widget->screen_location, get_updated_rects());
     if (widget->destructor != NULL) {
         widget->destructor(widget);
     }

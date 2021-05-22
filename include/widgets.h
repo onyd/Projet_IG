@@ -9,6 +9,9 @@
 #include "draw.h"
 #include "vector.h"
 
+/**
+ * @brief The button widget struct
+ */
 typedef struct ei_button_t {
     ei_widget_t widget;
     // Specific field
@@ -26,6 +29,9 @@ typedef struct ei_button_t {
     ei_callback_t callback;
 } ei_button_t;
 
+/**
+ * @brief The frame widget struct
+ */
 typedef struct ei_frame_t {
     ei_widget_t widget;
     // Specific field
@@ -41,13 +47,18 @@ typedef struct ei_frame_t {
     ei_anchor_t img_anchor;
 } ei_frame_t;
 
-
+/**
+ * @brief Defines grab_event_type for toplevel
+ */
 typedef enum {
     idle = 0,
     grabbed,
     resized
 } grab_event_type;
 
+/**
+ * @brief Used to handle toplevel events
+ */
 typedef struct grab_event_t {
     grab_event_type grab_type; // Tells what the user do with toplevel
     struct param {
@@ -57,6 +68,9 @@ typedef struct grab_event_t {
     } param;
 } grab_event_t;
 
+/**
+ * @brief The toplevel widget struct
+ */
 typedef struct ei_toplevel_t {
     ei_widget_t widget;
     //Specific field
@@ -70,6 +84,9 @@ typedef struct ei_toplevel_t {
     grab_event_t grab_event;
 } ei_toplevel_t;
 
+/**
+ * @brief The radio button widget struct
+ */
 typedef struct ei_radiobutton_t {
     ei_widget_t widget;
     // Specific field
@@ -95,10 +112,9 @@ typedef struct ei_radiobutton_t {
  */
 void ei_widget_destroy_rec(ei_widget_t *widget);
 
-void draw_window();
 
 /**
- * \brief	search for the first parent of a widget which is a toplevel
+ * \brief	Search for the first parent of a widget which is a toplevel
  * @param a widget
  * @return the first widget's parent which is a toplevel or NULL if it doesn't exist
  */
@@ -236,28 +252,83 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget);
 void radiobutton_setdefaultsfunc(ei_widget_t *widget);
 
 /* geomnotifyfunc */
+/**
+ * \brief	Allow to update geometry of a widget of type \ref ei_button_t.
+ *
+ * @param	widget		The subject widget.
+ * @param	rect		The updated content_rect.
+ */
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
+/**
+ * \brief	Allow to update geometry of a widget of type \ref ei_frame_t.
+ *
+ * @param	widget		The subject widget.
+ * @param	rect		The updated content_rect.
+ */
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
+/**
+ * \brief	Allow to update geometry of a widget of type \ref ei_toplevel_t.
+ *
+ * @param	widget		The subject widget.
+ * @param	rect		The updated content_rect.
+ */
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
+/**
+ * \brief	Allow to update geometry of a widget of type \ref ei_radiobutton_t.
+ *
+ * @param	widget		The subject widget.
+ * @param	rect		The updated content_rect.
+ */
 void radiobutton_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect);
 
-void append_updated_rects(ei_rect_t rect);
-
-void updated_rect_size(ei_widget_t *widget, ei_rect_t rect);
+/**
+ * \brief	Allow to add the rect that cover the pixels eventually modified by the widget.
+ *
+ * @param	widget		The subject widget.
+ * @param	rect		The old screen location.
+ */
+void add_widget_updated_rects(ei_widget_t *widget, ei_rect_t rect);
 
 /* handlefunc */
+/**
+ * \brief	Handle the internal events for widget of type \ref ei_button_t .
+ *
+ * @param	widget		The widget which receive the event.
+ * @param	event		The received event.
+ */
 ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
+/**
+ * \brief	Handle the internal events for widget of type \ref ei_frame_t .
+ *
+ * @param	widget		The widget which receive the event.
+ * @param	event		The received event.
+ */
 ei_bool_t frame_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
+/**
+ * \brief	Handle the internal events for widget of type \ref ei_toplevel_t .
+ *
+ * @param	widget		The widget which receive the event.
+ * @param	event		The received event.
+ */
 ei_bool_t toplevel_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
+/**
+ * \brief	Handle the internal events for widget of type \ref ei_radiobutton_t .
+ *
+ * @param	widget		The widget which receive the event.
+ * @param	event		The received event.
+ */
 ei_bool_t radiobutton_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
 /* radiobutton configure */
+/**
+ * \brief	Allows to configure a widget of type \ref ei_radiobutton_t.
+ */
 void ei_radiobutton_configure(ei_widget_t *widget,
                               ei_size_t *requested_size,
                               ei_color_t *background_color,

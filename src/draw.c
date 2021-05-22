@@ -2,6 +2,13 @@
 #include "ei_utils.h"
 #include "geometry.h"
 #include "utils.h"
+#include "defaults.h"
+#include "ei_application.h"
+
+void draw_window() {
+    ei_widget_t *root = ei_app_root_widget();
+    root->wclass->drawfunc(root, get_main_window(), get_pick_surface(), get_clipper_window());
+}
 
 void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper) {
     ei_linked_point_t first_point[5];
@@ -138,16 +145,16 @@ void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_
     ei_draw_polygon(surface, first_point_2, color, clipper);
 }
 
-void draw_blank_rect (ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t w, int32_t d){
+void draw_blank_rect(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t w, int32_t d) {
     ei_linked_point_t first_point[7];
     ei_linked_point_t *current = first_point;
     current->point.x = rect.top_left.x;
     current->point.y = rect.top_left.y;
     current->next = &first_point[1];
-    current->point.x =rect.top_left.x + d;
+    current->point.x = rect.top_left.x + d;
     current->point.y = rect.top_left.y;
     current->next = &first_point[2];
-    current->point.x = rect.top_left.x +d + w;
+    current->point.x = rect.top_left.x + d + w;
     current->point.y = rect.top_left.y;
     current->next = &first_point[3];
     current->point.x = rect.top_left.x + rect.size.width;
@@ -177,7 +184,7 @@ uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper) {
     return result;
 }
 
-enum clipping_code get_clipping_code(uint8_t code) {
+enum clipping_type get_clipping_type(uint8_t code) {
     switch (code) {
         case 0:
             return center_reject;
@@ -227,7 +234,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
     int y_max = clipper->top_left.y + clipper->size.height;
 
     float e = 0;
-    switch (get_clipping_code(c1)) {
+    switch (get_clipping_type(c1)) {
         case center_reject:
             *clipped1 = p1;
             break;
@@ -282,7 +289,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
     }
     *error += e;
 
-    switch (get_clipping_code(c2)) {
+    switch (get_clipping_type(c2)) {
         case center_reject:
             *clipped2 = p2;
             break;
@@ -365,12 +372,12 @@ void polygon_analytic_clipping(ei_linked_point_t *points, vector *clipped, vecto
         while (current != NULL) {
             ei_point_t intersection;
             vertical_line_intersection_rect(previous->point, current->point, topleft.x,
-                                                          &intersection);
+                                            &intersection);
             if (!is_left(current->point, topleft, botleft)) {
                 if (is_left(previous->point, topleft, botleft)) {
                     ei_linked_point_t *linked_intersection = calloc(1, sizeof(ei_linked_point_t));
                     linked_intersection->point = intersection;
-                    append_linked_point(linked_intersection, get(clipped, clipped->last_idx-1));
+                    append_linked_point(linked_intersection, get(clipped, clipped->last_idx - 1));
                 }
                 append_linked_point(current, get(clipped, i));
             } else if (!is_left(previous->point, topleft, botleft)) {

@@ -9,6 +9,7 @@
 #include "vector.h"
 #include "widgetclass.h"
 #include "defaults.h"
+#include "utils.h"
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     hw_init();
@@ -116,14 +117,9 @@ void ei_app_run(void) {
         draw_window();
         hw_surface_unlock(get_main_window());
         hw_surface_update_rects(get_main_window(), get_updated_rects());
-        ei_linked_rect_t *current_rect = get_updated_rects()->next;
-        while (current_rect != NULL) {
-            ei_linked_rect_t *tmp = current_rect;
-            current_rect = current_rect->next;
-            free(tmp);
-        }
-        get_updated_rects()->rect = ei_rect_zero();
-        get_updated_rects()->next = NULL;
+
+        free_linked_rect(get_updated_rects());
+        append_linked_rect(ei_rect_zero(), get_updated_rects());
 
         // Event handling
         hw_event_wait_next(&event);

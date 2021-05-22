@@ -28,12 +28,6 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
     }
 }
 
-
-void draw_window() {
-    ei_widget_t *root = ei_app_root_widget();
-    root->wclass->drawfunc(root, get_main_window(), get_pick_surface(), get_clipper_window());
-}
-
 ei_widget_t *search_for_toplevel(ei_widget_t *widget) {
     ei_widget_t *current = widget->parent;
     ei_widget_t *root_widget = ei_app_root_widget();
@@ -398,9 +392,9 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
     char *title = "Toplevel";
     ei_bool_t default_closable = EI_TRUE;
     ei_axis_set_t default_resizable = ei_axis_both;
+    ei_size_t *min_size = get_toplevel_default_min_size();
 
     // Toplevel default settings
-    ei_size_t *min_size = get_toplevel_default_min_size();
     ei_toplevel_configure(widget,
                           get_toplevel_default_size(),
                           &background,
@@ -422,7 +416,7 @@ void radiobutton_setdefaultsfunc(ei_widget_t *widget) {
                              get_default_size(),
                              get_default_color(),
                              get_default_button_color(),
-                             get_default_selectioned_color(),
+                             get_default_selected_color(),
                              NULL,
                              &ei_default_font,
                              get_default_text_color(),
@@ -436,7 +430,7 @@ void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     widget->screen_location = rect;
 
     // Update
-    updated_rect_size(widget, old_screen_location);
+    add_widget_updated_rects(widget, old_screen_location);
 }
 
 void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
@@ -444,7 +438,7 @@ void frame_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     widget->screen_location = rect;
 
     // Update
-    updated_rect_size(widget, old_screen_location);
+    add_widget_updated_rects(widget, old_screen_location);
 }
 
 void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
@@ -476,25 +470,18 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
                                                   ei_point(toplevel->border_width, toplevel->border_width + height));
 
     // Update
-    updated_rect_size(widget, old_screen_location);
+    add_widget_updated_rects(widget, old_screen_location);
 }
 
 void radiobutton_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     return;
 }
 
-void append_updated_rects(ei_rect_t rect) {
-    ei_linked_rect_t *new = malloc(sizeof(ei_linked_rect_t));
-    new->rect = rect;
-    new->next = get_updated_rects();
-    set_updated_rects(new);
-}
-
-void updated_rect_size(ei_widget_t *widget, ei_rect_t rect) {
+void add_widget_updated_rects(ei_widget_t *widget, ei_rect_t rect) {
     ei_rect_t update_rect;
     union_rect(&rect, &(widget->screen_location), &update_rect);
     if (intersection_rect(&update_rect, get_clipper_window(), &update_rect)) {
-        append_updated_rects(update_rect);
+        append_linked_rect(update_rect, get_updated_rects());
     }
 }
 
@@ -522,7 +509,7 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
             break;
     }
     if (treated) {
-        append_updated_rects(widget->screen_location);
+        append_linked_rect(widget->screen_location, get_updated_rects());
     }
     return treated || false;
 }
@@ -679,7 +666,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     if (treated) {
         ei_rect_t clipper;
         intersection_rect(&widget->screen_location, get_clipper_window(), &clipper);
-        append_updated_rects(clipper);
+        append_linked_rect(clipper, get_updated_rects());
     }
 
     // Button has to receive event
