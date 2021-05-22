@@ -1,16 +1,18 @@
 #include "hw_interface.h"
 #include "ei_widgetclass.h"
 #include "stdbool.h"
-#include "string.h"
+#include <string.h>
 #include "ei_application.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include "widgets.h"
 #include "eventhandler.h"
 #include "vector.h"
+#include "widgetclass.h"
+#include "defaults.h"
 
 void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     hw_init();
-    quit_request = false;
+
     // Class init
     button_class = malloc(sizeof(ei_widgetclass_t));
     frame_class = malloc(sizeof(ei_widgetclass_t));
@@ -27,74 +29,47 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     // Defaults init
     ei_default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, ei_font_default_size);
 
-    default_color = malloc(sizeof(ei_color_t));
-    *default_color = (ei_color_t) {100, 100, 100, 255};
-
-    default_text_color = malloc(sizeof(ei_color_t));
-    *default_text_color = (ei_color_t) {0, 0, 0, 255};
-
-    default_size = malloc(sizeof(ei_size_t));
-    *default_size = (ei_size_t) {100, 100};
-
-    default_relief = malloc(sizeof(ei_relief_t));
-    *default_relief = ei_relief_raised;
-
-    default_anchor = malloc((sizeof(ei_anchor_t)));
-    *default_anchor = ei_anc_center;
-
-    default_button_color = malloc(sizeof(ei_color_t));
-    *default_button_color = (ei_color_t) {200, 200, 200, 255};
-
-    default_selectioned_color = malloc(sizeof(ei_color_t));
-    *default_selectioned_color = (ei_color_t) {255, 0, 0, 255};
-
-    toplevel_default_size = malloc(sizeof(ei_size_t));
-    *toplevel_default_size = ei_size(320, 240);
-
-    toplevel_default_min_size = malloc(sizeof(ei_size_t));
-    *toplevel_default_min_size = ei_size(160, 120);
-
-    toplevel_default_border_width = malloc(sizeof(ei_size_t));
-    *toplevel_default_border_width = 4;
-
-    clipping_window = malloc(sizeof(ei_rect_t));
+    ei_rect_t *clipping_window = malloc(sizeof(ei_rect_t));
     *clipping_window = ei_rect(ei_point(0, 0), main_window_size);
+    set_clipper_window(clipping_window);
 
     default_handle_func = malloc(sizeof(ei_default_handle_func_t));
     default_handle_func = &always_true;
 
+    set_quit_request(false);
+
     // Picking init
-    pick_vector = create_vector(1);
+    set_pick_vector(create_vector(1));
 
-    updated_rects = calloc(1, sizeof(ei_linked_rect_t));
+    ei_linked_rect_t *updated_rects = calloc(1, sizeof(ei_linked_rect_t));
     updated_rects->rect = *get_clipper_window();
+    set_updated_rects(updated_rects);
 
-    mouse_pos = calloc(1, sizeof(ei_point_t));
-    *mouse_pos = ei_point_zero();
-
-    prev_mouse_pos = calloc(1, sizeof(ei_point_t));
-    *prev_mouse_pos = ei_point_zero();
+    set_mouse_pos(ei_point_zero());
+    set_prev_mouse_pos(ei_point_zero());
 
     // root init
-    root = frame_allocfunc();
-    root->widget.wclass = frame_class;
-    root->widget.wclass->setdefaultsfunc(root);
-    root->widget.requested_size = main_window_size;
+    set_root_widget(frame_allocfunc());
+    get_root_widget()->widget.wclass = frame_class;
+    get_root_widget()->widget.wclass->setdefaultsfunc(get_root_widget());
+    get_root_widget()->widget.requested_size = main_window_size;
     ei_rect_t *root_rect = malloc(sizeof(ei_rect_t));
     *root_rect = ei_rect(ei_point(0, 0), main_window_size);
-    root->widget.screen_location = *root_rect;
-    root->widget.content_rect = root_rect;
-    root->widget.pick_id = 0;
-    root->widget.pick_color = malloc(sizeof(ei_color_t));
-    *(root->widget.pick_color) = (ei_color_t) {0, 0, 0, 0};
+    get_root_widget()->widget.screen_location = *root_rect;
+    get_root_widget()->widget.content_rect = root_rect;
+    get_root_widget()->widget.pick_id = 0;
+    get_root_widget()->widget.pick_color = malloc(sizeof(ei_color_t));
+    *(get_root_widget()->widget.pick_color) = (ei_color_t) {0, 0, 0, 0};
 
+    ei_surface_t main_window;
     if (fullscreen == false) {
         main_window = hw_create_window(main_window_size, EI_FALSE);
     } else {
         main_window = hw_create_window(ei_size(900, 700), EI_TRUE);
     }
+    set_main_window(main_window);
 
-    pick_surface = hw_surface_create(get_main_window(), hw_surface_get_size(main_window), EI_FALSE);
+    set_pick_surface(hw_surface_create(get_main_window(), hw_surface_get_size(get_main_window()), EI_FALSE));
 }
 
 void ei_app_free(void) {
@@ -106,10 +81,8 @@ void ei_app_free(void) {
         ei_widget_destroy(tmp);
     }
 
-    free_vector(pick_vector);
-    free(updated_rects);
-    free(mouse_pos);
-    free(prev_mouse_pos);
+    free_vector(get_pick_vector());
+    free(get_updated_rects());
 
     // Free classes
     free(frame_class);
@@ -117,17 +90,7 @@ void ei_app_free(void) {
     free(toplevel_class);
 
     // Free defaults
-    free(default_color);
-    free(default_text_color);
-    free(default_size);
-    free(default_relief);
-    free(default_anchor);
-    free(default_button_color);
-    free(default_selectioned_color);
-    free(toplevel_default_border_width);
-    free(toplevel_default_min_size);
-    free(toplevel_default_size);
-    free(clipping_window);
+    free(get_clipper_window());
     //hw_text_font_free(ei_default_font); seems to be already freed by hw_quit()
     hw_quit();
 }
@@ -136,7 +99,7 @@ void ei_app_run(void) {
     ei_event_t event;
 
     event.type = ei_ev_none;
-    while (quit_request == false) {
+    while (get_quit_request() == false) {
         if (event.type == ei_ev_keydown && event.param.key.key_code == 27) {
             ei_app_quit_request();
         }
@@ -149,19 +112,18 @@ void ei_app_run(void) {
         }
 
         // Draw
-        hw_surface_lock(main_window);
+        hw_surface_lock(get_main_window());
         draw_window();
-
         hw_surface_unlock(get_main_window());
-        hw_surface_update_rects(get_main_window(), updated_rects);
-        ei_linked_rect_t *current_rect = updated_rects->next;
+        hw_surface_update_rects(get_main_window(), get_updated_rects());
+        ei_linked_rect_t *current_rect = get_updated_rects()->next;
         while (current_rect != NULL) {
             ei_linked_rect_t *tmp = current_rect;
             current_rect = current_rect->next;
             free(tmp);
         }
-        updated_rects->rect = ei_rect_zero();
-        updated_rects->next = NULL;
+        get_updated_rects()->rect = ei_rect_zero();
+        get_updated_rects()->next = NULL;
 
         // Event handling
         hw_event_wait_next(&event);
@@ -174,15 +136,15 @@ void ei_app_invalidate_rect(ei_rect_t *rect) {
 }
 
 void ei_app_quit_request(void) {
-    quit_request = true;
+    set_quit_request(true);
 }
 
 ei_widget_t *ei_app_root_widget(void) {
-    return root;
+    return (ei_widget_t *) get_root_widget();
 }
 
 ei_surface_t ei_app_root_surface(void) {
-    ei_surface_t surface = hw_surface_create(get_main_window(), hw_surface_get_size(main_window), EI_FALSE);
+    ei_surface_t surface = hw_surface_create(get_main_window(), hw_surface_get_size(get_main_window()), EI_FALSE);
     return surface;
 }
 

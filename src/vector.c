@@ -1,6 +1,6 @@
 #include "stdint.h"
 #include "vector.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include "stdio.h"
 
 vector *create_vector(size_t size) {

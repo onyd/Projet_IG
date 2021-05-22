@@ -1,8 +1,9 @@
 #include "ei_widget.h"
 #include "widgets.h"
-#include "string.h"
+#include <string.h>
 #include "utils.h"
 #include "eventhandler.h"
+#include "defaults.h"
 
 ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *parent, void *user_data,
                               ei_widget_destructor_t destructor) {
@@ -14,6 +15,8 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
         // Widget init
         new_widget->wclass = class;
         new_widget->parent = parent;
+        new_widget->user_data = user_data;
+        new_widget->destructor = destructor;
         class->setdefaultsfunc(new_widget);
 
         if (parent->children_head == NULL) {
@@ -26,8 +29,8 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
 
         // Picking params
 
-        new_widget->pick_id = append_vector(pick_vector, new_widget);
-        ei_color_t pick_color = ei_map_rgba_inverse(pick_surface, new_widget->pick_id);
+        new_widget->pick_id = append_vector(get_pick_vector(), new_widget);
+        ei_color_t pick_color = ei_map_rgba_inverse(get_pick_surface(), new_widget->pick_id);
         *(new_widget->pick_color) = pick_color;
 
         return new_widget;
@@ -53,7 +56,7 @@ ei_widget_t *ei_widget_pick(ei_point_t *where) {
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(get_pick_surface());
     int width = hw_surface_get_size(get_pick_surface()).width;
     uint32_t current_pick_color = pixels[where->x + width * (where->y)];
-    return get(pick_vector, current_pick_color);
+    return get(get_pick_vector(), current_pick_color);
 }
 
 void ei_frame_configure(ei_widget_t *widget,
@@ -203,7 +206,7 @@ void ei_toplevel_configure(ei_widget_t *widget,
         if (*min_size != NULL) {
             toplevel->min_size = **min_size;
         } else {
-            toplevel->min_size = *toplevel_default_min_size;
+            toplevel->min_size = *get_toplevel_default_min_size();
         }
     }
 

@@ -1,6 +1,8 @@
 #include "widgets.h"
 #include "ei_application.h"
 #include "eventhandler.h"
+#include "utils.h"
+#include "defaults.h"
 
 ei_default_handle_func_t default_handle_func;
 ei_widget_t *active_widget = NULL;
@@ -28,8 +30,8 @@ void handle_event(ei_event_t *event) {
 
     switch (event->type) {
         case ei_ev_mouse_move:
-            *prev_mouse_pos = *mouse_pos;
-            *mouse_pos = event->param.mouse.where;
+            set_prev_mouse_pos(get_mouse_pos());
+            set_mouse_pos(event->param.mouse.where);
         case ei_ev_mouse_buttondown :
         case ei_ev_mouse_buttonup:
             if (active_widget != NULL) {
@@ -99,12 +101,5 @@ void inverse_depth_widget_list(ei_widget_t *widget, struct ei_widget_list_t *res
     }
 }
 
-void free_linked_widget(struct ei_linked_widget_t *l) {
-    ei_linked_widget_t *current = l;
-    while (current != NULL) {
-        ei_linked_widget_t *tmp = current;
-        current = current->next;
-        free(tmp);
-    }
-}
+
 

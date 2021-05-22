@@ -1,9 +1,9 @@
 #include "ei_draw.h"
 #include "utils.h"
 #include "stdio.h"
-#include "math.h"
+#include <math.h>
 #include "stdbool.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include "ei_utils.h"
 #include "geometry.h"
 #include "draw.h"

@@ -3,6 +3,7 @@
 
 #include "ei_draw.h"
 #include "vector.h"
+#include "geometry.h"
 
 typedef enum trivial_clipping_code {
     trivial_accept = 0,
@@ -43,7 +44,7 @@ void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_r
  * @param the clipper
  * @param direction = 0: the triangle is at the top of the rectangle, else at the bottom
  */
-void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int direction);
+void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, direction dir);
 
 
 /** @brief Allows to draw an image on a surface

@@ -1,75 +1,15 @@
 #include "widgets.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include "utils.h"
 #include "hw_interface.h"
 #include "geometry.h"
 #include "eventhandler.h"
 #include "ei_application.h"
 #include "SDL_keycode.h"
-#include "string.h"
+#include <string.h>
+#include "widgetclass.h"
+#include "defaults.h"
 
-// Class declarations
-ei_widgetclass_t *frame_class;
-ei_widgetclass_t *button_class;
-ei_widgetclass_t *toplevel_class;
-ei_widgetclass_t *radiobutton_class;
-
-// Default declaration
-ei_surface_t main_window;
-ei_frame_t *root;
-ei_surface_t pick_surface;
-vector *pick_vector;
-ei_linked_rect_t *updated_rects;
-ei_point_t *mouse_pos;
-ei_point_t *prev_mouse_pos;
-
-
-ei_size_t *toplevel_default_size;
-ei_size_t *toplevel_default_min_size;
-int *toplevel_default_border_width;
-ei_color_t *default_color;
-ei_color_t *default_text_color;
-ei_size_t *default_size;
-ei_relief_t *default_relief;
-ei_anchor_t *default_anchor;
-ei_color_t *default_button_color;
-ei_color_t *default_selectioned_color;
-
-bool quit_request;
-
-ei_rect_t *clipping_window;
-
-ei_bool_t is_button(ei_widget_t *widget) {
-    return strcmp(widget->wclass->name, "button");
-}
-
-ei_bool_t is_frame(ei_widget_t *widget) {
-    return strcmp(widget->wclass->name, "frame");
-}
-
-ei_bool_t is_toplevel(ei_widget_t *widget) {
-    return strcmp(widget->wclass->name, "toplevel");
-}
-
-ei_surface_t get_main_window() {
-    return main_window;
-}
-
-ei_surface_t get_pick_surface() {
-    return pick_surface;
-}
-
-ei_rect_t *get_clipper_window() {
-    return clipping_window;
-}
-
-ei_point_t get_mouse_pos() {
-    return *mouse_pos;
-}
-
-ei_point_t get_prev_mouse_pos() {
-    return *prev_mouse_pos;
-}
 
 void ei_widget_destroy_rec(ei_widget_t *widget) {
     ei_widget_t *current = widget->children_head;
@@ -91,7 +31,7 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
 
 void draw_window() {
     ei_widget_t *root = ei_app_root_widget();
-    root->wclass->drawfunc(root, get_main_window(), get_pick_surface(), clipping_window);
+    root->wclass->drawfunc(root, get_main_window(), get_pick_surface(), get_clipper_window());
 }
 
 ei_widget_t *search_for_toplevel(ei_widget_t *widget) {
@@ -139,7 +79,7 @@ ei_widget_t *toplevel_allocfunc() {
     return widget;
 }
 
-ei_widget_t *radiobutton_allocfunc(){
+ei_widget_t *radiobutton_allocfunc() {
     ei_widget_t *widget = (ei_radiobutton_t *) calloc(1, sizeof(ei_radiobutton_t));
     ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget;
     return widget;
@@ -182,9 +122,9 @@ void toplevel_releasefunc(ei_widget_t *widget) {
     }
 }
 
-void radiobutton_releasefunc(ei_widget_t *widget){
-    ei_radiobutton_t *to_release = (ei_radiobutton_t*) widget;
-    if (to_release->text != NULL){
+void radiobutton_releasefunc(ei_widget_t *widget) {
+    ei_radiobutton_t *to_release = (ei_radiobutton_t *) widget;
+    if (to_release->text != NULL) {
         free(to_release->text);
     }
 }
@@ -208,8 +148,8 @@ void button_drawfunc(ei_widget_t *widget,
     ei_color_t lighter = {0.9 * color.red, 0.9 * color.green, 0.9 * color.blue, color.alpha};
 
     // The two part of the button
-    ei_linked_point_t *top = rounded_frame(widget->screen_location, radius, 10, 1);
-    ei_linked_point_t *bot = rounded_frame(widget->screen_location, radius, 10, 2);
+    ei_linked_point_t *top = rounded_frame(widget->screen_location, radius, 10, up);
+    ei_linked_point_t *bot = rounded_frame(widget->screen_location, radius, 10, down);
     // The button
     ei_rect_t inside_button;
     int border_size = button->border_width;
@@ -218,7 +158,7 @@ void button_drawfunc(ei_widget_t *widget,
     inside_button.size.width = widget->screen_location.size.width - 2 * border_size;
     inside_button.size.height = widget->screen_location.size.height - 2 * border_size;
     radius = (radius <= border_size) ? 0 : radius - border_size;
-    ei_linked_point_t *points_button = rounded_frame(inside_button, radius, 15, 0);
+    ei_linked_point_t *points_button = rounded_frame(inside_button, radius, 15, both);
 
     if (button->relief == ei_relief_raised) {
         ei_draw_polygon(surface, top, lighter, clipper);
@@ -233,15 +173,16 @@ void button_drawfunc(ei_widget_t *widget,
     ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
     ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
 
-    free_rounded_frame(top);
-    free_rounded_frame(bot);
-    free_rounded_frame(points_button);
+    free(top);
+    free(bot);
+    free(points_button);
 
     // Text eventually inside the button
     if (button->text != NULL) {
         int width, height;
         hw_text_compute_size(button->text, button->text_font, &width, &height);
-        ei_point_t topleft = anchor_target_pos(button->text_anchor, ei_size(width, height), widget->screen_location, radius, button->border_width);
+        ei_point_t topleft = anchor_target_pos(button->text_anchor, ei_size(width, height), widget->screen_location,
+                                               radius, button->border_width);
         ei_rect_t clipper_text;
         // We crop text in the button
         intersection_rect(&widget->screen_location, clipper, &clipper_text);
@@ -251,7 +192,8 @@ void button_drawfunc(ei_widget_t *widget,
     if (button->img != NULL) {
         ei_rect_t rect = (button->img_rect != NULL) ? (*button->img_rect) : ei_rect(ei_point_zero(),
                                                                                     hw_surface_get_size(button->img));
-        ei_point_t topleft = anchor_target_pos(button->img_anchor, rect.size, widget->screen_location, 0, 0);
+        ei_point_t topleft = anchor_target_pos(button->img_anchor, rect.size, widget->screen_location, radius,
+                                               button->border_width);
         ei_rect_t clipper_img;
         // We crop image in the button
         intersection_rect(&widget->screen_location, clipper, &clipper_img);
@@ -264,7 +206,7 @@ void button_drawfunc(ei_widget_t *widget,
         ei_rect_t clipping_widget;
         intersection_rect(get_clipper_window(), widget->content_rect, &clipping_widget);
         current->wclass->drawfunc(current, get_main_window(), get_pick_surface(),
-                                  clipping_window);
+                                  get_clipper_window());
         current = current->next_sibling;
     }
 }
@@ -291,9 +233,13 @@ void frame_drawfunc(ei_widget_t *widget,
     if (frame->relief == ei_relief_none) {
         draw_rectangle(surface, widget->screen_location, color, clipper);
     } else {
-        int direction = (frame->relief == ei_relief_raised) ? 0 : 1;
-        draw_rect_triangle(surface, widget->screen_location, lighter, clipper, direction);
-        draw_rect_triangle(surface, widget->screen_location, darker, clipper, 1 - direction);
+        if (frame->relief == ei_relief_raised) {
+            draw_rect_triangle(surface, widget->screen_location, lighter, clipper, up);
+            draw_rect_triangle(surface, widget->screen_location, darker, clipper, down);
+        } else {
+            draw_rect_triangle(surface, widget->screen_location, lighter, clipper, down);
+            draw_rect_triangle(surface, widget->screen_location, darker, clipper, up);
+        }
         draw_rectangle(surface, inside_frame, color, clipper);
     }
 
@@ -302,7 +248,8 @@ void frame_drawfunc(ei_widget_t *widget,
     if (frame->text != NULL) {
         int width, height;
         hw_text_compute_size(frame->text, frame->text_font, &width, &height);
-        ei_point_t topleft = anchor_target_pos(frame->text_anchor, ei_size(width, height), widget->screen_location, 0, frame->border_width);
+        ei_point_t topleft = anchor_target_pos(frame->text_anchor, ei_size(width, height), widget->screen_location, 0,
+                                               0);
         ei_rect_t clipper_text;
         //in case the clipper is NULL, clipper_text must be widget->screen_location to avoid having the text outside the button
         intersection_rect(&widget->screen_location, clipper, &clipper_text);
@@ -325,7 +272,7 @@ void frame_drawfunc(ei_widget_t *widget,
         ei_rect_t clipping_widget;
         intersection_rect(get_clipper_window(), widget->content_rect, &clipping_widget);
         current->wclass->drawfunc(current, get_main_window(), get_pick_surface(),
-                                  clipping_window);
+                                  get_clipper_window());
         current = current->next_sibling;
     }
 }
@@ -344,7 +291,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
     char *title = toplevel->title;
 
     //Draw all the top level
-    draw_rectangle(surface, widget->screen_location, *default_color, clipper);
+    draw_rectangle(surface, widget->screen_location, *get_default_color(), clipper);
     draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper);
     //Draw the toplevel without border and top bar
     draw_rectangle(surface, *widget->content_rect, color, clipper);
@@ -384,7 +331,8 @@ void toplevel_drawfunc(ei_widget_t *widget,
     ei_rect_t clipping_square;
     intersection_rect(get_clipper_window(), toplevel->widget.content_rect, &clipping_square);
     if (toplevel->grab_event.param.show_minimize_square) {
-        draw_rectangle(get_main_window(), toplevel->grab_event.param.minimize_square, *default_color, &clipping_square);
+        draw_rectangle(get_main_window(), toplevel->grab_event.param.minimize_square, *get_default_color(),
+                       &clipping_square);
     }
     draw_rectangle(pick_surface, toplevel->grab_event.param.minimize_square, *toplevel->widget.pick_color,
                    &clipping_square);
@@ -394,14 +342,14 @@ void toplevel_drawfunc(ei_widget_t *widget,
 void radiobutton_drawfunc(ei_widget_t *widget,
                           ei_surface_t surface,
                           ei_surface_t pick_surface,
-                          ei_rect_t *clipper){
+                          ei_rect_t *clipper) {
     ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget;
     draw_rectangle(surface, *(widget->content_rect), radiobutton->background_color, clipper);
     ei_point_t where = ei_point(widget->content_rect->top_left.x + 105, widget->content_rect->top_left.y);
     ei_draw_text(surface, &where, radiobutton->text, ei_default_font, radiobutton->text_color, clipper);
     draw_blank_rect(surface, *(widget->content_rect), radiobutton->text_color, clipper, 10, 100);
-    for (uint32_t i = 0; i <= radiobutton->button_tab->last_idx; i++){
-        if (get(radiobutton->button_tab, i) != NULL){
+    for (uint32_t i = 0; i <= radiobutton->button_tab->last_idx; i++) {
+        if (get(radiobutton->button_tab, i) != NULL) {
             button_drawfunc(get(radiobutton->button_tab, i), surface, NULL, clipper);
         }
     }
@@ -411,15 +359,15 @@ void radiobutton_drawfunc(ei_widget_t *widget,
 /* setdefaultsfunc */
 void button_setdefaultsfunc(ei_widget_t *widget) {
     ei_button_configure(widget,
-                        default_size,
-                        default_color,
+                        get_default_size(),
+                        get_default_color(),
                         &k_default_button_border_width,
                         &k_default_button_corner_radius,
-                        default_relief,
+                        get_default_relief(),
                         NULL,
                         &ei_default_font,
-                        default_text_color,
-                        default_anchor,
+                        get_default_text_color(),
+                        get_default_anchor(),
                         NULL,
                         NULL,
                         NULL,
@@ -430,13 +378,13 @@ void button_setdefaultsfunc(ei_widget_t *widget) {
 
 void frame_setdefaultsfunc(ei_widget_t *widget) {
     ei_frame_configure(widget,
-                       default_size,
-                       default_color,
+                       get_default_size(),
+                       get_default_color(),
                        &k_default_button_border_width,
                        ei_relief_none,
                        NULL,
                        &ei_default_font,
-                       default_text_color,
+                       get_default_text_color(),
                        NULL,
                        NULL,
                        NULL,
@@ -452,34 +400,36 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
     ei_axis_set_t default_resizable = ei_axis_both;
 
     // Toplevel default settings
+    ei_size_t *min_size = get_toplevel_default_min_size();
     ei_toplevel_configure(widget,
-                          toplevel_default_size,
+                          get_toplevel_default_size(),
                           &background,
-                          toplevel_default_border_width,
+                          get_toplevel_default_border_width(),
                           &title,
                           &default_closable,
                           &default_resizable,
-                          &toplevel_default_min_size);
+                          &min_size);
 
     // Picking
     toplevel->button->widget.pick_color = malloc(sizeof(ei_color_t));
-    toplevel->button->widget.pick_id = append_vector(pick_vector, toplevel->button);
-    ei_color_t pick_color = ei_map_rgba_inverse(pick_surface, toplevel->button->widget.pick_id);
+    toplevel->button->widget.pick_id = append_vector(get_pick_vector(), toplevel->button);
+    ei_color_t pick_color = ei_map_rgba_inverse(get_pick_surface(), toplevel->button->widget.pick_id);
     *(toplevel->button->widget.pick_color) = pick_color;
 }
 
-void radiobutton_setdefaultsfunc(ei_widget_t *widget){
+void radiobutton_setdefaultsfunc(ei_widget_t *widget) {
     ei_radiobutton_configure(widget,
-                             default_size,
-                             default_color,
-                             default_button_color,
-                             default_selectioned_color,
+                             get_default_size(),
+                             get_default_color(),
+                             get_default_button_color(),
+                             get_default_selectioned_color(),
                              NULL,
                              &ei_default_font,
-                             default_text_color,
+                             get_default_text_color(),
                              NULL
     );
 }
+
 /* geomnotifyfunc */
 void button_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     ei_rect_t old_screen_location = widget->screen_location;
@@ -529,15 +479,15 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     updated_rect_size(widget, old_screen_location);
 }
 
-void radiobutton_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect){
+void radiobutton_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     return;
 }
 
 void append_updated_rects(ei_rect_t rect) {
     ei_linked_rect_t *new = malloc(sizeof(ei_linked_rect_t));
     new->rect = rect;
-    new->next = updated_rects;
-    updated_rects = new;
+    new->next = get_updated_rects();
+    set_updated_rects(new);
 }
 
 void updated_rect_size(ei_widget_t *widget, ei_rect_t rect) {
@@ -698,7 +648,8 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                             toplevel->grab_event.param.show_minimize_square = true;
                             treated = true;
                         }
-                    } else if (toplevel->resizable != ei_axis_none && !toplevel->grab_event.param.unshow_minimize_square_event_sent) {
+                    } else if (toplevel->resizable != ei_axis_none &&
+                               !toplevel->grab_event.param.unshow_minimize_square_event_sent) {
                         user_param_t *event = calloc(1, sizeof(user_param_t));
                         event->app_event_type = toplevel_param;
                         toplevel_app_event_t *data = calloc(1, sizeof(toplevel_app_event_t));
@@ -735,7 +686,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     return treated || toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
 }
 
-ei_bool_t radiobutton_handlefunc(ei_widget_t *widget, ei_event_t *event){
+ei_bool_t radiobutton_handlefunc(ei_widget_t *widget, ei_event_t *event) {
     return EI_TRUE;
 }
 
@@ -747,7 +698,7 @@ void ei_radiobutton_configure(ei_widget_t *widget,
                               char **text,
                               ei_font_t *text_font,
                               ei_color_t *text_color,
-                              ei_anchor_t *text_anchor){
+                              ei_anchor_t *text_anchor) {
     ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget;
     widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
     radiobutton->background_color = (background_color != NULL) ? *background_color : radiobutton->background_color;
@@ -762,5 +713,3 @@ void ei_radiobutton_configure(ei_widget_t *widget,
         strcpy(radiobutton->text, *text);
     }
 }
-
-

@@ -1,6 +1,7 @@
 #include "ei_widgetclass.h"
-#include "string.h"
+#include <string.h>
 #include "widgets.h"
+#include "widgetclass.h"
 
 void ei_widgetclass_register(ei_widgetclass_t *widgetclass) {
     if (strcmp(widgetclass->name, "button") == 0) {

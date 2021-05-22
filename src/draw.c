@@ -30,11 +30,11 @@ void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_r
     ei_draw_polygon(surface, first_point, color, clipper);
 }
 
-void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int direction) {
+void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, direction dir) {
     ei_linked_point_t first_point[4];
     ei_linked_point_t *current = first_point;
 
-    if (direction == 0) {
+    if (dir == up) {
         current->point.x = rect.top_left.x;
         current->point.y = rect.top_left.y;
         current->next = &first_point[1];
@@ -49,7 +49,7 @@ void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, 
         current = current->next;
         current->point.x = rect.top_left.x;
         current->point.y = rect.top_left.y;
-    } else {
+    } else if (dir == down) {
         current->point.x = rect.top_left.x + rect.size.width;
         current->point.y = rect.top_left.y;
         current->next = &first_point[1];
@@ -370,7 +370,7 @@ void polygon_analytic_clipping(ei_linked_point_t *points, vector *clipped, vecto
                 if (is_left(previous->point, topleft, botleft)) {
                     ei_linked_point_t *linked_intersection = calloc(1, sizeof(ei_linked_point_t));
                     linked_intersection->point = intersection;
-                    append_linked_point(linked_intersection, get(clipped, i));
+                    append_linked_point(linked_intersection, get(clipped, clipped->last_idx-1));
                 }
                 append_linked_point(current, get(clipped, i));
             } else if (!is_left(previous->point, topleft, botleft)) {

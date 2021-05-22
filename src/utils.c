@@ -1,10 +1,17 @@
 #include "utils.h"
 #include "stdio.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include "ei_utils.h"
 #include "hw_interface.h"
 
-void append_left_lae(struct linked_edges *e, struct linked_acive_edges *lae) {
+void swap(int *a, int *b) {
+    int tmp = *a;
+    (*a) = *b;
+    (*b) = tmp;
+}
+
+// linked edges helper
+void append_left_lae(linked_edges *e, linked_acive_edges *lae) {
     if (lae->head == NULL) {
         lae->head = e;
         return;
@@ -13,14 +20,14 @@ void append_left_lae(struct linked_edges *e, struct linked_acive_edges *lae) {
     lae->head = e;
 }
 
-void delete_y(int y, struct linked_acive_edges *lae) {
+void delete_y(int y, linked_acive_edges *lae) {
     if (lae->head == NULL) {
         return;
     }
 
-    struct linked_edges *previous = lae->head;
+    linked_edges *previous = lae->head;
     while (previous != NULL && previous->ymax == y) {
-        struct linked_edges *tmp = previous;
+        linked_edges *tmp = previous;
         previous = previous->next;
         free(tmp);
     }
@@ -29,7 +36,7 @@ void delete_y(int y, struct linked_acive_edges *lae) {
         return;
     }
 
-    struct linked_edges *current = lae->head->next;
+    linked_edges *current = lae->head->next;
     while (current != NULL) {
         if (current->ymax == y) {
             previous->next = current->next;
@@ -42,8 +49,8 @@ void delete_y(int y, struct linked_acive_edges *lae) {
     }
 }
 
-void display(struct linked_acive_edges *lae) {
-    struct linked_edges *current = lae->head;
+void display(linked_acive_edges *lae) {
+    linked_edges *current = lae->head;
     while (current != NULL) {
         printf("[%i, %i]->", current->ymax, current->x_ymin);
         current = current->next;
@@ -52,14 +59,7 @@ void display(struct linked_acive_edges *lae) {
 }
 
 
-void swap(int *a, int *b) {
-    int tmp = *a;
-    (*a) = *b;
-    (*b) = tmp;
-}
-
-
-struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked_point_t *b) {
+ei_linked_point_t *y_argmax(ei_linked_point_t *a, ei_linked_point_t *b) {
     if (a->point.y > b->point.y) {
         return a;
     } else {
@@ -67,7 +67,7 @@ struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked
     }
 }
 
-struct ei_linked_point_t *y_argmin(struct ei_linked_point_t *a, struct ei_linked_point_t *b) {
+ei_linked_point_t *y_argmin(ei_linked_point_t *a, ei_linked_point_t *b) {
     if (a->point.y < b->point.y) {
         return a;
     } else {
@@ -75,13 +75,13 @@ struct ei_linked_point_t *y_argmin(struct ei_linked_point_t *a, struct ei_linked
     }
 }
 
-void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *lae) {
+void sorting_insert(linked_edges *tc, linked_acive_edges *lae) {
     if (lae->head == NULL) {
         lae->head = tc;
         return;
     }
-    struct linked_edges *previous = lae->head;
-    struct linked_edges *current = previous;
+    linked_edges *previous = lae->head;
+    linked_edges *current = previous;
     while (current != NULL) {
         // à savoir: il ne peut pas y avoir plus de deux côtés qui ont le même x_ymin
         if (current->x_ymin == tc->x_ymin) {
@@ -122,7 +122,23 @@ void sorting_insert(struct linked_edges *tc, struct linked_acive_edges *lae) {
     }
 }
 
-void append_linked_point(struct ei_linked_point_t *p, struct ei_linked_point_t *l) {
+
+void le_free(linked_edges *tc) {
+    linked_edges *next_tc = tc;
+    while (tc != NULL) {
+        next_tc = tc->next;
+        free(tc);
+        tc = next_tc;
+    }
+}
+
+void lae_free(linked_acive_edges *lae) {
+    le_free(lae->head);
+    free(lae);
+}
+
+// Linked point helper
+void append_linked_point(ei_linked_point_t *p, ei_linked_point_t *l) {
     if (l == NULL) {
         l = p;
         return;
@@ -132,21 +148,25 @@ void append_linked_point(struct ei_linked_point_t *p, struct ei_linked_point_t *
     l = p;
 }
 
-void le_free(struct linked_edges *tc) {
-    struct linked_edges *next_tc = tc;
-    while (tc != NULL) {
-        next_tc = tc->next;
-        free(tc);
-        tc = next_tc;
+void free_linked_point(ei_linked_point_t *l) {
+    ei_linked_point_t *current = l;
+    while (current != NULL) {
+        ei_linked_point_t *tmp = current;
+        current = current->next;
+        free(tmp);
     }
 }
 
-void lae_free(struct linked_acive_edges *lae) {
-    le_free(lae->head);
-    free(lae);
+void free_linked_widget(ei_linked_widget_t *l) {
+    ei_linked_widget_t *current = l;
+    while (current != NULL) {
+        ei_linked_widget_t *tmp = current;
+        current = current->next;
+        free(tmp);
+    }
 }
 
-
+// Position helper
 ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *anchor) {
     switch (*anchor) {
         case ei_anc_none:
@@ -265,7 +285,7 @@ ei_point_t anchor_target_pos(ei_anchor_t anchor, ei_size_t target_size, ei_rect_
     return topleft;
 }
 
-ei_color_t ei_map_rgba_inverse(ei_surface_t surface, uint32_t color_id){
+ei_color_t ei_map_rgba_inverse(ei_surface_t surface, uint32_t color_id) {
     int ir, ig, ib, ia;
     hw_surface_get_channel_indices(surface, &ir, &ig, &ib, &ia);
     uint32_t r, g, b, a = 0;

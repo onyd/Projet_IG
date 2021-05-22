@@ -4,8 +4,9 @@
 #include "stdint.h"
 #include "ei_types.h"
 #include "hw_interface.h"
+#include "eventhandler.h"
 
-struct linked_edges {
+typedef struct linked_edges {
     int ymax;
     int x_ymin;
     int x_ymax;
@@ -14,34 +15,11 @@ struct linked_edges {
     int dy;
     int sign_dx;
     struct linked_edges *next;
-};
+} linked_edges;
 
-struct linked_acive_edges {
+typedef struct linked_acive_edges {
     struct linked_edges *head;
-};
-
-
-void append_left_lae(struct linked_edges *e, struct linked_acive_edges *lae);
-
-void delete_y(int y, struct linked_acive_edges *lae);
-
-void display(struct linked_acive_edges *lae);
-
-void sorting_insert(struct linked_edges *le, struct linked_acive_edges *lae);
-
-/**
- * \brief	free the structure linked_edges
- *
- * @param	 	struct linked_edges*.
- */
-void le_free(struct linked_edges *);
-
-/**
- * \brief	free the structure linked_acive_edges
- *
- * @param	 	struct linked_acive_edges*.
- */
-void lae_free(struct linked_acive_edges *);
+} linked_acive_edges;
 
 /**
  * \brief	Swap the variable content pointed by a and b
@@ -51,7 +29,30 @@ void lae_free(struct linked_acive_edges *);
  */
 void swap(int *a, int *b);
 
-struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked_point_t *b);
+void append_left_lae(linked_edges *e, linked_acive_edges *lae);
+
+void delete_y(int y, linked_acive_edges *lae);
+
+void display(linked_acive_edges *lae);
+
+void sorting_insert(linked_edges *le, linked_acive_edges *lae);
+
+/**
+ * \brief	free the structure linked_edges
+ *
+ * @param	 	struct linked_edges*.
+ */
+void le_free(linked_edges *);
+
+/**
+ * \brief	free the structure linked_acive_edges
+ *
+ * @param	 	struct linked_acive_edges*.
+ */
+void lae_free(linked_acive_edges *);
+
+
+struct ei_linked_point_t *y_argmax(ei_linked_point_t *a, ei_linked_point_t *b);
 
 /**
  * \brief	Return the point which have the maximum y coordinates
@@ -59,9 +60,13 @@ struct ei_linked_point_t *y_argmax(struct ei_linked_point_t *a, struct ei_linked
  * @param	a 	struct ei_linked_point_t the first point.
  * @param	b   struct ei_linked_point_t the other point.
  */
-struct ei_linked_point_t *y_argmin(struct ei_linked_point_t *a, struct ei_linked_point_t *b);
+struct ei_linked_point_t *y_argmin(ei_linked_point_t *a, ei_linked_point_t *b);
 
-void append_linked_point(struct ei_linked_point_t *p, struct ei_linked_point_t *l);
+void append_linked_point(ei_linked_point_t *p, ei_linked_point_t *l);
+
+void free_linked_point(ei_linked_point_t *l);
+
+void free_linked_widget(ei_linked_widget_t *l);
 
 ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *anchor);
 

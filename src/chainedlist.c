@@ -1,6 +1,6 @@
 #include <ei_widget.h>
 #include "chainedlist.h"
-#include "stdlib.h"
+#include <stdlib.h>
 
 chained_list *create_chained_list() {
     chained_list *l = calloc(1, sizeof(chained_list));

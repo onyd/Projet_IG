@@ -12,12 +12,17 @@
 
 static const float pi = 3.14159265359;
 
+typedef enum direction {
+    both = 0,
+    up,
+    down
+} direction;
+
 // Draw helper
-ei_linked_point_t *arc(const ei_point_t *c, uint32_t r, float start_angle, float end_angle, uint32_t N);
+ei_linked_point_t *arc(ei_point_t c, uint32_t r, float start_angle, float end_angle, uint32_t N);
 
-ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t rayon, uint32_t N, int param);
+ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t rayon, uint32_t N, enum direction dir);
 
-void free_rounded_frame(ei_linked_point_t *points);
 
 // Geometry helper
 ei_bool_t intersection_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result);

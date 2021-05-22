@@ -9,7 +9,6 @@
 #include "draw.h"
 #include "vector.h"
 
-
 typedef struct ei_button_t {
     ei_widget_t widget;
     // Specific field
@@ -42,6 +41,7 @@ typedef struct ei_frame_t {
     ei_anchor_t img_anchor;
 } ei_frame_t;
 
+
 typedef enum {
     idle = 0,
     grabbed,
@@ -67,7 +67,6 @@ typedef struct ei_toplevel_t {
     ei_axis_set_t resizable;
     ei_size_t min_size;
     ei_button_t *button;
-    //previous active point for the event
     grab_event_t grab_event;
 } ei_toplevel_t;
 
@@ -88,51 +87,6 @@ typedef struct ei_radiobutton_t {
 
 } ei_radiobutton_t;
 
-// Class declarations
-extern ei_widgetclass_t *frame_class;
-extern ei_widgetclass_t *button_class;
-extern ei_widgetclass_t *toplevel_class;
-extern ei_widgetclass_t *radiobutton_class;
-
-// Default declaration
-extern ei_surface_t main_window;
-extern ei_frame_t *root;
-extern ei_surface_t pick_surface;
-extern vector *pick_vector;
-extern ei_linked_rect_t *updated_rects;
-extern ei_point_t *mouse_pos;
-extern ei_point_t *prev_mouse_pos;
-
-extern ei_size_t *toplevel_default_size;
-extern ei_size_t *toplevel_default_min_size;
-extern int *toplevel_default_border_width;
-extern ei_color_t *default_color;
-extern ei_color_t *default_text_color;
-extern ei_size_t *default_size;
-extern ei_relief_t *default_relief;
-extern ei_anchor_t *default_anchor;
-extern bool quit_request;
-extern ei_color_t *default_button_color;
-extern ei_color_t *default_selectioned_color;
-
-//Rectangle of the main window for the clipping
-extern ei_rect_t *clipping_window;
-
-ei_bool_t is_button(ei_widget_t *widget);
-
-ei_bool_t is_frame(ei_widget_t *widget);
-
-ei_bool_t is_toplevel(ei_widget_t *widget);
-
-ei_surface_t get_main_window();
-
-ei_surface_t get_pick_surface();
-
-ei_rect_t *get_clipper_window();
-
-ei_point_t get_mouse_pos();
-
-ei_point_t get_prev_mouse_pos();
 
 /**
  * \brief	Allows to recursively destroy a widget of type \ref ei_widget_t.
@@ -142,7 +96,6 @@ ei_point_t get_prev_mouse_pos();
 void ei_widget_destroy_rec(ei_widget_t *widget);
 
 void draw_window();
-
 
 /**
  * \brief	search for the first parent of a widget which is a toplevel
@@ -300,19 +253,20 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
 ei_bool_t frame_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
-ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event);
+ei_bool_t toplevel_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
 ei_bool_t radiobutton_handlefunc(ei_widget_t *widget, ei_event_t *event);
 
 /* radiobutton configure */
 void ei_radiobutton_configure(ei_widget_t *widget,
                               ei_size_t *requested_size,
-                            ei_color_t *background_color,
-                            ei_color_t *button_color,
-                            ei_color_t *selectioned_color,
-                            char **text,
-                            ei_font_t *text_font,
-                            ei_color_t *text_color,
-                            ei_anchor_t *text_anchor
-                            );
+                              ei_color_t *background_color,
+                              ei_color_t *button_color,
+                              ei_color_t *selectioned_color,
+                              char **text,
+                              ei_font_t *text_font,
+                              ei_color_t *text_color,
+                              ei_anchor_t *text_anchor
+);
+
 #endif //PROJETC_IG_WIDGETS_H

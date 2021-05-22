@@ -4,20 +4,23 @@
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
+ei_linked_point_t *rectangle(ei_rect_t *rect) {
 
-ei_linked_point_t *arc(const ei_point_t *c, uint32_t r, float start_angle, float end_angle, uint32_t N) {
+}
+
+ei_linked_point_t *arc(ei_point_t c, uint32_t r, float start_angle, float end_angle, uint32_t N) {
     float da = (end_angle - start_angle) / (N - 1);
 
     ei_linked_point_t *points = calloc(N, sizeof(ei_linked_point_t));
     float angle = start_angle;
-    points[0].point.x = c->x + r * cos(angle * (pi / 180.0f));
-    points[0].point.y = c->y - r * sin(angle * (pi / 180.0f));
+    points[0].point.x = c.x + r * cos(angle * (pi / 180.0f));
+    points[0].point.y = c.y - r * sin(angle * (pi / 180.0f));
 
     uint32_t i;
     for (i = 1; i < N; i++) {
         angle += da;
-        points[i].point.x = c->x + r * cos(angle * (pi / 180.0f));
-        points[i].point.y = c->y - r * sin(angle * (pi / 180.0f));
+        points[i].point.x = c.x + r * cos(angle * (pi / 180.0f));
+        points[i].point.y = c.y - r * sin(angle * (pi / 180.0f));
 
         points[i - 1].next = &points[i];
     }
@@ -27,8 +30,8 @@ ei_linked_point_t *arc(const ei_point_t *c, uint32_t r, float start_angle, float
 }
 
 
-ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_t N, int param) {
-    // if param = 0, generate all the boutton, if param = 1 generate the top else the bottom
+ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_t N, direction dir) {
+    // if dir = both, generate all the boutton, if dir = up generate the top and dir = down the bottom
     int button_width = button_rect.size.width;
     int button_height = button_rect.size.height;
     int top_left_x = button_rect.top_left.x;
@@ -42,11 +45,11 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     ei_linked_point_t *end = malloc(sizeof(ei_linked_point_t));
     end->next = NULL;
 
-    if (param <= 1) {
+    if (dir <= 1) {
         // Top right first part
         point1.x = top_left_x + button_width - radius;
         point1.y = top_left_y + radius;
-        current = arc(&point1, radius, 45, 90, N);
+        current = arc(point1, radius, 45, 90, N);
         //Button1 is at top right
         button1 = current;
         previous = current;
@@ -59,7 +62,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         // Top left
         point1.x = top_left_x + radius;
         point1.y = top_left_y + radius;
-        current = arc(&point1, radius, 90, 180, N);
+        current = arc(point1, radius, 90, 180, N);
         previous->next = current;
 
         // Find last arc point
@@ -70,7 +73,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         // Bot left first part
         point1.x = top_left_x + radius;
         point1.y = top_left_y + button_height - radius;
-        current = arc(&point1, radius, 180, 225, N);
+        current = arc(point1, radius, 180, 225, N);
         previous->next = current;
         while (previous->next != NULL) {
             previous = previous->next;
@@ -79,13 +82,13 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         button2 = previous;
     }
 
-    if (param != 1) {
+    if (dir != 1) {
         // Bot left second part
         point1.x = top_left_x + radius;
         point1.y = top_left_y + button_height - radius;
-        current = arc(&point1, radius, 225, 270, N);
-        // si on doit construire tout le boutton on récupère les paramètres précédent
-        if (param == 0) {
+        current = arc(point1, radius, 225, 270, N);
+        // If we have to build the whole button, we use previous values
+        if (dir == 0) {
             button2->next = current;
             previous = current;
         } else {
@@ -99,7 +102,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         // Bot right
         point1.x = top_left_x + button_width - radius;
         point1.y = top_left_y + button_height - radius;
-        current = arc(&point1, radius, 270, 360, N);
+        current = arc(point1, radius, 270, 360, N);
         previous->next = current;
         while (previous->next != NULL) {
             previous = previous->next;
@@ -108,12 +111,12 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         // Top right
         point1.x = top_left_x + button_width - radius;
         point1.y = top_left_y + radius;
-        current = arc(&point1, radius, 0, 45, N);
+        current = arc(point1, radius, 0, 45, N);
         previous->next = current;
         while (previous->next != NULL) {
             previous = previous->next;
         }
-        if (param == 0) {
+        if (dir == 0) {
             previous->next = end;
             end->point = button1->point;
             return button1;
@@ -133,7 +136,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     cut_bot_left->point = point1;
     ei_linked_point_t *cut_top_right = malloc(sizeof(ei_linked_point_t));
     cut_top_right->point = point2;
-    if (param == 1) {
+    if (dir == 1) {
         button2->next = cut_bot_left;
         cut_bot_left->next = cut_top_right;
         cut_top_right->next = end;
@@ -148,10 +151,6 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     }
 }
 
-
-void free_rounded_frame(ei_linked_point_t *points) {
-    free(points);
-}
 
 ei_bool_t intersection_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {
     if (r1 == NULL) {
@@ -187,8 +186,8 @@ void union_rect(const ei_rect_t *r1, const ei_rect_t *r2, ei_rect_t *result) {
 
     int top_left_x = min(r1->top_left.x, r2->top_left.x);
     int top_left_y = min(r1->top_left.y, r2->top_left.y);
-    int width =
-            max(r1->top_left.x + r1->size.width, r2->top_left.x + r2->size.width) - min(r1->top_left.x, r2->top_left.x);
+    int width = max(r1->top_left.x + r1->size.width, r2->top_left.x + r2->size.width) -
+                min(r1->top_left.x, r2->top_left.x);
     int height = max(r1->top_left.y + r1->size.height, r2->top_left.y + r2->size.height) -
                  min(r1->top_left.y, r2->top_left.y);
 

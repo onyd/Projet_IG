@@ -57,6 +57,5 @@ void destroy_widget_callback(ei_widget_t *widget,
 
 void inverse_depth_widget_list(ei_widget_t *widget, struct ei_widget_list_t *result);
 
-void free_linked_widget(struct ei_linked_widget_t *l);
 
 #endif //PROJETC_IG_EVENTHANDLER_H
