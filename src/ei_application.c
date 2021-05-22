@@ -42,9 +42,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     // Picking init
     set_pick_vector(create_vector(1));
 
-    ei_linked_rect_t *updated_rects = calloc(1, sizeof(ei_linked_rect_t));
-    updated_rects->rect = *get_clipper_window();
-    set_updated_rects(updated_rects);
+    append_linked_rect(*get_clipper_window(), get_updated_rects());
 
     set_mouse_pos(ei_point_zero());
     set_prev_mouse_pos(ei_point_zero());

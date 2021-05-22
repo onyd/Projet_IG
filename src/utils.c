@@ -158,8 +158,13 @@ void free_linked_point(ei_linked_point_t *l) {
 }
 
 void append_linked_rect(ei_rect_t rect, ei_linked_rect_t *l) {
-    ei_linked_rect_t *new = malloc(sizeof(ei_linked_rect_t));
-    new->rect = rect;
+    ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
+
+    if (l == NULL) {
+        l = new;
+        return;
+    }
+
     new->next = l;
     l = new;
 }
@@ -171,6 +176,7 @@ void free_linked_rect(ei_linked_rect_t *l) {
         current_rect = current_rect->next;
         free(tmp);
     }
+    l = NULL;
 }
 
 void free_linked_widget(ei_linked_widget_t *l) {
@@ -180,6 +186,7 @@ void free_linked_widget(ei_linked_widget_t *l) {
         current = current->next;
         free(tmp);
     }
+    l = NULL;
 }
 
 // Position helper
@@ -254,7 +261,7 @@ ei_point_t anchor_point(ei_point_t topleft, ei_size_t size, const ei_anchor_t *a
 ei_point_t anchor_target_pos(ei_anchor_t anchor, ei_size_t target_size, ei_rect_t parent_rect, int radius, int border) {
     int width = target_size.width;
     int height = target_size.height;
-    radius = radius*(1 - sqrt(2)/2);
+    radius = radius * (1 - sqrt(2) / 2);
     ei_point_t topleft;
     switch (anchor) {
         case ei_anc_none:
