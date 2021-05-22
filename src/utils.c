@@ -215,50 +215,51 @@ ei_point_t anchor_point(ei_point_t topleft, ei_size_t size, const ei_anchor_t *a
     return topleft;
 }
 
-ei_point_t anchor_target_pos(ei_anchor_t anchor, ei_size_t target_size, ei_rect_t parent_rect) {
+ei_point_t anchor_target_pos(ei_anchor_t anchor, ei_size_t target_size, ei_rect_t parent_rect, int radius, int border) {
     int width = target_size.width;
     int height = target_size.height;
+    radius = radius*(1 - sqrt(2)/2);
     ei_point_t topleft;
     switch (anchor) {
         case ei_anc_none:
-            topleft.y = parent_rect.top_left.y;
-            topleft.x = parent_rect.top_left.x;
+            topleft.y = parent_rect.top_left.y + border + radius;
+            topleft.x = parent_rect.top_left.x + border + radius;
             break;
         case ei_anc_center:
             topleft.y = parent_rect.top_left.y + parent_rect.size.height / 2 - height / 2;
             topleft.x = parent_rect.top_left.x + parent_rect.size.width / 2 - width / 2;
             break;
         case ei_anc_north:
-            topleft.y = parent_rect.top_left.y;
+            topleft.y = parent_rect.top_left.y + border;
             topleft.x = parent_rect.top_left.x + parent_rect.size.width / 2 - width / 2;
             break;
         case ei_anc_northeast:
-            topleft.y = parent_rect.top_left.y;
-            topleft.x = parent_rect.top_left.x + parent_rect.size.width - width;
+            topleft.y = parent_rect.top_left.y + border + radius;
+            topleft.x = parent_rect.top_left.x + parent_rect.size.width - width - border - radius;
             break;
         case ei_anc_east:
             topleft.y = parent_rect.top_left.y + parent_rect.size.height / 2 - height / 2;
-            topleft.x = parent_rect.top_left.x + parent_rect.size.width - width;
+            topleft.x = parent_rect.top_left.x + parent_rect.size.width - width - border;
             break;
         case ei_anc_southeast:
-            topleft.y = parent_rect.top_left.y + parent_rect.size.height - height;
-            topleft.x = parent_rect.top_left.x + parent_rect.size.width - width;
+            topleft.y = parent_rect.top_left.y + parent_rect.size.height - height - border - radius;
+            topleft.x = parent_rect.top_left.x + parent_rect.size.width - width - border - radius;
             break;
         case ei_anc_south:
-            topleft.y = parent_rect.top_left.y + parent_rect.size.height - height;
+            topleft.y = parent_rect.top_left.y + parent_rect.size.height - height - border;
             topleft.x = parent_rect.top_left.x + parent_rect.size.width / 2 - width / 2;
             break;
         case ei_anc_southwest:
-            topleft.y = parent_rect.top_left.y + parent_rect.size.height - height;
-            topleft.x = parent_rect.top_left.x;
+            topleft.y = parent_rect.top_left.y + parent_rect.size.height - height - border - radius;
+            topleft.x = parent_rect.top_left.x + border + radius;
             break;
         case ei_anc_west:
             topleft.y = parent_rect.top_left.y + parent_rect.size.height / 2 - height / 2;
-            topleft.x = parent_rect.top_left.x;
+            topleft.x = parent_rect.top_left.x + border;
             break;
         case ei_anc_northwest:
-            topleft.y = parent_rect.top_left.y;
-            topleft.x = parent_rect.top_left.x;
+            topleft.y = parent_rect.top_left.y + border + radius;
+            topleft.x = parent_rect.top_left.x + border + radius;
             break;
     }
     return topleft;

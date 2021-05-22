@@ -67,7 +67,7 @@ ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *a
 
 ei_point_t anchor_point(ei_point_t topleft, ei_size_t size, const ei_anchor_t *anchor);
 
-ei_point_t anchor_target_pos(ei_anchor_t anchor, ei_size_t target_size, ei_rect_t parent_rect);
+ei_point_t anchor_target_pos(ei_anchor_t anchor, ei_size_t target_size, ei_rect_t parent_rect, int radius, int border);
 
 ei_color_t ei_map_rgba_inverse(ei_surface_t surface, uint32_t color_id);
 

@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 	ei_color_t	button_text_color	= {0x00, 0x00, 0x00, 0xff};
 	ei_relief_t	button_relief		= ei_relief_raised;
 	int		button_border_width	= 6;
-	ei_anchor_t text_anchor = ei_anc_northwest;
+	ei_anchor_t text_anchor = ei_anc_center;
 	ei_callback_t	button_callback 	= button_press;
 
 	/* Create the application and change the color of the background. */

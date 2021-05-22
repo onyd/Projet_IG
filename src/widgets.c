@@ -241,7 +241,7 @@ void button_drawfunc(ei_widget_t *widget,
     if (button->text != NULL) {
         int width, height;
         hw_text_compute_size(button->text, button->text_font, &width, &height);
-        ei_point_t topleft = anchor_target_pos(button->text_anchor, ei_size(width, height), widget->screen_location);
+        ei_point_t topleft = anchor_target_pos(button->text_anchor, ei_size(width, height), widget->screen_location, radius, button->border_width);
         ei_rect_t clipper_text;
         // We crop text in the button
         intersection_rect(&widget->screen_location, clipper, &clipper_text);
@@ -251,7 +251,7 @@ void button_drawfunc(ei_widget_t *widget,
     if (button->img != NULL) {
         ei_rect_t rect = (button->img_rect != NULL) ? (*button->img_rect) : ei_rect(ei_point_zero(),
                                                                                     hw_surface_get_size(button->img));
-        ei_point_t topleft = anchor_target_pos(button->img_anchor, rect.size, widget->screen_location);
+        ei_point_t topleft = anchor_target_pos(button->img_anchor, rect.size, widget->screen_location, 0, 0);
         ei_rect_t clipper_img;
         // We crop image in the button
         intersection_rect(&widget->screen_location, clipper, &clipper_img);
@@ -302,7 +302,7 @@ void frame_drawfunc(ei_widget_t *widget,
     if (frame->text != NULL) {
         int width, height;
         hw_text_compute_size(frame->text, frame->text_font, &width, &height);
-        ei_point_t topleft = anchor_target_pos(frame->text_anchor, ei_size(width, height), widget->screen_location);
+        ei_point_t topleft = anchor_target_pos(frame->text_anchor, ei_size(width, height), widget->screen_location, 0, frame->border_width);
         ei_rect_t clipper_text;
         //in case the clipper is NULL, clipper_text must be widget->screen_location to avoid having the text outside the button
         intersection_rect(&widget->screen_location, clipper, &clipper_text);
@@ -312,7 +312,7 @@ void frame_drawfunc(ei_widget_t *widget,
     if (frame->img != NULL) {
         ei_rect_t rect = (frame->img_rect != NULL) ? (*frame->img_rect) : ei_rect(ei_point_zero(),
                                                                                   hw_surface_get_size(frame->img));
-        ei_point_t topleft = anchor_target_pos(frame->img_anchor, rect.size, widget->screen_location);
+        ei_point_t topleft = anchor_target_pos(frame->img_anchor, rect.size, widget->screen_location, 0, 0);
         ei_rect_t clipper_img;
         // We crop image in the button
         intersection_rect(&widget->screen_location, clipper, &clipper_img);
@@ -470,14 +470,14 @@ void toplevel_setdefaultsfunc(ei_widget_t *widget) {
 
 void radiobutton_setdefaultsfunc(ei_widget_t *widget){
     ei_radiobutton_configure(widget,
-                            default_size,
-                            default_color,
-                            default_button_color,
-                            default_selectioned_color,
-                            NULL,
-                            &ei_default_font,
-                            default_text_color,
-                            NULL
+                             default_size,
+                             default_color,
+                             default_button_color,
+                             default_selectioned_color,
+                             NULL,
+                             &ei_default_font,
+                             default_text_color,
+                             NULL
     );
 }
 /* geomnotifyfunc */
