@@ -375,15 +375,11 @@ void polygon_analytic_clipping(ei_linked_point_t *points, vector *clipped, vecto
                                             &intersection);
             if (!is_left(current->point, topleft, botleft)) {
                 if (is_left(previous->point, topleft, botleft)) {
-                    ei_linked_point_t *linked_intersection = calloc(1, sizeof(ei_linked_point_t));
-                    linked_intersection->point = intersection;
-                    append_linked_point(linked_intersection, get(clipped, clipped->last_idx - 1));
+                    append_linked_point(intersection, get(clipped, clipped->last_idx - 1));
                 }
-                append_linked_point(current, get(clipped, i));
+                append_linked_point(current->point, get(clipped, i));
             } else if (!is_left(previous->point, topleft, botleft)) {
-                ei_linked_point_t *linked_intersection = calloc(1, sizeof(ei_linked_point_t));
-                linked_intersection->point = intersection;
-                append_linked_point(linked_intersection, get(clipped, i));
+                append_linked_point(intersection, get(clipped, i));
             }
 
             previous = current;

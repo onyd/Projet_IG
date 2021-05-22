@@ -138,14 +138,17 @@ void lae_free(linked_acive_edges *lae) {
 }
 
 // Linked point helper
-void append_linked_point(ei_linked_point_t *p, ei_linked_point_t *l) {
-    if (l == NULL) {
-        l = p;
+void append_linked_point(ei_point_t p, ei_point_list_t *l) {
+    ei_linked_point_t *new = calloc(1, sizeof(ei_linked_point_t));
+    new->point = p;
+
+    if (l->head == NULL) {
+        l->head = new;
         return;
     }
 
-    p->next = l;
-    l = p;
+    new->next = l->head;
+    l->head = new;
 }
 
 void free_linked_point(ei_linked_point_t *l) {
@@ -157,16 +160,17 @@ void free_linked_point(ei_linked_point_t *l) {
     }
 }
 
-void append_linked_rect(ei_rect_t rect, ei_linked_rect_t *l) {
+void append_linked_rect(ei_rect_t rect, ei_rect_list_t *l) {
     ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
+    new->rect = rect;
 
-    if (l == NULL) {
-        l = new;
+    if (l->head == NULL) {
+        l->head = new;
         return;
     }
 
-    new->next = l;
-    l = new;
+    new->next = l->head;
+    l->head = new;
 }
 
 void free_linked_rect(ei_linked_rect_t *l) {
@@ -177,6 +181,20 @@ void free_linked_rect(ei_linked_rect_t *l) {
         free(tmp);
     }
     l = NULL;
+}
+
+void append_linked_widget(ei_widget_t *widget, ei_widget_list_t *l) {
+    ei_linked_widget_t *new = calloc(1, sizeof(ei_linked_widget_t));
+    new->widget = widget;
+
+    if (l->head == NULL) {
+        l->head = new;
+        return;
+    }
+
+    new->next = l->head;
+    l->head = new;
+    return;
 }
 
 void free_linked_widget(ei_linked_widget_t *l) {

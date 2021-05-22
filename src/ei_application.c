@@ -42,6 +42,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     // Picking init
     set_pick_vector(create_vector(1));
 
+    set_updated_rects((ei_rect_list_t) {NULL});
     append_linked_rect(*get_clipper_window(), get_updated_rects());
 
     set_mouse_pos(ei_point_zero());
@@ -114,9 +115,10 @@ void ei_app_run(void) {
         hw_surface_lock(get_main_window());
         draw_window();
         hw_surface_unlock(get_main_window());
-        hw_surface_update_rects(get_main_window(), get_updated_rects());
+        hw_surface_update_rects(get_main_window(), get_updated_rects()->head);
 
-        free_linked_rect(get_updated_rects());
+        free_linked_rect(get_updated_rects()->head);
+        get_updated_rects()->head = NULL;
         append_linked_rect(ei_rect_zero(), get_updated_rects());
 
         // Event handling

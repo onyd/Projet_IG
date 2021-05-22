@@ -1,14 +1,13 @@
 #include "widgets.h"
 #include "ei_application.h"
 #include "eventhandler.h"
-#include "utils.h"
 #include "defaults.h"
 
 ei_default_handle_func_t default_handle_func;
 ei_widget_t *active_widget = NULL;
 
 ei_bool_t event_propagation(ei_widget_t *widget, ei_event_t *event) {
-    ei_widget_list_t l = {NULL, NULL};
+    ei_widget_list_t l = {NULL};
     inverse_depth_widget_list(widget, &l);
 
     // Event propagation on children
@@ -81,17 +80,9 @@ ei_bool_t always_true(ei_event_t *event) {
     return true;
 }
 
-void inverse_depth_widget_list(ei_widget_t *widget, struct ei_widget_list_t *result) {
+void inverse_depth_widget_list(ei_widget_t *widget, ei_widget_list_t *result) {
     // Add current
-    ei_linked_widget_t *current = calloc(1, sizeof(ei_linked_widget_t));
-    current->widget = widget;
-    if (result->tail == NULL) {
-        result->head = current;
-        result->tail = current;
-    } else {
-        current->next = result->head;
-        result->head = current;
-    }
+    append_linked_widget(widget, result);
 
     // Recursively add children
     ei_widget_t *current_child = widget->children_head;

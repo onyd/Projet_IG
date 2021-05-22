@@ -5,7 +5,7 @@ static ei_surface_t _main_window;
 static ei_frame_t *_root;
 static ei_surface_t _pick_surface;
 static vector *_pick_vector;
-static ei_linked_rect_t *_updated_rects;
+static ei_rect_list_t _updated_rects;
 static ei_point_t _mouse_pos;
 static ei_point_t _prev_mouse_pos;
 static ei_rect_t *_clipping_window;
@@ -42,8 +42,8 @@ vector *get_pick_vector() {
     return _pick_vector;
 }
 
-ei_linked_rect_t *get_updated_rects() {
-    return _updated_rects;
+ei_rect_list_t *get_updated_rects() {
+    return &_updated_rects;
 }
 
 ei_point_t get_mouse_pos() {
@@ -120,7 +120,7 @@ void set_pick_vector(vector *pick_vector) {
     _pick_vector = pick_vector;
 }
 
-void set_updated_rects(ei_linked_rect_t *updated_rects) {
+void set_updated_rects(ei_rect_list_t updated_rects) {
     _updated_rects = updated_rects;
 }
 

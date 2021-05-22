@@ -3,13 +3,14 @@
 
 #include "hw_interface.h"
 #include "widgets.h"
+#include "utils.h"
 
 // App values
 static ei_surface_t _main_window;
 static ei_frame_t *_root;
 static ei_surface_t _pick_surface;
 static vector *_pick_vector;
-static ei_linked_rect_t *_updated_rects;
+static ei_rect_list_t _updated_rects;
 static ei_point_t _mouse_pos;
 static ei_point_t _prev_mouse_pos;
 static ei_rect_t *_clipping_window;
@@ -51,7 +52,7 @@ vector *get_pick_vector();
 /**
  * @brief Return the rects which have been modified as a linked list
  */
-ei_linked_rect_t *get_updated_rects();
+ei_rect_list_t *get_updated_rects();
 
 /**
  * @brief Return the mouse position surface
@@ -147,7 +148,7 @@ void set_pick_vector(vector *pick_vector);
 /**
  * @brief Set the rects which have been modified as a linked list
  */
-void set_updated_rects(ei_linked_rect_t *updated_rects);
+void set_updated_rects(ei_rect_list_t updated_rects);
 
 /**
  * @brief Return the mouse position surface

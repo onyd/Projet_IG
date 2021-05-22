@@ -3,20 +3,11 @@
 
 #include "ei_event.h"
 #include "widgets.h"
-
-typedef struct ei_linked_widget_t {
-    ei_widget_t *widget;
-    struct ei_linked_widget_t *next;
-} ei_linked_widget_t;
-
-typedef struct ei_widget_list_t {
-    struct ei_linked_widget_t *head;
-    struct ei_linked_widget_t *tail;
-} ei_widget_list_t;
+#include "utils.h"
 
 typedef enum {
     user_param = 0,
-    toplevel_param ,
+    toplevel_param
 } user_param_type_t;
 
 typedef struct user_param_t {
@@ -52,10 +43,9 @@ ei_bool_t always_true(ei_event_t *event);
  * @param the user_param
  */
 void destroy_widget_callback(ei_widget_t *widget,
-                    struct ei_event_t *event,
-                    void *user_param);
+                             ei_event_t *event,
+                             void *user_param);
 
 void inverse_depth_widget_list(ei_widget_t *widget, struct ei_widget_list_t *result);
-
 
 #endif //PROJETC_IG_EVENTHANDLER_H
