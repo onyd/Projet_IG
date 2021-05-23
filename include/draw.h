@@ -4,6 +4,7 @@
 #include "ei_draw.h"
 #include "vector.h"
 #include "geometry.h"
+#include "utils.h"
 
 /** @brief Says where the point is clipped according to clipper
  */
@@ -19,13 +20,6 @@ typedef enum clipping_type {
     center_reject
 } clipping_type;
 
-/**
- * @brief Store a linked list of errors for polygons clipping
- */
-typedef struct ei_linked_errors {
-    float error;
-    struct ei_linked_errors *next;
-} ei_linked_errors;
 
 /**
  * @brief Allows to draw the whole window from the root widget
@@ -107,6 +101,6 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
  * @param errors        where to store the error
  * @param clipper       the clipper
  */
-void polygon_analytic_clipping(ei_linked_point_t *points, vector *clipped, vector *errors, ei_rect_t *clipper);
+void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipped, ei_error_list_t *errors, ei_rect_t *clipper);
 
 #endif //PROJETC_IG_DRAW_H

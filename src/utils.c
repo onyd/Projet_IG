@@ -194,11 +194,33 @@ void append_linked_widget(ei_widget_t *widget, ei_widget_list_t *l) {
 
     new->next = l->head;
     l->head = new;
-    return;
 }
 
 void free_linked_widget(ei_linked_widget_t *l) {
     ei_linked_widget_t *current = l;
+    while (current != NULL) {
+        ei_linked_widget_t *tmp = current;
+        current = current->next;
+        free(tmp);
+    }
+    l = NULL;
+}
+
+void append_linked_error(float error, ei_error_list_t *l) {
+    ei_linked_error_t *new = calloc(1, sizeof(ei_linked_error_t));
+    new->error = error;
+
+    if (l->head == NULL) {
+        l->head = new;
+        return;
+    }
+
+    new->next = l->head;
+    l->head = new;
+}
+
+void free_linked_error(ei_linked_error_t *l) {
+    ei_linked_error_t *current = l;
     while (current != NULL) {
         ei_linked_widget_t *tmp = current;
         current = current->next;

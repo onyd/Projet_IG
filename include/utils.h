@@ -3,9 +3,11 @@
 
 #include "stdint.h"
 #include "ei_types.h"
-#include "hw_interface.h"
-#include "eventhandler.h"
+#include "ei_widget.h"
 
+/**
+ * \brief	linked structure that stores data for scanline algorithm
+ */
 typedef struct linked_edges {
     int ymax;
     int x_ymin;
@@ -17,26 +19,57 @@ typedef struct linked_edges {
     struct linked_edges *next;
 } linked_edges;
 
+/**
+ * \brief	list structure for \ref linked_edges used to store active edges in scanline algorithm
+ */
 typedef struct linked_acive_edges {
     struct linked_edges *head;
 } linked_acive_edges;
 
+/**
+ * \brief	Linked list of widget
+ */
 typedef struct ei_linked_widget_t {
     ei_widget_t *widget;
     struct ei_linked_widget_t *next;
 } ei_linked_widget_t;
 
+/**
+ * @brief Linked list of float error
+ */
+typedef struct ei_linked_error_t {
+    float error;
+    struct ei_linked_error_t *next;
+} ei_linked_error_t;
+
+/**
+ * \brief	List structure for \ref ei_point_t
+ */
 typedef struct ei_point_list_t {
-    struct ei_linked_point_t *head;
+    ei_linked_point_t *head;
 } ei_point_list_t;
 
+/**
+ * \brief	List structure for \ref ei_rect_t
+ */
 typedef struct ei_rect_list_t {
-    struct ei_linked_rect_t *head;
+    ei_linked_rect_t *head;
 } ei_rect_list_t;
 
+/**
+ * \brief	List structure for \ref ei_widget_t
+ */
 typedef struct ei_widget_list_t {
-    struct ei_linked_widget_t *head;
+    ei_linked_widget_t *head;
 } ei_widget_list_t;
+
+/**
+ * \brief	List structure for \ref float
+ */
+typedef struct ei_error_list_t {
+    ei_linked_error_t *head;
+} ei_error_list_t;
+
 
 /**
  * \brief	Swap the variable content pointed by a and b
@@ -95,6 +128,10 @@ void free_linked_rect(ei_linked_rect_t *l);
 void append_linked_widget(ei_widget_t *widget, ei_widget_list_t *l);
 
 void free_linked_widget(ei_linked_widget_t *l);
+
+void append_linked_error(float error, ei_error_list_t *l);
+
+void free_linked_error(ei_linked_error_t *l);
 
 ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *anchor);
 

@@ -1,7 +1,6 @@
 #include "draw.h"
 #include "ei_utils.h"
 #include "geometry.h"
-#include "utils.h"
 #include "defaults.h"
 #include "ei_application.h"
 
@@ -346,44 +345,139 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
     return true;
 }
 
-void polygon_analytic_clipping(ei_linked_point_t *points, vector *clipped, vector *errors, ei_rect_t *clipper) {
-    vector *input = create_vector(2);
-
-    clipped = create_vector(2);
-    append_vector(clipped, points);
-    errors = create_vector(2);
+void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipped,
+                               ei_error_list_t *errors, ei_rect_t *clipper) {
+    // Initialization
+    ei_point_list_t input = {NULL};
+    ei_error_list_t input_errors = {NULL};
+    clipped->head = points;
 
     ei_point_t topleft = clipper->top_left;
     ei_point_t topright = ei_point(clipper->top_left.x + clipper->size.width, clipper->top_left.y);
     ei_point_t botleft = ei_point(clipper->top_left.x, clipper->top_left.y + clipper->size.height);
     ei_point_t botright = ei_point(clipper->top_left.x + clipper->size.width,
                                    clipper->top_left.y + clipper->size.height);
-    // TODO do this for all clipping edges
-    copy(clipped, input);
-    clear(clipped, NULL);
-    // Go through all polygon to clip
-    for (uint32_t i = 0; i < input->last_idx; i++) {
-        if (get(input, i) == NULL) {
-            continue;
-        }
-        // Go through all polygon's edges
-        ei_linked_point_t *previous = get(input, i);
-        ei_linked_point_t *current = previous->next;
-        while (current != NULL) {
-            ei_point_t intersection;
-            vertical_line_intersection_rect(previous->point, current->point, topleft.x,
-                                            &intersection);
-            if (!is_left(current->point, topleft, botleft)) {
-                if (is_left(previous->point, topleft, botleft)) {
-                    append_linked_point(intersection, get(clipped, clipped->last_idx - 1));
-                }
-                append_linked_point(current->point, get(clipped, i));
-            } else if (!is_left(previous->point, topleft, botleft)) {
-                append_linked_point(intersection, get(clipped, i));
-            }
+    // West
+    input.head = clipped;
+    clipped->head = NULL;
+    errors->head = NULL;
 
-            previous = current;
-            current = current->next;
+    // Go through all polygon's edges
+    ei_linked_point_t *previous = input.head;
+    ei_linked_point_t *current = previous->next;
+    while (current != NULL) {
+        ei_point_t intersection;
+        float e = vertical_line_intersection_rect(previous->point, current->point, topleft.x, &intersection);
+        if (!is_left(current->point, topleft, botleft)) {
+            if (is_left(previous->point, topleft, botleft)) {
+                append_linked_point(intersection, clipped);
+                append_linked_error(e, errors);
+            }
+            append_linked_point(current->point, clipped);
+            append_linked_error(0.0f, errors);
+        } else if (!is_left(previous->point, topleft, botleft)) {
+            append_linked_point(intersection, clipped);
+            append_linked_error(e, errors);
+
         }
+
+        previous = current;
+        current = current->next;
+    }
+
+    // South
+    free_linked_point(input.head);
+    input.head = clipped->head;
+    input_errors.head = errors->head;
+    clipped->head = NULL;
+    errors->head = NULL;
+
+    // Go through all polygon's edges
+    previous = input.head;
+    current = previous->next;
+    ei_linked_error_t *last_error = input_errors.head;
+    while (current != NULL) {
+        ei_point_t intersection;
+        float e = horizontal_line_intersection_rect(previous->point, current->point, botleft.y,
+                                          &intersection);
+        if (!is_left(current->point, botleft, botright)) {
+            if (is_left(previous->point, botleft, botright)) {
+                append_linked_point(intersection, clipped);
+                append_linked_error(e + last_error->error, errors);
+            }
+            append_linked_point(current->point, clipped);
+            append_linked_error(last_error->error, errors);
+        } else if (!is_left(previous->point, botleft, botright)) {
+            append_linked_point(intersection, clipped);
+            append_linked_error(e + last_error->error, errors);
+        }
+
+        last_error = last_error->next;
+        previous = current;
+        current = current->next;
+    }
+
+    // East
+    free_linked_point(input.head);
+    input.head = clipped->head;
+    input_errors.head = errors->head;
+    clipped->head = NULL;
+    errors->head = NULL;
+
+    // Go through all polygon's edges
+    previous = input.head;
+    current = previous->next;
+    last_error = input_errors.head;
+    while (current != NULL) {
+        ei_point_t intersection;
+        float e = vertical_line_intersection_rect(previous->point, current->point, topright.x,
+                                        &intersection);
+        if (!is_left(current->point, botright, topright)) {
+            if (is_left(previous->point, botright, topright)) {
+                append_linked_point(intersection, clipped);
+                append_linked_error(e + last_error->error, errors);
+            }
+            append_linked_point(current->point, clipped);
+            append_linked_error(last_error->error, errors);
+        } else if (!is_left(previous->point, botright, topright)) {
+            append_linked_point(intersection, clipped);
+            append_linked_error(e + last_error->error, errors);
+        }
+
+        last_error = last_error->next;
+        previous = current;
+        current = current->next;
+    }
+
+    // North
+    free_linked_point(input.head);
+    input.head = clipped->head;
+    input_errors.head = errors->head;
+    clipped->head = NULL;
+    errors->head = NULL;
+
+    // Go through all polygon's edges
+    previous = input.head;
+    current = previous->next;
+    last_error = input_errors.head;
+    while (current != NULL) {
+        ei_point_t intersection;
+        float e = horizontal_line_intersection_rect(previous->point, current->point, topleft.y,
+                                          &intersection);
+        if (!is_left(current->point, botright, topleft)) {
+            if (is_left(previous->point, botright, topleft)) {
+                append_linked_point(intersection, clipped);
+                append_linked_error(e + last_error->error, errors);
+            }
+            append_linked_point(current->point, clipped);
+            append_linked_error(last_error->error, errors);
+        } else if (!is_left(previous->point, botright, topleft)) {
+            append_linked_point(intersection, clipped);
+            append_linked_error(e + last_error->error, errors);
+        }
+
+        last_error = last_error->next;
+        previous = current;
+        current = current->next;
     }
 }
