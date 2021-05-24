@@ -497,14 +497,20 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
                 if (toplevel != NULL) {
                     toplevel->wclass->handlefunc(toplevel, event);
                 }
+                ei_event_set_active_widget(widget);
                 treated = true;
             }
             break;
+        case ei_ev_mouse_move:
+            if (inside(event->param.mouse.where, button->widget.content_rect)) {
+                break;
+            }
         case ei_ev_mouse_buttonup:
             button->relief = ei_relief_raised;
             if (button->callback != NULL && inside(event->param.mouse.where, button->widget.content_rect)) {
                 button->callback(widget->parent, event, button->widget.user_data);
             }
+            ei_event_set_active_widget(NULL);
             treated = true;
             break;
     }
