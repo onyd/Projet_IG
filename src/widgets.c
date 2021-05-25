@@ -29,13 +29,17 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
 }
 
 ei_widget_t *search_for_toplevel(ei_widget_t *widget) {
-    ei_widget_t *current = widget->parent;
+    ei_widget_t *current = widget;
+    ei_widget_t *first_top_level = widget;
     ei_widget_t *root_widget = ei_app_root_widget();
-    while (current != root_widget && !is_toplevel(widget)) {
+    while (current != root_widget) {
+        if (!is_toplevel(current)) {
+            first_top_level = current;
+        }
         current = current->parent;
     }
-    current = (current != root_widget) ? current : NULL;
-    return current;
+    first_top_level = (!is_toplevel(first_top_level)) ? first_top_level : NULL;
+    return first_top_level;
 }
 
 /* allocfunc */
@@ -552,28 +556,34 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                 toplevel->grab_event.grab_type = resized;
                 treated = true;
             }
-            //The top level is at the first plan
-            ei_widget_t *current_child = widget->parent->children_head;
-            ei_widget_t *previous_child = current_child;
-            if (widget->parent->children_head != widget->parent->children_tail &&
-                widget != widget->parent->children_tail) {
-                while (current_child != widget) {
-                    previous_child = current_child;
-                    current_child = current_child->next_sibling;
+            ei_widget_t *toplevel = search_for_toplevel(widget);
+            if (toplevel != widget) {
+                toplevel->wclass->handlefunc(toplevel, event);
+            }
+            else {
+                //The top level is at the first plan
+                ei_widget_t *current_child = widget->parent->children_head;
+                ei_widget_t *previous_child = current_child;
+                if (widget->parent->children_head != widget->parent->children_tail &&
+                    widget != widget->parent->children_tail) {
+                    while (current_child != widget) {
+                        previous_child = current_child;
+                        current_child = current_child->next_sibling;
+                    }
+                    //if the widget is the head
+                    if (current_child == previous_child) {
+                        widget->parent->children_head = widget->next_sibling;
+                        widget->next_sibling = NULL;
+                        widget->parent->children_tail->next_sibling = widget;
+                        widget->parent->children_tail = widget;
+                    } else {
+                        previous_child->next_sibling = widget->next_sibling;
+                        widget->next_sibling = NULL;
+                        widget->parent->children_tail->next_sibling = widget;
+                        widget->parent->children_tail = widget;
+                    }
+                    treated = true;
                 }
-                //if the widget is the head
-                if (current_child == previous_child) {
-                    widget->parent->children_head = widget->next_sibling;
-                    widget->next_sibling = NULL;
-                    widget->parent->children_tail->next_sibling = widget;
-                    widget->parent->children_tail = widget;
-                } else {
-                    previous_child->next_sibling = widget->next_sibling;
-                    widget->next_sibling = NULL;
-                    widget->parent->children_tail->next_sibling = widget;
-                    widget->parent->children_tail = widget;
-                }
-                treated = true;
             }
             break;
         }
