@@ -47,6 +47,7 @@ typedef struct ei_linked_error_t {
  */
 typedef struct ei_point_list_t {
     ei_linked_point_t *head;
+    ei_linked_point_t *tail;
 } ei_point_list_t;
 
 /**
@@ -68,6 +69,7 @@ typedef struct ei_widget_list_t {
  */
 typedef struct ei_error_list_t {
     ei_linked_error_t *head;
+    ei_linked_error_t *tail;
 } ei_error_list_t;
 
 
@@ -121,11 +123,11 @@ void append_linked_point(ei_point_t p, ei_point_list_t *l);
 
 void free_linked_point(ei_linked_point_t *l);
 
-void append_linked_rect(ei_rect_t rect, ei_rect_list_t *l);
+void append_left_linked_rect(ei_rect_t rect, ei_rect_list_t *l);
 
 void free_linked_rect(ei_linked_rect_t *l);
 
-void append_linked_widget(ei_widget_t *widget, ei_widget_list_t *l);
+void append_left_linked_widget(ei_widget_t *widget, ei_widget_list_t *l);
 
 void free_linked_widget(ei_linked_widget_t *l);
 

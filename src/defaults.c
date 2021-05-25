@@ -19,7 +19,7 @@ static int _toplevel_default_border_width = 4;
 static ei_color_t _default_color = {100, 100, 100, 255};
 static ei_color_t _default_text_color = {0, 0, 0, 255};
 static ei_color_t _default_button_color = {200, 200, 200, 255};
-static ei_color_t _default_selectioned_color = {255, 0, 0, 255};
+static ei_color_t _default_selected_color = {255, 0, 0, 255};
 
 static ei_size_t _default_size = {100, 100};
 static ei_relief_t _default_relief = ei_relief_raised;
@@ -99,7 +99,7 @@ ei_color_t *get_default_button_color() {
 }
 
 ei_color_t *get_default_selected_color() {
-    return &_default_selectioned_color;
+    return &_default_selected_color;
 }
 
 // Setter

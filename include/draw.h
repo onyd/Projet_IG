@@ -77,7 +77,7 @@ void draw_blank_rect(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_
  * @param p             the point which we want the code
  * @param clipper       the rect that clip
  */
-uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper);
+uint8_t cohen_sutherland_code(ei_point_t p, const ei_rect_t *clipper);
 
 /** @brief Give what is the type of clipping of the point (see \ref clipping_type)
  * @param code          the Sutherland-Cohen code
@@ -93,7 +93,7 @@ enum clipping_type get_clipping_type(uint8_t code);
  * @param clipper       the clipper
  */
 ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipped1, ei_point_t *clipped2, float *error,
-                                 ei_rect_t *clipper);
+                                 const ei_rect_t *clipper);
 
 /** @brief Compute the clipped polygons, the errors due to int cast
  * @param points        the points of the polygon
@@ -101,6 +101,6 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
  * @param errors        where to store the error
  * @param clipper       the clipper
  */
-void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipped, ei_error_list_t *errors, ei_rect_t *clipper);
+void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t *clipped, ei_error_list_t *errors, const ei_rect_t *clipper);
 
 #endif //PROJETC_IG_DRAW_H

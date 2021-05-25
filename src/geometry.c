@@ -9,15 +9,15 @@ ei_linked_point_t *rectangle(ei_rect_t *rect) {
 }
 
 ei_linked_point_t *arc(ei_point_t c, uint32_t r, float start_angle, float end_angle, uint32_t N) {
-    float da = (end_angle - start_angle) / (N - 1);
+    float da = (end_angle - start_angle) / N;
 
-    ei_linked_point_t *points = calloc(N, sizeof(ei_linked_point_t));
+    ei_linked_point_t *points = calloc(N + 1, sizeof(ei_linked_point_t));
     float angle = start_angle;
     points[0].point.x = c.x + r * cos(angle * (pi / 180.0f));
     points[0].point.y = c.y - r * sin(angle * (pi / 180.0f));
 
     uint32_t i;
-    for (i = 1; i < N; i++) {
+    for (i = 1; i <= N; i++) {
         angle += da;
         points[i].point.x = c.x + r * cos(angle * (pi / 180.0f));
         points[i].point.y = c.y - r * sin(angle * (pi / 180.0f));
@@ -244,7 +244,7 @@ float cross_product(ei_point_t v1, ei_point_t v2) {
 ei_bool_t is_left(ei_point_t p, ei_point_t p1, ei_point_t p2) {
     ei_point_t v1 = ei_point_sub(p, p1);
     ei_point_t v2 = ei_point_sub(p2, p1);
-    return cross_product(v1, v2) > 0;
+    return cross_product(v1, v2) < 0;
 }
 
 ei_bool_t inside(ei_point_t p, const ei_rect_t *r) {

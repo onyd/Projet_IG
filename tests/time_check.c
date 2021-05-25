@@ -16,14 +16,14 @@ void draw_circle(ei_surface_t surface, ei_point_t pos, ei_rect_t *clipper) {
     ei_color_t color = {0, 100, 255, 255};
     ei_color_t color2 = {0, 100, 0, 255};
 
-    ei_linked_point_t *pts = arc(&pos, 30, 0, 360, 20);
+    ei_linked_point_t *pts = arc(pos, 30, 0, 360, 10);
     ei_linked_point_t *end = malloc(sizeof(ei_linked_point_t));
     end->point.x = pts->point.x;
     end->point.y = pts->point.y;
     pts[19].next = end;
     end->next = NULL;
 
-    ei_draw_polygon(surface, pts, color, clipper);
+  //  ei_draw_polygon(surface, pts, color, clipper);
     ei_draw_polyline(surface, pts, color2, clipper);
 }
 

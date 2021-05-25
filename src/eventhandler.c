@@ -56,7 +56,7 @@ void handle_event(ei_event_t *event) {
                     ei_toplevel_t *toplevel = toplevel_params->caller;
                     if (!inside(get_mouse_pos(), &toplevel->grab_event.param.minimize_square)) {
                         toplevel->grab_event.param.show_minimize_square = false;
-                        append_linked_rect(toplevel->widget.screen_location, get_updated_rects());
+                        append_left_linked_rect(toplevel->widget.screen_location, get_updated_rects());
                         free(user_params->data);
                         free(user_params);
                     }
@@ -82,7 +82,7 @@ ei_bool_t always_true(ei_event_t *event) {
 
 void inverse_depth_widget_list(ei_widget_t *widget, ei_widget_list_t *result) {
     // Add current
-    append_linked_widget(widget, result);
+    append_left_linked_widget(widget, result);
 
     // Recursively add children
     ei_widget_t *current_child = widget->children_head;

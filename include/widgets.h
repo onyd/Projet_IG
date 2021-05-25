@@ -85,6 +85,15 @@ typedef struct ei_toplevel_t {
 } ei_toplevel_t;
 
 /**
+ * @brief The radio button item widget struct that represent one radio button
+ */
+typedef struct ei_radiobutton_item_t {
+    ei_button_t *button;
+    char* text;
+    uint32_t id;
+};
+
+/**
  * @brief The radio button widget struct
  */
 typedef struct ei_radiobutton_t {
@@ -93,14 +102,13 @@ typedef struct ei_radiobutton_t {
     uint32_t compt;
     ei_color_t background_color;
     ei_color_t button_color;
-    ei_color_t selectioned_color;
+    ei_color_t selected_color;
     char *text;
     ei_font_t text_font;
     ei_color_t text_color;
     ei_anchor_t text_anchor;
-    vector *button_tab; // List of buttons
-    vector *text_tab;
-    int selectioned_button_idx;
+    vector *button_tab; // List of ei_radiobutton_item_t
+    int selected_id;
 
 } ei_radiobutton_t;
 
@@ -333,7 +341,7 @@ void ei_radiobutton_configure(ei_widget_t *widget,
                               ei_size_t *requested_size,
                               ei_color_t *background_color,
                               ei_color_t *button_color,
-                              ei_color_t *selectioned_color,
+                              ei_color_t *selected_color,
                               char **text,
                               ei_font_t *text_font,
                               ei_color_t *text_color,

@@ -117,12 +117,23 @@ void ei_draw_polygon(ei_surface_t surface,
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, color);
 
+    // Clipping
+    ei_point_list_t clipped;
+    ei_error_list_t errors;
+    if (clipper == NULL) {
+        clipped.head = first_point;
+    } else {
+        polygon_analytic_clipping(first_point, &clipped, &errors, clipper);
+        if (clipped.head == NULL) {
+            return; // Totally out, we skip it
+        }
+    }
 
     // Find ymax and ymin to initialize size
-    int ymax = first_point->point.y;
-    int ymin = first_point->point.y;
+    int ymax = clipped.head->point.y;
+    int ymin = clipped.head->point.y;
 
-    struct ei_linked_point_t *current = first_point;
+    ei_linked_point_t *current = clipped.head;
     while (current != NULL) {
         if (ymax < current->point.y) {
             ymax = current->point.y;
@@ -133,36 +144,37 @@ void ei_draw_polygon(ei_surface_t surface,
     }
 
     // TC/TCA initialization
-    struct linked_edges **TC = calloc(ymax - ymin, sizeof(struct linked_edges *));
-    struct linked_acive_edges *TCA = malloc(sizeof(struct linked_acive_edges));
+    linked_edges **TC = calloc(ymax - ymin, sizeof(linked_edges *));
+    linked_acive_edges *TCA = malloc(sizeof(linked_acive_edges));
     TCA->head = NULL;
 
     // Build TC
-    struct ei_linked_point_t *first = first_point;
-    struct ei_linked_point_t *second = first_point->next;
+    ei_linked_point_t *first = clipped.head;
+    ei_linked_point_t *second = first->next;
+    ei_linked_error_t *error = errors.head;
 
     while (second != NULL) {
-        struct ei_linked_point_t *p_min = y_argmin(first, second);
-        struct ei_linked_point_t *p_max = y_argmax(first, second);
+        ei_linked_point_t *p_min = y_argmin(first, second);
+        ei_linked_point_t *p_max = y_argmax(first, second);
 
         int dx = p_max->point.x - p_min->point.x;
         int dy = p_max->point.y - p_min->point.y;
-        float inv_p = (float) dx / dy;
         // Ignore horizontal edges
         if (dy != 0) {
-            struct linked_edges *edge = malloc(sizeof(struct linked_edges));
+            linked_edges *edge = malloc(sizeof(linked_edges));
             edge->ymax = p_max->point.y;
             edge->x_ymin = p_min->point.x;
             edge->x_ymax = p_max->point.x;
             edge->dx = dx;
             edge->dy = dy;
-            edge->E = 0;
+            edge->E = error->error;
             edge->sign_dx = (dx > 0) ? 1 : -1;
             edge->next = TC[p_min->point.y - ymin];
             TC[p_min->point.y - ymin] = edge;
         }
         first = second;
         second = second->next;
+        error = error->next;
     }
 
     /* Fill polygon for every scanline */
@@ -175,29 +187,29 @@ void ei_draw_polygon(ei_surface_t surface,
 
         // Add current scanline starting edges while keeping TCA sorted
         while (TC[i] != NULL) {
-            struct linked_edges *tc = TC[i];
+            linked_edges *tc = TC[i];
             TC[i] = tc->next;
             tc->next = NULL;
             sorting_insert(tc, TCA);
         }
 
         // Draw pixels
-        struct linked_edges *current = TCA->head;
+        linked_edges *current = TCA->head;
         while (current != NULL && current->next != NULL) {
             int x1 = current->x_ymin;
             current = current->next;
             int x2 = current->x_ymin;
             for (uint32_t k = x1; k < x2; k++) {
-                if (inside(ei_point(k, y), clipper)) {
-                    pixels[k + size.width * y] = c;
-                }
+                //if (inside(ei_point(k, y), clipper)) {
+                pixels[k + size.width * y] = c;
+                //}
             }
             current = current->next;
         }
 
         y++;
 
-        // Bresenham iterations for next intersection_rects
+        // Bresenham iterations for next intersection
         current = TCA->head;
         while (current != NULL) {
             // y-directed
