@@ -190,11 +190,26 @@ void append_left_linked_widget(ei_widget_t *widget, ei_widget_list_t *l) {
 
     if (l->head == NULL) {
         l->head = new;
+        l->tail = new;
         return;
     }
 
     new->next = l->head;
     l->head = new;
+}
+
+void append_linked_widget(ei_widget_t *widget, ei_widget_list_t *l) {
+    ei_linked_widget_t *new = calloc(1, sizeof(ei_linked_widget_t));
+    new->widget = widget;
+
+    if (l->head == NULL) {
+        l->head = new;
+        l->tail = new;
+        return;
+    }
+
+    l->tail->next = new;
+    l->tail = new;
 }
 
 void free_linked_widget(ei_linked_widget_t *l) {
@@ -225,6 +240,30 @@ void free_linked_error(ei_linked_error_t *l) {
     ei_linked_error_t *current = l;
     while (current != NULL) {
         ei_linked_error_t *tmp = current;
+        current = current->next;
+        free(tmp);
+    }
+    l = NULL;
+}
+
+void append_linked_text(char* text, struct ei_text_list_t *l) {
+    ei_linked_text_t *new = calloc(1, sizeof(ei_linked_text_t));
+    new->text = text;
+
+    if (l->head == NULL) {
+        l->head = new;
+        l->tail = new;
+        return;
+    }
+
+    l->tail->next = new;
+    l->tail = new;
+}
+
+void free_linked_text(ei_linked_text_t *l) {
+    ei_linked_text_t *current = l;
+    while (current != NULL) {
+        ei_linked_text_t *tmp = current;
         current = current->next;
         free(tmp);
     }

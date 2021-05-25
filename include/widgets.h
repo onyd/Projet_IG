@@ -90,7 +90,7 @@ typedef struct ei_toplevel_t {
 typedef struct ei_radiobutton_t {
     ei_widget_t widget;
     // Specific field
-    uint32_t compt;
+    uint32_t margin;
     ei_color_t background_color;
     ei_color_t button_color;
     ei_color_t selected_color;
@@ -98,10 +98,8 @@ typedef struct ei_radiobutton_t {
     ei_font_t text_font;
     ei_color_t text_color;
     ei_anchor_t text_anchor;
-    ei_widget_list_t *button_list;
-    ei_text_list_t *text_list;
+    vector *button_list;
     int selected_id;
-
 } ei_radiobutton_t;
 
 
@@ -331,6 +329,7 @@ ei_bool_t radiobutton_handlefunc(ei_widget_t *widget, ei_event_t *event);
  */
 void ei_radiobutton_configure(ei_widget_t *widget,
                               ei_size_t *requested_size,
+                              uint32_t *margin,
                               ei_color_t *background_color,
                               ei_color_t *button_color,
                               ei_color_t *selected_color,
@@ -339,5 +338,9 @@ void ei_radiobutton_configure(ei_widget_t *widget,
                               ei_color_t *text_color,
                               ei_anchor_t *text_anchor
 );
+
+void append_radiobutton(ei_radiobutton_t *radiobutton, char *text, ei_callback_t *callback);
+
+void clear_radiobutton(ei_radiobutton_t *radiobutton);
 
 #endif //PROJETC_IG_WIDGETS_H

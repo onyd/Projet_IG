@@ -2,6 +2,7 @@
 #define PROJETC_IG_VECTOR_H
 
 #include "stddef.h"
+#include "stdint.h"
 
 typedef struct {
     void **data;

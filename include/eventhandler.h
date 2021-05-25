@@ -7,7 +7,7 @@
 
 typedef enum {
     user_param = 0,
-    toplevel_param
+    toplevel_param,
 } user_param_type_t;
 
 typedef struct user_param_t {
@@ -18,6 +18,11 @@ typedef struct user_param_t {
 typedef struct toplevel_app_event_t {
     ei_toplevel_t *caller;
 } toplevel_app_event_t;
+
+typedef struct radiobutton_user_param_t {
+    uint32_t idx;
+    char *text;
+} radiobutton_user_param_t;
 
 extern ei_default_handle_func_t default_handle_func;
 extern ei_widget_t *active_widget;
@@ -53,7 +58,6 @@ void close_toplevel_callback(ei_widget_t *widget,
 void check_radiobutton_callback(ei_widget_t *widget,
                                 ei_event_t *event,
                                 void *user_param);
-
 
 void inverse_depth_widget_list(ei_widget_t *widget, struct ei_widget_list_t *result);
 

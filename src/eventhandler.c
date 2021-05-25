@@ -35,7 +35,7 @@ void handle_event(ei_event_t *event) {
         case ei_ev_mouse_buttondown :
         case ei_ev_mouse_buttonup:
             if (ei_event_get_active_widget() != NULL) {
-                if (active_widget->wclass->handlefunc(active_widget, event))
+                if (!active_widget->wclass->handlefunc(active_widget, event))
                     (*ei_event_get_default_handle_func())(event);
             } else {
                 ei_widget_t *picked = ei_widget_pick(&event->param.mouse.where);
@@ -77,6 +77,15 @@ void close_toplevel_callback(ei_widget_t *widget,
                              struct ei_event_t *event,
                              void *user_param) {
         ei_widget_destroy(widget);
+}
+void check_radiobutton_callback(ei_widget_t *widget,
+                                ei_event_t *event,
+                                void *user_param) {
+    ei_radiobutton_t *radiobutton = (ei_radiobutton_t *)widget->parent;
+    radiobutton_user_param_t *params = (radiobutton_user_param_t*)user_param;
+    radiobutton->selected_id = params->idx;
+
+    free(params);
 }
 
 ei_bool_t always_true(ei_event_t *event) {

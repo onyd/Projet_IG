@@ -70,6 +70,7 @@ typedef struct ei_rect_list_t {
  */
 typedef struct ei_widget_list_t {
     ei_linked_widget_t *head;
+    ei_linked_widget_t *tail;
 } ei_widget_list_t;
 
 /**
@@ -145,11 +146,17 @@ void free_linked_rect(ei_linked_rect_t *l);
 
 void append_left_linked_widget(ei_widget_t *widget, ei_widget_list_t *l);
 
+void append_linked_widget(ei_widget_t *widget, ei_widget_list_t *l);
+
 void free_linked_widget(ei_linked_widget_t *l);
 
 void append_linked_error(float error, ei_error_list_t *l);
 
 void free_linked_error(ei_linked_error_t *l);
+
+void append_linked_text(char* text, struct ei_text_list_t *l);
+
+void free_linked_text(ei_linked_text_t *l);
 
 ei_point_t topleft(ei_point_t anchor_point, ei_size_t size, const ei_anchor_t *anchor);
 
