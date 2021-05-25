@@ -553,46 +553,44 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             if (inside(event->param.mouse.where, toplevel->button->widget.content_rect)) {
                 toplevel->grab_event.grab_type = clicked;
             } else if (inside(event->param.mouse.where, &top_bar)) {
-                ei_event_set_active_widget(toplevel);
-                if (inside(event->param.mouse.where, &top_bar)) {
-                    ei_event_set_active_widget((ei_widget_t *) toplevel);
-                    toplevel->grab_event.grab_type = grabbed;
-                    treated = true;
-                } else if (inside(event->param.mouse.where, &toplevel->grab_event.param.minimize_square)) {
-                    ei_event_set_active_widget((ei_widget_t *) toplevel);
-                    toplevel->grab_event.grab_type = resized;
-                    treated = true;
-                }
-                ei_widget_t *toplevel = search_for_toplevel(widget);
-                if (toplevel != widget) {
-                    toplevel->wclass->handlefunc(toplevel, event);
-                } else {
-                    //The top level is at the first plan
-                    ei_widget_t *current_child = widget->parent->children_head;
-                    ei_widget_t *previous_child = current_child;
-                    if (widget->parent->children_head != widget->parent->children_tail &&
-                        widget != widget->parent->children_tail) {
-                        while (current_child != widget) {
-                            previous_child = current_child;
-                            current_child = current_child->next_sibling;
-                        }
-                        //if the widget is the head
-                        if (current_child == previous_child) {
-                            widget->parent->children_head = widget->next_sibling;
-                            widget->next_sibling = NULL;
-                            widget->parent->children_tail->next_sibling = widget;
-                            widget->parent->children_tail = widget;
-                        } else {
-                            previous_child->next_sibling = widget->next_sibling;
-                            widget->next_sibling = NULL;
-                            widget->parent->children_tail->next_sibling = widget;
-                            widget->parent->children_tail = widget;
-                        }
-                        treated = true;
-                    }
-                }
-                break;
+                ei_event_set_active_widget((ei_widget_t *) toplevel);
+                toplevel->grab_event.grab_type = grabbed;
+                treated = true;
+            } else if (inside(event->param.mouse.where, &toplevel->grab_event.param.minimize_square)) {
+                ei_event_set_active_widget((ei_widget_t *) toplevel);
+                toplevel->grab_event.grab_type = resized;
+                treated = true;
             }
+            ei_widget_t *toplevel = search_for_toplevel(widget);
+            if (toplevel != widget) {
+                toplevel->wclass->handlefunc(toplevel, event);
+            }
+            else {
+                //The top level is at the first plan
+                ei_widget_t *current_child = widget->parent->children_head;
+                ei_widget_t *previous_child = current_child;
+                if (widget->parent->children_head != widget->parent->children_tail &&
+                    widget != widget->parent->children_tail) {
+                    while (current_child != widget) {
+                        previous_child = current_child;
+                        current_child = current_child->next_sibling;
+                    }
+                    //if the widget is the head
+                    if (current_child == previous_child) {
+                        widget->parent->children_head = widget->next_sibling;
+                        widget->next_sibling = NULL;
+                        widget->parent->children_tail->next_sibling = widget;
+                        widget->parent->children_tail = widget;
+                    } else {
+                        previous_child->next_sibling = widget->next_sibling;
+                        widget->next_sibling = NULL;
+                        widget->parent->children_tail->next_sibling = widget;
+                        widget->parent->children_tail = widget;
+                    }
+                    treated = true;
+                }
+            }
+            break;
         }
             case ei_ev_mouse_move:
                 switch (toplevel->grab_event.grab_type) {
