@@ -32,7 +32,7 @@ size_t append_vector(vector *v, void *element) {
 
     // Different idx => move current_idx to next empty cell
     v->data[v->current_idx] = element;
-    uint32_t append_idx = v->current_idx;
+    size_t append_idx = v->current_idx;
     while (v->data[v->current_idx] != NULL && v->current_idx < v->last_idx) {
         v->current_idx++;
     }

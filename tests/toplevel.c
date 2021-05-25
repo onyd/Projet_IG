@@ -40,17 +40,17 @@ int main(int argc, char **argv) {
     ei_place(toplevel, NULL, NULL, NULL, &width, &height, NULL, NULL, NULL, NULL);
     /* Create, configure and place the frame on screen. */
     // text on the frame
-    char *text = "Toto";
+    char *text = "Tout va bien Yannick :)";
     ei_anchor_t text_anchor = ei_anc_center;
     frame = ei_widget_create("frame", toplevel, NULL, NULL);
-    ei_frame_configure(frame, &frame_size, &frame_color,
+    ei_frame_configure(frame, NULL, &frame_color,
                        &frame_border_width, &frame_relief, &text, NULL, NULL, &text_anchor,
                        NULL, NULL, NULL);
     float relative = 0;
-    float rel_size = 0.2;
+    float rel_size = 0.2f;
     int x = 5;
     int y = 5;
-    ei_place(frame, NULL, &x, &y, NULL, NULL, NULL, NULL, &rel_size, &rel_size);
+    ei_place(frame, NULL, &x, &y, NULL, NULL, NULL, NULL, NULL, NULL);
 
     ei_anchor_t text_anchor2 = ei_anc_center;
     ei_widget_t *frame2 = ei_widget_create("frame", toplevel, NULL, NULL);

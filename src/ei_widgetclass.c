@@ -52,4 +52,6 @@ ei_widgetclass_t *ei_widgetclass_from_name(ei_widgetclass_name_t name) {
     if (strcmp(name, "radiobutton") == 0) {
         return radiobutton_class;
     }
+
+    return NULL;
 }

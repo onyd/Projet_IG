@@ -43,6 +43,14 @@ typedef struct ei_linked_error_t {
 } ei_linked_error_t;
 
 /**
+ * @brief Linked list of float error
+ */
+typedef struct ei_linked_text_t {
+    char* text;
+    struct ei_linked_text_t *next;
+} ei_linked_text_t;
+
+/**
  * \brief	List structure for \ref ei_point_t
  */
 typedef struct ei_point_list_t {
@@ -72,6 +80,14 @@ typedef struct ei_error_list_t {
     ei_linked_error_t *tail;
 } ei_error_list_t;
 
+
+/**
+ * \brief	List structure for \ref char*
+ */
+typedef struct ei_text_list_t {
+    ei_linked_text_t *head;
+    ei_linked_text_t *tail;
+} ei_text_list_t;
 
 /**
  * \brief	Swap the variable content pointed by a and b

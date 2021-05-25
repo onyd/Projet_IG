@@ -8,19 +8,19 @@ ei_linked_point_t *rectangle(ei_rect_t *rect) {
 
 }
 
-ei_linked_point_t *arc(ei_point_t c, uint32_t r, float start_angle, float end_angle, uint32_t N) {
+ei_linked_point_t *arc(ei_point_t c, float r, float start_angle, float end_angle, uint32_t N) {
     float da = (end_angle - start_angle) / N;
 
     ei_linked_point_t *points = calloc(N + 1, sizeof(ei_linked_point_t));
     float angle = start_angle;
-    points[0].point.x = c.x + r * cos(angle * (pi / 180.0f));
-    points[0].point.y = c.y - r * sin(angle * (pi / 180.0f));
+    points[0].point.x = c.x + (int) (r * cosf(angle * (pi / 180.0f)));
+    points[0].point.y = c.y - (int) (r * sinf(angle * (pi / 180.0f)));
 
     uint32_t i;
     for (i = 1; i <= N; i++) {
         angle += da;
-        points[i].point.x = c.x + r * cos(angle * (pi / 180.0f));
-        points[i].point.y = c.y - r * sin(angle * (pi / 180.0f));
+        points[i].point.x = c.x + (int) (r * cosf(angle * (pi / 180.0f)));
+        points[i].point.y = c.y - (int) (r * sinf(angle * (pi / 180.0f)));
 
         points[i - 1].next = &points[i];
     }
@@ -47,7 +47,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
 
     if (dir <= 1) {
         // Top right first part
-        point1.x = top_left_x + button_width - radius;
+        point1.x = top_left_x + (int) (button_width - radius);
         point1.y = top_left_y + radius;
         current = arc(point1, radius, 45, 90, N);
         //Button1 is at top right
@@ -209,7 +209,7 @@ float vertical_line_intersection_rect(ei_point_t first, ei_point_t second, float
 
     float y = a * x + b;
     int int_y = (int) y;
-    *clipped = ei_point(x, int_y);
+    *clipped = ei_point((int) x, int_y);
 
     return y - (float) int_y;
 }
@@ -222,7 +222,7 @@ float horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, flo
 
     // Vertical
     if (x1 == x2) {
-        *clipped = ei_point(x1, y);
+        *clipped = ei_point((int) x1, (int)y);
         return 0;
     }
 
@@ -232,12 +232,12 @@ float horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, flo
 
     float x = (y - b) / a;
     int int_x = (int) x;
-    *clipped = ei_point(int_x, y);
+    *clipped = ei_point(int_x, (int)y);
 
     return x - (float) int_x;
 }
 
-float cross_product(ei_point_t v1, ei_point_t v2) {
+int cross_product(ei_point_t v1, ei_point_t v2) {
     return v1.x * v2.y - v1.y * v2.x;
 }
 

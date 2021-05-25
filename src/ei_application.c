@@ -51,7 +51,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     // root init
     set_root_widget(frame_allocfunc());
     get_root_widget()->widget.wclass = frame_class;
-    get_root_widget()->widget.wclass->setdefaultsfunc(get_root_widget());
+    get_root_widget()->widget.wclass->setdefaultsfunc(ei_app_root_widget());
     get_root_widget()->widget.requested_size = main_window_size;
     ei_rect_t *root_rect = malloc(sizeof(ei_rect_t));
     *root_rect = ei_rect(ei_point(0, 0), main_window_size);

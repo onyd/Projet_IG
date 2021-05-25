@@ -10,7 +10,7 @@
 #include "ei_draw.h"
 
 
-static const float pi = 3.14159265359;
+static const float pi = 3.14159265359f;
 
 typedef enum direction {
     both = 0,
@@ -19,9 +19,9 @@ typedef enum direction {
 } direction;
 
 // Draw helper
-ei_linked_point_t *arc(ei_point_t c, uint32_t r, float start_angle, float end_angle, uint32_t N);
+ei_linked_point_t *arc(ei_point_t c, float r, float start_angle, float end_angle, uint32_t N);
 
-ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t rayon, uint32_t N, enum direction dir);
+ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_t N, enum direction dir);
 
 
 // Geometry helper
@@ -33,7 +33,7 @@ float vertical_line_intersection_rect(ei_point_t first, ei_point_t second, float
 
 float horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, float y, ei_point_t *clipped);
 
-float cross_product(ei_point_t v1, ei_point_t v2);
+int cross_product(ei_point_t v1, ei_point_t v2);
 
 ei_bool_t is_left(ei_point_t p, ei_point_t p1, ei_point_t p2);
 

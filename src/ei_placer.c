@@ -19,7 +19,6 @@ void ei_place(struct ei_widget_t *widget,
               float *rel_height) {
     int used_width = (width != NULL) ? *width : widget->requested_size.width;
     int used_height = (height != NULL) ? *height : widget->requested_size.height;
-    ei_size_t used_size = ei_size(used_width, used_height);
     // Initialization of the placer_params
     if (widget->placer_params == NULL) {
         widget->placer_params = calloc(1, sizeof(ei_placer_params_t));
@@ -58,7 +57,7 @@ void ei_placer_run(ei_widget_t *widget) {
     if (widget->placer_params != NULL) {
         int x = widget->parent->content_rect->top_left.x;
         if (widget->placer_params->rx != NULL) {
-            x += (widget->placer_params->rx_data) * (widget->parent->content_rect->size.width);
+            x +=(int) (widget->placer_params->rx_data) * (widget->parent->content_rect->size.width);
         }
         if (widget->placer_params->x != NULL) {
             x += (widget->placer_params->x_data);
@@ -66,7 +65,7 @@ void ei_placer_run(ei_widget_t *widget) {
 
         int y = widget->parent->content_rect->top_left.y;
         if (widget->placer_params->ry != NULL) {
-            y += (widget->placer_params->ry_data) * (widget->parent->content_rect->size.height);
+            y += (int) (widget->placer_params->ry_data) * (widget->parent->content_rect->size.height);
         }
         if (widget->placer_params->y != NULL) {
             y += (widget->placer_params->y_data);
@@ -78,7 +77,7 @@ void ei_placer_run(ei_widget_t *widget) {
         } else {
             w = 0;
             if (widget->placer_params->rw != NULL) {
-                w += (widget->placer_params->rw_data) * (widget->parent->content_rect->size.width);
+                w += (int) (widget->placer_params->rw_data) * (widget->parent->content_rect->size.width);
             }
             if (widget->placer_params->w != NULL) {
                 w += (widget->placer_params->w_data);
@@ -91,7 +90,7 @@ void ei_placer_run(ei_widget_t *widget) {
         } else {
             h = 0;
             if (widget->placer_params->rh != NULL) {
-                h += (widget->placer_params->rh_data) * (widget->parent->content_rect->size.height);
+                h += (int) (widget->placer_params->rh_data) * (widget->parent->content_rect->size.height);
             }
             if (widget->placer_params->h != NULL) {
                 h += (widget->placer_params->h_data);

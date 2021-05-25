@@ -84,7 +84,7 @@ void ei_draw_polyline(ei_surface_t surface,
             swap(&sign_dx, &sign_dy);
             swap(&x2, &y2);
         }
-        int E = error * abs(dx);
+        int E = (int) (error * abs(dx));
 
         while (sign_dx * x < sign_dx * x2) {
             x += sign_dx;
@@ -167,7 +167,7 @@ void ei_draw_polygon(ei_surface_t surface,
             edge->x_ymax = p_max->point.x;
             edge->dx = dx;
             edge->dy = dy;
-            edge->E = error->error;
+            edge->E = (int) (error->error * abs(dx));
             edge->sign_dx = (dx > 0) ? 1 : -1;
             edge->next = TC[p_min->point.y - ymin];
             TC[p_min->point.y - ymin] = edge;
@@ -178,7 +178,7 @@ void ei_draw_polygon(ei_surface_t surface,
     }
 
     /* Fill polygon for every scanline */
-    uint32_t y = ymin;
+    int y = ymin;
     while (y < ymax) {
         uint32_t i = y - ymin;
 
@@ -199,7 +199,7 @@ void ei_draw_polygon(ei_surface_t surface,
             int x1 = current->x_ymin;
             current = current->next;
             int x2 = current->x_ymin;
-            for (uint32_t k = x1; k < x2; k++) {
+            for (int k = x1; k < x2; k++) {
                 //if (inside(ei_point(k, y), clipper)) {
                 pixels[k + size.width * y] = c;
                 //}
@@ -273,8 +273,8 @@ void ei_fill(ei_surface_t surface,
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, *color);
-    for (uint32_t y = 0; y < size.height; y++) {
-        for (uint32_t x = 0; x < size.width; x++) {
+    for (int y = 0; y < size.height; y++) {
+        for (int x = 0; x < size.width; x++) {
             if (inside(ei_point(x, y), clipper)) {
                 pixels[x + size.width * y] = c;
             }
