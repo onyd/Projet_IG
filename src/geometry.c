@@ -11,20 +11,24 @@ ei_linked_point_t *rectangle(ei_rect_t *rect) {
 ei_linked_point_t *arc(ei_point_t c, float r, float start_angle, float end_angle, uint32_t N) {
     float da = (end_angle - start_angle) / N;
 
-    ei_linked_point_t *points = calloc(N + 1, sizeof(ei_linked_point_t));
+    ei_linked_point_t *points = calloc(1, sizeof(ei_linked_point_t));
+    ei_linked_point_t *current = points;
+    ei_linked_point_t *previous = points;
     float angle = start_angle;
-    points[0].point.x = c.x + (int) (r * cosf(angle * (pi / 180.0f)));
-    points[0].point.y = c.y - (int) (r * sinf(angle * (pi / 180.0f)));
+    current->point.x = c.x + (int) (r * cosf(angle * (pi / 180.0f)));
+    current->point.y = c.y - (int) (r * sinf(angle * (pi / 180.0f)));
 
     uint32_t i;
     for (i = 1; i <= N; i++) {
+        current = calloc(1, sizeof(ei_linked_point_t));
         angle += da;
-        points[i].point.x = c.x + (int) (r * cosf(angle * (pi / 180.0f)));
-        points[i].point.y = c.y - (int) (r * sinf(angle * (pi / 180.0f)));
+        current->point.x = c.x + (int) (r * cosf(angle * (pi / 180.0f)));
+        current->point.y = c.y - (int) (r * sinf(angle * (pi / 180.0f)));
 
-        points[i - 1].next = &points[i];
+        previous->next = current;
+        previous = current;
     }
-    points[i - 1].next = NULL;
+    previous->next = NULL;
 
     return points;
 }

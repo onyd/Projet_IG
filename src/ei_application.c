@@ -37,7 +37,6 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     *clipping_window = ei_rect(ei_point(0, 0), main_window_size);
     set_clipper_window(clipping_window);
 
-    default_handle_func = malloc(sizeof(ei_default_handle_func_t));
     default_handle_func = &always_true;
 
     set_quit_request(false);
@@ -86,7 +85,7 @@ void ei_app_free(void) {
     //free the root
     free(ei_app_root_widget()->pick_color);
     ei_app_root_widget()->wclass->releasefunc(ei_app_root_widget());
-
+    free(ei_app_root_widget());
 
     free_vector(get_pick_vector());
     free_linked_rect(get_updated_rects()->head);
