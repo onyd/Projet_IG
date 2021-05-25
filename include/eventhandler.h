@@ -46,6 +46,15 @@ void close_toplevel_callback(ei_widget_t *widget,
                              ei_event_t *event,
                              void *user_param);
 
+/** @brief callback of the button of a radiobutton which make it checked
+ * @param the widget of the event
+ * @param the user_param
+ */
+void check_radiobutton_callback(ei_widget_t *widget,
+                                ei_event_t *event,
+                                void *user_param);
+
+
 void inverse_depth_widget_list(ei_widget_t *widget, struct ei_widget_list_t *result);
 
 #endif //PROJETC_IG_EVENTHANDLER_H
