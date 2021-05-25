@@ -2,6 +2,7 @@
 #include "vector.h"
 #include <stdlib.h>
 #include "stdio.h"
+#include "ei_widget.h"
 
 vector *create_vector(uint32_t size) {
     vector *v = calloc(1, sizeof(vector));
@@ -13,7 +14,9 @@ vector *create_vector(uint32_t size) {
 }
 
 void *get(vector *v, uint32_t i) {
-    return v->data[i];
+    ei_widget_t *tmp = (ei_widget_t *) v;
+    v = v->data[i];
+    return v;
 }
 
 uint32_t append_vector(vector *v, void *element) {

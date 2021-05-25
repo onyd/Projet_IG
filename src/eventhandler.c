@@ -34,7 +34,7 @@ void handle_event(ei_event_t *event) {
             set_mouse_pos(event->param.mouse.where);
         case ei_ev_mouse_buttondown :
         case ei_ev_mouse_buttonup:
-            if (active_widget != NULL) {
+            if (ei_event_get_active_widget() != NULL) {
                 if (active_widget->wclass->handlefunc(active_widget, event))
                     (*ei_event_get_default_handle_func())(event);
             } else {
@@ -76,9 +76,7 @@ void handle_event(ei_event_t *event) {
 void close_toplevel_callback(ei_widget_t *widget,
                              struct ei_event_t *event,
                              void *user_param) {
-    if (((ei_toplevel_t *) widget)->grab_event.grab_type == clicked){
         ei_widget_destroy(widget);
-    }
 }
 
 ei_bool_t always_true(ei_event_t *event) {

@@ -54,7 +54,6 @@ typedef enum {
     idle = 0,
     grabbed,
     resized,
-    clicked
 } grab_event_type;
 
 /**
