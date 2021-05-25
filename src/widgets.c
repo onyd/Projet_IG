@@ -22,6 +22,8 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
         ei_widget_t *tmp = current;
         current = current->next_sibling;
         tmp->wclass->releasefunc(tmp);
+        free(tmp->pick_color);
+        free(tmp);
     }
     if (ei_event_get_active_widget() == widget) {
         ei_event_set_active_widget(NULL);
@@ -104,6 +106,8 @@ void frame_releasefunc(ei_widget_t *widget) {
 void toplevel_releasefunc(ei_widget_t *widget) {
     ei_toplevel_t *to_release = (ei_toplevel_t *) widget;
     to_release->button->widget.wclass->releasefunc((ei_widget_t *) to_release->button);
+    free(to_release->button->widget.pick_color);
+    free(to_release->button);
 
     if (to_release->title != NULL) {
         free(to_release->title);

@@ -232,8 +232,9 @@ void ei_draw_polygon(ei_surface_t surface,
             current = current->next;
         }
     }
-
+    free_linked_error(errors.head);
     lae_free(TCA);
+    free(TC);
 }
 
 void ei_draw_text(ei_surface_t surface,

@@ -426,6 +426,7 @@ void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t 
 
     // East
     free_linked_point(input.head);
+    free_linked_error(input_errors.head);
     input.head = clipped->head;
     input_errors.head = errors->head;
     clipped->head = NULL;
@@ -462,6 +463,7 @@ void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t 
 
     // North
     free_linked_point(input.head);
+    free_linked_error(input_errors.head);
     input.head = clipped->head;
     input_errors.head = errors->head;
     clipped->head = NULL;
@@ -495,4 +497,6 @@ void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t 
     if (clipped->head != NULL) {
         append_linked_point(clipped->head->point, clipped);
     }
+    free_linked_point(input.head);
+    free_linked_error(input_errors.head);
 }
