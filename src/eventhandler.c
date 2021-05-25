@@ -2,6 +2,7 @@
 #include "ei_application.h"
 #include "eventhandler.h"
 #include "defaults.h"
+#include "geometry.h"
 
 ei_default_handle_func_t default_handle_func;
 ei_widget_t *active_widget = NULL;
@@ -56,7 +57,9 @@ void handle_event(ei_event_t *event) {
                     ei_toplevel_t *toplevel = toplevel_params->caller;
                     if (!inside(get_mouse_pos(), &toplevel->grab_event.param.minimize_square)) {
                         toplevel->grab_event.param.show_minimize_square = false;
-                        append_left_linked_rect(toplevel->widget.screen_location, get_updated_rects());
+                        ei_rect_t inter_rect;
+                        intersection_rect(get_clipper_window(), &(toplevel->widget.screen_location), &inter_rect);
+                        append_left_linked_rect(inter_rect, get_updated_rects());
                         free(user_params->data);
                         free(user_params);
                     }
@@ -70,10 +73,12 @@ void handle_event(ei_event_t *event) {
     }
 }
 
-void destroy_widget_callback(ei_widget_t *widget,
+void close_toplevel_callback(ei_widget_t *widget,
                              struct ei_event_t *event,
                              void *user_param) {
-    ei_widget_destroy(widget);
+    if (((ei_toplevel_t *) widget)->grab_event.grab_type == clicked){
+        ei_widget_destroy(widget);
+    }
 }
 
 ei_bool_t always_true(ei_event_t *event) {
