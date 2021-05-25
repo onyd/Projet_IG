@@ -144,11 +144,12 @@ void append_linked_point(ei_point_t p, ei_point_list_t *l) {
 
     if (l->head == NULL) {
         l->head = new;
+        l->tail = new;
         return;
     }
 
-    new->next = l->head;
-    l->head = new;
+    l->tail->next = new;
+    l->tail = new;
 }
 
 void free_linked_point(ei_linked_point_t *l) {
@@ -160,7 +161,7 @@ void free_linked_point(ei_linked_point_t *l) {
     }
 }
 
-void append_linked_rect(ei_rect_t rect, ei_rect_list_t *l) {
+void append_left_linked_rect(ei_rect_t rect, ei_rect_list_t *l) {
     ei_linked_rect_t *new = calloc(1, sizeof(ei_linked_rect_t));
     new->rect = rect;
 
@@ -183,7 +184,7 @@ void free_linked_rect(ei_linked_rect_t *l) {
     l = NULL;
 }
 
-void append_linked_widget(ei_widget_t *widget, ei_widget_list_t *l) {
+void append_left_linked_widget(ei_widget_t *widget, ei_widget_list_t *l) {
     ei_linked_widget_t *new = calloc(1, sizeof(ei_linked_widget_t));
     new->widget = widget;
 
@@ -212,11 +213,12 @@ void append_linked_error(float error, ei_error_list_t *l) {
 
     if (l->head == NULL) {
         l->head = new;
+        l->tail = new;
         return;
     }
 
-    new->next = l->head;
-    l->head = new;
+    l->tail->next = new;
+    l->tail = new;
 }
 
 void free_linked_error(ei_linked_error_t *l) {

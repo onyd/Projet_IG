@@ -485,7 +485,7 @@ void add_widget_updated_rects(ei_widget_t *widget, ei_rect_t rect) {
     ei_rect_t update_rect;
     union_rect(&rect, &(widget->screen_location), &update_rect);
     if (intersection_rect(&update_rect, get_clipper_window(), &update_rect)) {
-        append_linked_rect(update_rect, get_updated_rects());
+        append_left_linked_rect(update_rect, get_updated_rects());
     }
 }
 
@@ -519,7 +519,7 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
             break;
     }
     if (treated) {
-        append_linked_rect(widget->screen_location, get_updated_rects());
+        append_left_linked_rect(widget->screen_location, get_updated_rects());
     }
     return treated || false;
 }
@@ -682,7 +682,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
     if (treated) {
         ei_rect_t clipper;
         intersection_rect(&widget->screen_location, get_clipper_window(), &clipper);
-        append_linked_rect(clipper, get_updated_rects());
+        append_left_linked_rect(clipper, get_updated_rects());
     }
 
     // Button has to receive event
@@ -697,7 +697,7 @@ void ei_radiobutton_configure(ei_widget_t *widget,
                               ei_size_t *requested_size,
                               ei_color_t *background_color,
                               ei_color_t *button_color,
-                              ei_color_t *selectioned_color,
+                              ei_color_t *selected_color,
                               char **text,
                               ei_font_t *text_font,
                               ei_color_t *text_color,
@@ -706,7 +706,7 @@ void ei_radiobutton_configure(ei_widget_t *widget,
     widget->requested_size = (requested_size != NULL) ? *requested_size : widget->requested_size;
     radiobutton->background_color = (background_color != NULL) ? *background_color : radiobutton->background_color;
     radiobutton->button_color = (button_color != NULL) ? *button_color : radiobutton->button_color;
-    radiobutton->selectioned_color = (selectioned_color != NULL) ? *selectioned_color : radiobutton->selectioned_color;
+    radiobutton->selected_color = (selected_color != NULL) ? *selected_color : radiobutton->selected_color;
     radiobutton->text_font = (text_font != NULL) ? *text_font : radiobutton->text_font;
     radiobutton->text_color = (text_color != NULL) ? *text_color : radiobutton->text_color;
     radiobutton->text_anchor = (text_anchor != NULL) ? *text_anchor : radiobutton->text_anchor;

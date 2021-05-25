@@ -26,7 +26,7 @@ static ei_size_t _default_size;
 static ei_relief_t _default_relief;
 static ei_anchor_t _default_anchor;
 static ei_color_t _default_button_color;
-static ei_color_t _default_selectioned_color;
+static ei_color_t _default_selected_color;
 
 // Getter
 /**

@@ -18,14 +18,17 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     button_class = malloc(sizeof(ei_widgetclass_t));
     frame_class = malloc(sizeof(ei_widgetclass_t));
     toplevel_class = malloc(sizeof(ei_widgetclass_t));
+    radiobutton_class = malloc(sizeof(ei_widgetclass_t));
 
     strcpy(button_class->name, "button");
     strcpy(frame_class->name, "frame");
     strcpy(toplevel_class->name, "toplevel");
+    strcpy(radiobutton_class->name, "radio_button");
 
     ei_widgetclass_register(button_class);
     ei_widgetclass_register(frame_class);
     ei_widgetclass_register(toplevel_class);
+    ei_widgetclass_register(radiobutton_class);
 
     // Defaults init
     ei_default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, ei_font_default_size);
@@ -43,7 +46,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     set_pick_vector(create_vector(1));
 
     set_updated_rects((ei_rect_list_t) {NULL});
-    append_linked_rect(*get_clipper_window(), get_updated_rects());
+    append_left_linked_rect(*get_clipper_window(), get_updated_rects());
 
     set_mouse_pos(ei_point_zero());
     set_prev_mouse_pos(ei_point_zero());
@@ -119,7 +122,7 @@ void ei_app_run(void) {
 
         free_linked_rect(get_updated_rects()->head);
         get_updated_rects()->head = NULL;
-        append_linked_rect(ei_rect_zero(), get_updated_rects());
+        append_left_linked_rect(ei_rect_zero(), get_updated_rects());
 
         // Event handling
         hw_event_wait_next(&event);

@@ -172,7 +172,7 @@ void draw_blank_rect(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_
     ei_draw_polyline(surface, first_point, color, clipper);
 }
 
-uint8_t cohen_sutherland_code(ei_point_t p, ei_rect_t *clipper) {
+uint8_t cohen_sutherland_code(ei_point_t p, const ei_rect_t *clipper) {
     uint8_t result = 0;
 
     result |= (p.x < clipper->top_left.x);
@@ -207,8 +207,8 @@ enum clipping_type get_clipping_type(uint8_t code) {
 }
 
 ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipped1, ei_point_t *clipped2, float *error,
-                                 ei_rect_t *clipper) {
-    *error += 0;
+                                 const ei_rect_t *clipper) {
+    *error = 0;
     if (clipper == NULL) {
         *clipped1 = p1;
         *clipped2 = p2;
@@ -232,61 +232,58 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
     int y_min = clipper->top_left.y;
     int y_max = clipper->top_left.y + clipper->size.height;
 
-    float e = 0;
     switch (get_clipping_type(c1)) {
         case center_reject:
             *clipped1 = p1;
             break;
         case north_east_reject:
             // Try horizontal intersection_rects
-            e = horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
+            *error = horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
             if (clipped1->x < x_min || clipped1->x > x_max) {
-                e = vertical_line_intersection_rect(p1, p2, x_max, clipped1);
+                *error = vertical_line_intersection_rect(p1, p2, x_max, clipped1);
             }
-            *error += e;
             return true; // Corner implies other point is in the clipper
         case north_west_reject:
             // Try horizontal intersection_rects
-            e = horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
+            *error = horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
             if (clipped1->x < x_min || clipped1->x > x_max) {
-                e = vertical_line_intersection_rect(p1, p2, x_min, clipped1);
+                *error = vertical_line_intersection_rect(p1, p2, x_min, clipped1);
             }
             return true; // Corner implies other point is in the clipper
         case south_east_reject:
             // Try horizontal intersection_rects
-            e = horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
+            *error = horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
             if (clipped1->x < x_min || clipped1->x > x_max) {
-                e = vertical_line_intersection_rect(p1, p2, x_max, clipped1);
+                *error = vertical_line_intersection_rect(p1, p2, x_max, clipped1);
             }
             return true; // Corner implies other point is in the clipper
         case south_west_reject:
             // Try horizontal intersection_rects
-            e = horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
+            *error = horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
             if (clipped1->x < x_min || clipped1->x > x_max) {
-                e = vertical_line_intersection_rect(p1, p2, x_min, clipped1);
+                *error = vertical_line_intersection_rect(p1, p2, x_min, clipped1);
             }
             return true; // Corner implies other point is in the clipper
         case north_reject:
-            *error += horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
+            *error = horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
         case south_reject:
-            *error += horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
+            *error = horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
             break;
         case east_reject:
-            *error += vertical_line_intersection_rect(p1, p2, x_max, clipped1);
+            *error = vertical_line_intersection_rect(p1, p2, x_max, clipped1);
             break;
         case west_reject:
-            *error += vertical_line_intersection_rect(p1, p2, x_min, clipped1);
+            *error = vertical_line_intersection_rect(p1, p2, x_min, clipped1);
             break;
     }
-    *error += e;
 
     switch (get_clipping_type(c2)) {
         case center_reject:
@@ -294,59 +291,58 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
             break;
         case north_east_reject:
             // Try horizontal intersection_rects
-            e = horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
+            horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
             if (clipped2->x < x_min || clipped2->x > x_max) {
-                e = vertical_line_intersection_rect(p1, p2, x_max, clipped2);
+                vertical_line_intersection_rect(p1, p2, x_max, clipped2);
             }
             break;
         case north_west_reject:
             // Try horizontal intersection_rects
-            e = horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
+            horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
             if (clipped2->x < x_min || clipped2->x > x_max) {
-                e = vertical_line_intersection_rect(p1, p2, x_min, clipped2);
+                vertical_line_intersection_rect(p1, p2, x_min, clipped2);
             }
             break;
         case south_east_reject:
             // Try horizontal intersection_rects
-            e = horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
+            horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
             if (clipped2->x < x_min || clipped2->x > x_max) {
-                e = vertical_line_intersection_rect(p1, p2, x_min, clipped2);
+                vertical_line_intersection_rect(p1, p2, x_min, clipped2);
             }
             break;
         case south_west_reject:
             // Try horizontal intersection_rects
-            e = horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
+            horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
             if (clipped2->x < x_min || clipped2->x > x_max) {
-                e = vertical_line_intersection_rect(p1, p2, x_max, clipped2);
+                vertical_line_intersection_rect(p1, p2, x_max, clipped2);
             }
             break;
         case north_reject:
-            *error += horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
+            horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
         case south_reject:
-            *error += horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
+            horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
             break;
         case east_reject:
-            *error += vertical_line_intersection_rect(p1, p2, x_max, clipped2);
+            vertical_line_intersection_rect(p1, p2, x_max, clipped2);
             break;
         case west_reject:
-            *error += vertical_line_intersection_rect(p1, p2, x_min, clipped2);
+            vertical_line_intersection_rect(p1, p2, x_min, clipped2);
             break;
     }
 
-    *error += e;
     return true;
 }
 
-void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipped,
-                               ei_error_list_t *errors, ei_rect_t *clipper) {
+void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t *clipped,
+                               ei_error_list_t *errors, const ei_rect_t *clipper) {
     // Initialization
     ei_point_list_t input = {NULL};
     ei_error_list_t input_errors = {NULL};
@@ -358,13 +354,13 @@ void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipp
     ei_point_t botright = ei_point(clipper->top_left.x + clipper->size.width,
                                    clipper->top_left.y + clipper->size.height);
     // West
-    input.head = clipped;
+    input.head = clipped->head;
     clipped->head = NULL;
     errors->head = NULL;
 
     // Go through all polygon's edges
     ei_linked_point_t *previous = input.head;
-    ei_linked_point_t *current = previous->next;
+    ei_linked_point_t *current = (previous != NULL) ? previous->next : NULL;
     while (current != NULL) {
         ei_point_t intersection;
         float e = vertical_line_intersection_rect(previous->point, current->point, topleft.x, &intersection);
@@ -378,15 +374,18 @@ void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipp
         } else if (!is_left(previous->point, topleft, botleft)) {
             append_linked_point(intersection, clipped);
             append_linked_error(e, errors);
-
         }
 
         previous = current;
         current = current->next;
     }
 
+    if (clipped->head != NULL) {
+        append_linked_point(clipped->head->point, clipped);
+    }
+
     // South
-    free_linked_point(input.head);
+    //free_linked_point(input.head); don't free args points
     input.head = clipped->head;
     input_errors.head = errors->head;
     clipped->head = NULL;
@@ -394,12 +393,12 @@ void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipp
 
     // Go through all polygon's edges
     previous = input.head;
-    current = previous->next;
+    current = (previous != NULL) ? previous->next : NULL;
     ei_linked_error_t *last_error = input_errors.head;
     while (current != NULL) {
         ei_point_t intersection;
         float e = horizontal_line_intersection_rect(previous->point, current->point, botleft.y,
-                                          &intersection);
+                                                    &intersection);
         if (!is_left(current->point, botleft, botright)) {
             if (is_left(previous->point, botleft, botright)) {
                 append_linked_point(intersection, clipped);
@@ -417,6 +416,10 @@ void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipp
         current = current->next;
     }
 
+    if (clipped->head != NULL) {
+        append_linked_point(clipped->head->point, clipped);
+    }
+
     // East
     free_linked_point(input.head);
     input.head = clipped->head;
@@ -426,12 +429,12 @@ void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipp
 
     // Go through all polygon's edges
     previous = input.head;
-    current = previous->next;
+    current = (previous != NULL) ? previous->next : NULL;
     last_error = input_errors.head;
     while (current != NULL) {
         ei_point_t intersection;
         float e = vertical_line_intersection_rect(previous->point, current->point, topright.x,
-                                        &intersection);
+                                                  &intersection);
         if (!is_left(current->point, botright, topright)) {
             if (is_left(previous->point, botright, topright)) {
                 append_linked_point(intersection, clipped);
@@ -449,6 +452,10 @@ void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipp
         current = current->next;
     }
 
+    if (clipped->head != NULL) {
+        append_linked_point(clipped->head->point, clipped);
+    }
+
     // North
     free_linked_point(input.head);
     input.head = clipped->head;
@@ -458,20 +465,20 @@ void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipp
 
     // Go through all polygon's edges
     previous = input.head;
-    current = previous->next;
+    current = (previous != NULL) ? previous->next : NULL;
     last_error = input_errors.head;
     while (current != NULL) {
         ei_point_t intersection;
         float e = horizontal_line_intersection_rect(previous->point, current->point, topleft.y,
-                                          &intersection);
-        if (!is_left(current->point, botright, topleft)) {
-            if (is_left(previous->point, botright, topleft)) {
+                                                    &intersection);
+        if (!is_left(current->point, topright, topleft)) {
+            if (is_left(previous->point, topright, topleft)) {
                 append_linked_point(intersection, clipped);
                 append_linked_error(e + last_error->error, errors);
             }
             append_linked_point(current->point, clipped);
             append_linked_error(last_error->error, errors);
-        } else if (!is_left(previous->point, botright, topleft)) {
+        } else if (!is_left(previous->point, topright, topleft)) {
             append_linked_point(intersection, clipped);
             append_linked_error(e + last_error->error, errors);
         }
@@ -479,5 +486,9 @@ void polygon_analytic_clipping(ei_linked_point_t *points, ei_point_list_t *clipp
         last_error = last_error->next;
         previous = current;
         current = current->next;
+    }
+
+    if (clipped->head != NULL) {
+        append_linked_point(clipped->head->point, clipped);
     }
 }

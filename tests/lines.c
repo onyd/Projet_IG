@@ -71,8 +71,7 @@ void test_octogone(ei_surface_t surface, ei_color_t color, ei_rect_t *clipper) {
     ei_draw_polyline(surface, pts, color, clipper);
 }
 
-void test_polygone(ei_surface_t surface, ei_rect_t *clipper) {
-    ei_color_t color = {50, 60, 100, 255};
+void test_polygone(ei_surface_t surface, ei_color_t color, ei_rect_t *clipper) {
     ei_linked_point_t pts[9];
     int i, xdiff, ydiff;
 
@@ -263,7 +262,7 @@ int main(int argc, char **argv) {
     clipper_test.top_left.x = 300;
     clipper_test.top_left.y = 0;
     clipper_test.size.width = 200;
-    clipper_test.size.height = 300;
+    clipper_test.size.height = 400;
 
 //	ei_rect_t		clipper		= ei_rect(ei_point(200, 150), ei_size(400, 300));
 //	clipper_ptr		= &clipper;
@@ -278,14 +277,14 @@ int main(int argc, char **argv) {
     ei_fill(main_window, &white, clipper_ptr);
     /* Draw polylines and plygon. */
     test_rect(main_window, &clipper_test);
-    test_line(main_window, &clipper_test);
+//    test_line(main_window, &clipper_test);
 
     test_octogone(main_window, (ei_color_t) {255, 0, 0, 255}, clipper_ptr);
     test_octogone(main_window, (ei_color_t) {50, 60, 100, 255}, &clipper_test);
 //	    test_square	(main_window, clipper_ptr);
 //	    test_dot	(main_window, clipper_ptr);
-//      test_polygone(main_window, clipper_ptr);
-//      test_polygone(main_window, &clipper_test);
+//    test_polygone(main_window, (ei_color_t) {255, 0, 0, 255}, clipper_ptr);
+//    test_polygone(main_window, (ei_color_t) {50, 60, 100, 255}, &clipper_test);
 //      test_random_polygon(main_window, 10, clipper_ptr);
 
     /* Rounded polygon */
