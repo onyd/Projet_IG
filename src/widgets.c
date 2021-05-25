@@ -22,6 +22,8 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
         ei_widget_t *tmp = current;
         current = current->next_sibling;
         tmp->wclass->releasefunc(tmp);
+        free(tmp->pick_color);
+        free(tmp);
     }
     if (ei_event_get_active_widget() == widget) {
         ei_event_set_active_widget(NULL);
@@ -104,6 +106,8 @@ void frame_releasefunc(ei_widget_t *widget) {
 void toplevel_releasefunc(ei_widget_t *widget) {
     ei_toplevel_t *to_release = (ei_toplevel_t *) widget;
     to_release->button->widget.wclass->releasefunc((ei_widget_t *) to_release->button);
+    free(to_release->button->widget.pick_color);
+    free(to_release->button);
 
     if (to_release->title != NULL) {
         free(to_release->title);
@@ -351,11 +355,12 @@ void radiobutton_drawfunc(ei_widget_t *widget,
 
 /* setdefaultsfunc */
 void button_setdefaultsfunc(ei_widget_t *widget) {
+
     ei_button_configure(widget,
                         get_default_size(),
                         get_default_color(),
-                        &k_default_button_border_width,
-                        &k_default_button_corner_radius,
+                        get_toplevel_default_border_width(),
+                        get_default_button_corner_radius(),
                         get_default_relief(),
                         NULL,
                         &ei_default_font,
@@ -370,11 +375,12 @@ void button_setdefaultsfunc(ei_widget_t *widget) {
 }
 
 void frame_setdefaultsfunc(ei_widget_t *widget) {
+    ei_relief_t relief = ei_relief_none;
     ei_frame_configure(widget,
                        get_default_size(),
                        get_default_color(),
-                       &k_default_button_border_width,
-                       ei_relief_none,
+                       get_default_button_border_width(),
+                       &relief,
                        NULL,
                        &ei_default_font,
                        get_default_text_color(),

@@ -17,16 +17,16 @@ static ei_rect_t *_clipping_window;
 static bool _quit_request;
 
 // Default values
-static ei_size_t _toplevel_default_size;
-static ei_size_t _toplevel_default_min_size;
-static int _toplevel_default_border_width;
-static ei_color_t _default_color;
-static ei_color_t _default_text_color;
-static ei_size_t _default_size;
-static ei_relief_t _default_relief;
-static ei_anchor_t _default_anchor;
-static ei_color_t _default_button_color;
-static ei_color_t _default_selected_color;
+static const ei_size_t _toplevel_default_size;
+static const ei_size_t _toplevel_default_min_size;
+static const int _toplevel_default_border_width;
+static const ei_color_t _default_color;
+static const ei_color_t _default_text_color;
+static const ei_size_t _default_size;
+static const ei_relief_t _default_relief;
+static const ei_anchor_t _default_anchor;
+static const ei_color_t _default_button_color;
+static const ei_color_t _default_selected_color;
 
 // Getter
 /**
@@ -123,6 +123,18 @@ ei_color_t *get_default_button_color();
  * @brief Return the default selected color for ei_radiobutton_t
  */
 ei_color_t *get_default_selected_color();
+
+/**
+ * @brief Return the default border width for ei_button_t
+ */
+int *get_default_button_border_width();
+
+
+/**
+ * @brief Return the default border width for ei_button_t
+ */
+int *get_default_button_corner_radius();
+
 
 // Setter
 /**

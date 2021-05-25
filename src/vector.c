@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "stdio.h"
 
-vector *create_vector(size_t size) {
+vector *create_vector(uint32_t size) {
     vector *v = calloc(1, sizeof(vector));
     v->data = calloc(size, sizeof(void *));
     v->last_idx = 0;
@@ -12,11 +12,11 @@ vector *create_vector(size_t size) {
     return v;
 }
 
-void *get(vector *v, size_t i) {
+void *get(vector *v, uint32_t i) {
     return v->data[i];
 }
 
-size_t append_vector(vector *v, void *element) {
+uint32_t append_vector(vector *v, void *element) {
     // Not enough space, up-size the vector
     if (v->last_idx == v->size) {
         v->size *= 2;
@@ -32,7 +32,7 @@ size_t append_vector(vector *v, void *element) {
 
     // Different idx => move current_idx to next empty cell
     v->data[v->current_idx] = element;
-    size_t append_idx = v->current_idx;
+    uint32_t append_idx = v->current_idx;
     while (v->data[v->current_idx] != NULL && v->current_idx < v->last_idx) {
         v->current_idx++;
     }
@@ -40,7 +40,7 @@ size_t append_vector(vector *v, void *element) {
     return append_idx;
 }
 
-size_t remove_vector(vector *v, void *element) {
+uint32_t remove_vector(vector *v, void *element) {
     for (uint32_t i = 0; i < v->size; i++) {
         if (v->data[i] == element) {
             v->data[i] = NULL;
@@ -83,7 +83,7 @@ void copy(vector *a, vector *b) {
     }
 }
 
-void clear(vector *v, size_t *size) {
+void clear(vector *v, uint32_t *size) {
     if (size != NULL) {
         resize(v, *size);
     }
@@ -95,7 +95,7 @@ void clear(vector *v, size_t *size) {
     v->size = *size;
 }
 
-void resize(vector *v, size_t size) {
+void resize(vector *v, uint32_t size) {
     v->data = realloc(v->data, size * sizeof(void *));
     v->size = size;
 }

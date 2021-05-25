@@ -121,7 +121,7 @@ void ei_draw_polygon(ei_surface_t surface,
     ei_point_list_t clipped;
     ei_error_list_t errors;
     if (clipper == NULL) {
-        clipped.head = first_point;
+        clipped.head = (ei_linked_point_t *) first_point;
     } else {
         polygon_analytic_clipping(first_point, &clipped, &errors, clipper);
         if (clipped.head == NULL) {
@@ -232,8 +232,9 @@ void ei_draw_polygon(ei_surface_t surface,
             current = current->next;
         }
     }
-
+    free_linked_error(errors.head);
     lae_free(TCA);
+    free(TC);
 }
 
 void ei_draw_text(ei_surface_t surface,

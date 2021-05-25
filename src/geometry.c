@@ -4,12 +4,9 @@
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
-ei_linked_point_t *rectangle(ei_rect_t *rect) {
-
-}
 
 ei_linked_point_t *arc(ei_point_t c, float r, float start_angle, float end_angle, uint32_t N) {
-    float da = (end_angle - start_angle) / N;
+    float da = (end_angle - start_angle) / (float) N;
 
     ei_linked_point_t *points = calloc(N + 1, sizeof(ei_linked_point_t));
     float angle = start_angle;
@@ -30,7 +27,7 @@ ei_linked_point_t *arc(ei_point_t c, float r, float start_angle, float end_angle
 }
 
 
-ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_t N, direction dir) {
+ei_linked_point_t *rounded_frame(ei_rect_t button_rect, int radius, uint32_t N, direction dir) {
     // if dir = both, generate all the boutton, if dir = up generate the top and dir = down the bottom
     int button_width = button_rect.size.width;
     int button_height = button_rect.size.height;
@@ -44,12 +41,12 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
     ei_linked_point_t *button2;
     ei_linked_point_t *end = malloc(sizeof(ei_linked_point_t));
     end->next = NULL;
-
+    float radius_f = (float) radius;
     if (dir <= 1) {
         // Top right first part
         point1.x = top_left_x + (int) (button_width - radius);
         point1.y = top_left_y + radius;
-        current = arc(point1, radius, 45, 90, N);
+        current = arc(point1, radius_f, 45, 90, N);
         //Button1 is at top right
         button1 = current;
         previous = current;
@@ -62,7 +59,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         // Top left
         point1.x = top_left_x + radius;
         point1.y = top_left_y + radius;
-        current = arc(point1, radius, 90, 180, N);
+        current = arc(point1, radius_f, 90, 180, N);
         previous->next = current;
 
         // Find last arc point
@@ -73,7 +70,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         // Bot left first part
         point1.x = top_left_x + radius;
         point1.y = top_left_y + button_height - radius;
-        current = arc(point1, radius, 180, 225, N);
+        current = arc(point1, radius_f, 180, 225, N);
         previous->next = current;
         while (previous->next != NULL) {
             previous = previous->next;
@@ -86,7 +83,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         // Bot left second part
         point1.x = top_left_x + radius;
         point1.y = top_left_y + button_height - radius;
-        current = arc(point1, radius, 225, 270, N);
+        current = arc(point1, radius_f, 225, 270, N);
         // If we have to build the whole button, we use previous values
         if (dir == 0) {
             button2->next = current;
@@ -102,7 +99,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         // Bot right
         point1.x = top_left_x + button_width - radius;
         point1.y = top_left_y + button_height - radius;
-        current = arc(point1, radius, 270, 360, N);
+        current = arc(point1, radius_f, 270, 360, N);
         previous->next = current;
         while (previous->next != NULL) {
             previous = previous->next;
@@ -111,7 +108,7 @@ ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_
         // Top right
         point1.x = top_left_x + button_width - radius;
         point1.y = top_left_y + radius;
-        current = arc(point1, radius, 0, 45, N);
+        current = arc(point1, radius_f, 0, 45, N);
         previous->next = current;
         while (previous->next != NULL) {
             previous = previous->next;
@@ -222,7 +219,7 @@ float horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, flo
 
     // Vertical
     if (x1 == x2) {
-        *clipped = ei_point((int) x1, (int)y);
+        *clipped = ei_point((int) x1, (int) y);
         return 0;
     }
 
@@ -232,7 +229,7 @@ float horizontal_line_intersection_rect(ei_point_t first, ei_point_t second, flo
 
     float x = (y - b) / a;
     int int_x = (int) x;
-    *clipped = ei_point(int_x, (int)y);
+    *clipped = ei_point(int_x, (int) y);
 
     return x - (float) int_x;
 }
