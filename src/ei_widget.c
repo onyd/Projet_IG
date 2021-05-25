@@ -40,7 +40,9 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
 
 void ei_widget_destroy(ei_widget_t *widget) {
     ei_widget_destroy_rec(widget);
-    append_left_linked_rect(widget->screen_location, get_updated_rects());
+    ei_rect_t inter_rect;
+    intersection_rect(get_clipper_window(), &(widget->screen_location), &inter_rect);
+    append_left_linked_rect(inter_rect, get_updated_rects());
     if (widget->destructor != NULL) {
         widget->destructor(widget);
     }
@@ -231,7 +233,7 @@ void ei_toplevel_configure(ei_widget_t *widget,
     ei_size_t size = ei_size(20, 20);
     int corner_size = 10;
     ei_color_t color_button = {200, 0, 0, 255};
-    ei_callback_t close_callback = destroy_widget_callback;
+    ei_callback_t close_callback = close_toplevel_callback;
     ei_button_configure((ei_widget_t *) toplevel->button, &size, &color_button, &button_width,
                         &corner_size, NULL, NULL, NULL, NULL,
                         NULL, NULL, NULL, NULL, &close_callback, NULL);

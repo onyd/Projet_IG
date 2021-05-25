@@ -21,7 +21,7 @@ typedef enum direction {
 // Draw helper
 ei_linked_point_t *arc(ei_point_t c, float r, float start_angle, float end_angle, uint32_t N);
 
-ei_linked_point_t *rounded_frame(ei_rect_t button_rect, uint32_t radius, uint32_t N, enum direction dir);
+ei_linked_point_t *rounded_frame(ei_rect_t button_rect, int radius, uint32_t N, enum direction dir);
 
 
 // Geometry helper

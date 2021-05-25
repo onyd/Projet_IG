@@ -42,7 +42,7 @@ ei_bool_t always_true(ei_event_t *event);
  * @param the widget of the event
  * @param the user_param
  */
-void destroy_widget_callback(ei_widget_t *widget,
+void close_toplevel_callback(ei_widget_t *widget,
                              ei_event_t *event,
                              void *user_param);
 

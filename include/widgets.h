@@ -53,7 +53,8 @@ typedef struct ei_frame_t {
 typedef enum {
     idle = 0,
     grabbed,
-    resized
+    resized,
+    clicked
 } grab_event_type;
 
 /**

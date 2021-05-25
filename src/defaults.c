@@ -12,18 +12,18 @@ static ei_rect_t *_clipping_window;
 static bool _quit_request = true;
 
 // Default values
-static ei_size_t _toplevel_default_size = {320, 240};
-static ei_size_t _toplevel_default_min_size = {160, 120};
-static int _toplevel_default_border_width = 4;
+static const ei_size_t _toplevel_default_size = {320, 240};
+static const ei_size_t _toplevel_default_min_size = {160, 120};
+static const int _toplevel_default_border_width = 4;
 
-static ei_color_t _default_color = {100, 100, 100, 255};
-static ei_color_t _default_text_color = {0, 0, 0, 255};
-static ei_color_t _default_button_color = {200, 200, 200, 255};
-static ei_color_t _default_selected_color = {255, 0, 0, 255};
+static const ei_color_t _default_color = {100, 100, 100, 255};
+static const ei_color_t _default_text_color = {0, 0, 0, 255};
+static const ei_color_t _default_button_color = {200, 200, 200, 255};
+static const ei_color_t _default_selected_color = {255, 0, 0, 255};
 
-static ei_size_t _default_size = {100, 100};
-static ei_relief_t _default_relief = ei_relief_raised;
-static ei_anchor_t _default_anchor = ei_anc_center;
+static const ei_size_t _default_size = {100, 100};
+static const ei_relief_t _default_relief = ei_relief_raised;
+static const ei_anchor_t _default_anchor = ei_anc_center;
 
 // Getter
 ei_surface_t get_main_window() {
@@ -100,6 +100,15 @@ ei_color_t *get_default_button_color() {
 
 ei_color_t *get_default_selected_color() {
     return &_default_selected_color;
+}
+
+int *get_default_button_border_width() {
+    return &k_default_button_border_width;
+}
+
+
+int *get_default_button_corner_radius() {
+    return &k_default_button_corner_radius;
 }
 
 // Setter
