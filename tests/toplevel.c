@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
     *min_size = &toplevel_size_3;
     ei_toplevel_configure(toplevel_3, &toplevel_size_3, NULL,
                           NULL, NULL, NULL, NULL, min_size);
-    ei_place(toplevel_3, NULL, NULL, NULL, NULL, NULL, &rel_3, &rel_3, &rel_size_3, &rel_size_3);
+    ei_place(toplevel_3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &rel_size_3, &rel_size_3);
     /* Run the application's main loop. */
     ei_app_run();
 
