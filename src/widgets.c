@@ -355,11 +355,12 @@ void radiobutton_drawfunc(ei_widget_t *widget,
 
 /* setdefaultsfunc */
 void button_setdefaultsfunc(ei_widget_t *widget) {
+
     ei_button_configure(widget,
                         get_default_size(),
                         get_default_color(),
-                        &k_default_button_border_width,
-                        &k_default_button_corner_radius,
+                        get_toplevel_default_border_width(),
+                        get_default_button_corner_radius(),
                         get_default_relief(),
                         NULL,
                         &ei_default_font,
@@ -374,11 +375,12 @@ void button_setdefaultsfunc(ei_widget_t *widget) {
 }
 
 void frame_setdefaultsfunc(ei_widget_t *widget) {
+    ei_relief_t relief = ei_relief_none;
     ei_frame_configure(widget,
                        get_default_size(),
                        get_default_color(),
-                       &k_default_button_border_width,
-                       ei_relief_none,
+                       get_default_button_border_width(),
+                       &relief,
                        NULL,
                        &ei_default_font,
                        get_default_text_color(),

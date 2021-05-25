@@ -350,7 +350,7 @@ void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t 
     // Initialization
     ei_point_list_t input = {NULL};
     ei_error_list_t input_errors = {NULL};
-    clipped->head = points;
+    clipped->head = (ei_linked_point_t *) points;
 
     ei_point_t topleft = clipper->top_left;
     ei_point_t topright = ei_point(clipper->top_left.x + clipper->size.width, clipper->top_left.y);
