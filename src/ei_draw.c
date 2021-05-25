@@ -232,6 +232,7 @@ void ei_draw_polygon(ei_surface_t surface,
             current = current->next;
         }
     }
+    free_linked_point(clipped.head);
     free_linked_error(errors.head);
     lae_free(TCA);
     free(TC);

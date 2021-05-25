@@ -168,9 +168,10 @@ void button_drawfunc(ei_widget_t *widget,
     ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
     ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
 
-    free(top);
-    free(bot);
-    free(points_button);
+    //Free all the points
+    free_linked_point(top);
+    free_linked_point(bot);
+    free_linked_point(points_button);
 
     // Text eventually inside the button
     if (button->text != NULL) {
