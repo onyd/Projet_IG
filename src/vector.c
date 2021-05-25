@@ -14,9 +14,7 @@ vector *create_vector(uint32_t size) {
 }
 
 void *get(vector *v, uint32_t i) {
-    ei_widget_t *tmp = (ei_widget_t *) v;
-    v = v->data[i];
-    return v;
+    return v->data[i];
 }
 
 uint32_t append_vector(vector *v, void *element) {

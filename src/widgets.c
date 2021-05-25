@@ -22,8 +22,6 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
         ei_widget_t *tmp = current;
         current = current->next_sibling;
         tmp->wclass->releasefunc(tmp);
-        free(tmp->pick_color);
-        free(tmp);
     }
     if (ei_event_get_active_widget() == widget) {
         ei_event_set_active_widget(NULL);
@@ -31,50 +29,53 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
 }
 
 ei_widget_t *search_for_toplevel(ei_widget_t *widget) {
-    ei_widget_t *current = widget;
-    ei_widget_t *first_top_level = widget;
+    ei_widget_t *current = widget->parent;
     ei_widget_t *root_widget = ei_app_root_widget();
-    while (current != root_widget) {
-        if (!is_toplevel(current)) {
-            first_top_level = current;
-        }
+    while (current != root_widget && !is_toplevel(widget)) {
         current = current->parent;
     }
-    first_top_level = (!is_toplevel(first_top_level)) ? first_top_level : NULL;
-    return first_top_level;
+    current = (current != root_widget) ? current : NULL;
+    return current;
 }
 
 /* allocfunc */
+ei_widget_t *widget_allocfunc() {
+    ei_widget_t *widget = calloc(1, sizeof(ei_widget_t));
+    return widget;
+}
+
 ei_widget_t *button_allocfunc() {
-    ei_widget_t *widget = calloc(1, sizeof(ei_button_t));
+    ei_widget_t *widget = (ei_button_t *) calloc(1, sizeof(ei_button_t));
     ei_button_t *button = (ei_button_t *) widget;
     button->callback = NULL;
     return widget;
 }
 
 ei_widget_t *frame_allocfunc() {
-    ei_widget_t *widget = calloc(1, sizeof(ei_frame_t));
+    ei_widget_t *widget = (ei_frame_t *) calloc(1, sizeof(ei_frame_t));
+    ei_frame_t *frame = (ei_frame_t *) widget;
     return widget;
 }
 
 ei_widget_t *toplevel_allocfunc() {
-    ei_widget_t *widget = calloc(1, sizeof(ei_toplevel_t));
+    ei_widget_t *widget = (ei_toplevel_t *) calloc(1, sizeof(ei_toplevel_t));
     ei_toplevel_t *toplevel = (ei_toplevel_t *) widget;
     widget->content_rect = calloc(1, sizeof(ei_rect_t));
 
     // Button
     ei_widgetclass_t *class = ei_widgetclass_from_name("button");
-    toplevel->button = (ei_button_t *) class->allocfunc();
+    toplevel->button = class->allocfunc();
 
     // Widget init
     toplevel->button->widget.wclass = class;
-    toplevel->button->widget.parent = (ei_widget_t *) toplevel;
+    toplevel->button->widget.parent = toplevel;
 
     return widget;
 }
 
 ei_widget_t *radiobutton_allocfunc() {
-    ei_widget_t *widget = calloc(1, sizeof(ei_radiobutton_t));
+    ei_widget_t *widget = (ei_radiobutton_t *) calloc(1, sizeof(ei_radiobutton_t));
+    ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget;
     return widget;
 }
 
@@ -105,9 +106,7 @@ void frame_releasefunc(ei_widget_t *widget) {
 
 void toplevel_releasefunc(ei_widget_t *widget) {
     ei_toplevel_t *to_release = (ei_toplevel_t *) widget;
-    to_release->button->widget.wclass->releasefunc((ei_widget_t *) to_release->button);
-    free(to_release->button->widget.pick_color);
-    free(to_release->button);
+    to_release->button->widget.wclass->releasefunc(to_release->button);
 
     if (to_release->title != NULL) {
         free(to_release->title);
@@ -137,10 +136,10 @@ void button_drawfunc(ei_widget_t *widget,
     ei_color_t color = button->color;
     int radius = button->corner_radius;
     // If etat is true the button is up else he is down
-    ei_color_t darker = {(char) (0.1 * 255 + 0.9 * button->color.red), (char) (0.1 * 255 + 0.9 * color.green),
-                         (char) (0.1 * 255 + 0.9 * color.blue),
+    ei_color_t darker = {0.1 * 255 + 0.9 * button->color.red, 0.1 * 255 + 0.9 * color.green,
+                         0.1 * 255 + 0.9 * color.blue,
                          color.alpha};
-    ei_color_t lighter = {(char) (0.9 * color.red), (char) (0.9 * color.green), (char) (0.9 * color.blue), color.alpha};
+    ei_color_t lighter = {0.9 * color.red, 0.9 * color.green, 0.9 * color.blue, color.alpha};
 
     // The two part of the button
     ei_linked_point_t *top = rounded_frame(widget->screen_location, radius, 10, up);
@@ -168,10 +167,9 @@ void button_drawfunc(ei_widget_t *widget,
     ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
     ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
 
-    //Free all the points
-    free_linked_point(top);
-    free_linked_point(bot);
-    free_linked_point(points_button);
+    free(top);
+    free(bot);
+    free(points_button);
 
     // Text eventually inside the button
     if (button->text != NULL) {
@@ -217,10 +215,9 @@ void frame_drawfunc(ei_widget_t *widget,
 
     ei_frame_t *frame = (ei_frame_t *) widget;
     ei_color_t color = frame->color;
-    ei_color_t darker = {(char) (0.1 * 255 + 0.9 * color.red), (char) (0.1 * 255 + 0.9 * color.green),
-                         (char) (0.1 * 255 + 0.9 * color.blue),
+    ei_color_t darker = {0.1 * 255 + 0.9 * color.red, 0.1 * 255 + 0.9 * color.green, 0.1 * 255 + 0.9 * color.blue,
                          color.alpha};
-    ei_color_t lighter = {(char) (0.9 * color.red), (char) (0.9 * color.green), (char) (0.9 * color.blue), color.alpha};
+    ei_color_t lighter = {0.9 * color.red, 0.9 * color.green, 0.9 * color.blue, color.alpha};
     ei_rect_t inside_frame;
     int border_size = frame->border_width;
     inside_frame.top_left.x = widget->screen_location.top_left.x + border_size;
@@ -304,15 +301,14 @@ void toplevel_drawfunc(ei_widget_t *widget,
         ei_point_t point_text = ei_point(widget->screen_location.top_left.x + 2 * toplevel->border_width + 20,
                                          widget->screen_location.top_left.y);
         ei_draw_text(surface, &point_text, title, ei_default_font, toplevel->color, &clipper_text);
-        toplevel->button->widget.wclass->drawfunc((ei_widget_t *) toplevel->button, surface, pick_surface, clipper);
-        float d = (float) toplevel->button->widget.content_rect->size.width;
-        float sqrt_2 = sqrtf(2);
-        draw_cross(surface,
-                   ei_rect(ei_point((toplevel->button->widget.content_rect->top_left.x +
-                                     (int) (d * (sqrt_2 - 1) / (2 * sqrt_2))),
-                                    (toplevel->button->widget.content_rect->top_left.y +
-                                     (int) (d * (sqrt_2 - 1) / (2 * sqrt_2)))),
-                           ei_size((int) (d / sqrt(2)), (int) (d / sqrt_2))), white, clipper, 2);
+        toplevel->button->widget.wclass->drawfunc(toplevel->button, surface, pick_surface, clipper);
+        uint32_t d = toplevel->button->widget.content_rect->size.width;
+        float sqrt_2 = sqrt(2);
+        draw_cross(surface, ei_rect(ei_point(toplevel->button->widget.content_rect->top_left.x + d * (sqrt_2 - 1) / (2 *
+                                                                                                                     sqrt_2),
+                                             toplevel->button->widget.content_rect->top_left.y + d * (sqrt_2 - 1) / (2 *
+                                                                                                                     sqrt_2)),
+                                    ei_size(d / sqrt(2), d / sqrt_2)), white, clipper, 2);
     }
 
     // Recursively draw children
@@ -327,7 +323,7 @@ void toplevel_drawfunc(ei_widget_t *widget,
 
     // Minimize square
     ei_rect_t clipping_square;
-    intersection_rect(clipper, &(toplevel->widget.screen_location), &clipping_square);
+    intersection_rect(clipper, toplevel->widget.content_rect, &clipping_square);
     if (toplevel->grab_event.param.show_minimize_square) {
         draw_rectangle(get_main_window(), toplevel->grab_event.param.minimize_square, *get_default_color(),
                        &clipping_square);
@@ -353,15 +349,13 @@ void radiobutton_drawfunc(ei_widget_t *widget,
 //    }
 //    return;
 }
-
 /* setdefaultsfunc */
 void button_setdefaultsfunc(ei_widget_t *widget) {
-
     ei_button_configure(widget,
                         get_default_size(),
                         get_default_color(),
-                        get_toplevel_default_border_width(),
-                        get_default_button_corner_radius(),
+                        &k_default_button_border_width,
+                        &k_default_button_corner_radius,
                         get_default_relief(),
                         NULL,
                         &ei_default_font,
@@ -376,12 +370,11 @@ void button_setdefaultsfunc(ei_widget_t *widget) {
 }
 
 void frame_setdefaultsfunc(ei_widget_t *widget) {
-    ei_relief_t relief = ei_relief_none;
     ei_frame_configure(widget,
                        get_default_size(),
                        get_default_color(),
-                       get_default_button_border_width(),
-                       &relief,
+                       &k_default_button_border_width,
+                       ei_relief_none,
                        NULL,
                        &ei_default_font,
                        get_default_text_color(),
@@ -552,44 +545,40 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                                                 widget->screen_location.size.height -
                                                 widget->content_rect->size.height));
             if (inside(event->param.mouse.where, &top_bar)) {
-                ei_event_set_active_widget((ei_widget_t *) toplevel);
+                ei_event_set_active_widget(toplevel);
                 toplevel->grab_event.grab_type = grabbed;
                 treated = true;
             } else if (inside(event->param.mouse.where, &toplevel->grab_event.param.minimize_square)) {
-                ei_event_set_active_widget((ei_widget_t *) toplevel);
+                ei_event_set_active_widget(toplevel);
                 toplevel->grab_event.grab_type = resized;
                 treated = true;
             }
-            ei_widget_t *toplevel = search_for_toplevel(widget);
-            if (toplevel != widget) {
-                toplevel->wclass->handlefunc(toplevel, event);
-            } else {
-                //The top level is at the first plan
-                ei_widget_t *current_child = widget->parent->children_head;
-                ei_widget_t *previous_child = current_child;
-                if (widget->parent->children_head != widget->parent->children_tail &&
-                    widget != widget->parent->children_tail) {
-                    while (current_child != widget) {
-                        previous_child = current_child;
-                        current_child = current_child->next_sibling;
-                    }
-                    //if the widget is the head
-                    if (current_child == previous_child) {
-                        widget->parent->children_head = widget->next_sibling;
-                        widget->next_sibling = NULL;
-                        widget->parent->children_tail->next_sibling = widget;
-                        widget->parent->children_tail = widget;
-                    } else {
-                        previous_child->next_sibling = widget->next_sibling;
-                        widget->next_sibling = NULL;
-                        widget->parent->children_tail->next_sibling = widget;
-                        widget->parent->children_tail = widget;
-                    }
-                    treated = true;
+            //The top level is at the first plan
+            ei_widget_t *current_child = widget->parent->children_head;
+            ei_widget_t *previous_child = current_child;
+            if (widget->parent->children_head != widget->parent->children_tail &&
+                widget != widget->parent->children_tail) {
+                while (current_child != widget) {
+                    previous_child = current_child;
+                    current_child = current_child->next_sibling;
                 }
+                //if the widget is the head
+                if (current_child == previous_child) {
+                    widget->parent->children_head = widget->next_sibling;
+                    widget->next_sibling = NULL;
+                    widget->parent->children_tail->next_sibling = widget;
+                    widget->parent->children_tail = widget;
+                } else {
+                    previous_child->next_sibling = widget->next_sibling;
+                    widget->next_sibling = NULL;
+                    widget->parent->children_tail->next_sibling = widget;
+                    widget->parent->children_tail = widget;
+                }
+                treated = true;
             }
             break;
         }
+
         case ei_ev_mouse_move:
             switch (toplevel->grab_event.grab_type) {
                 case grabbed:
@@ -600,7 +589,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                         int topleft_y =
                                 widget->screen_location.top_left.y - widget->parent->content_rect->top_left.y +
                                 (event->param.mouse.where.y - get_prev_mouse_pos().y);
-                        ei_place((ei_widget_t *) toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
+                        ei_place(toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
                                  NULL, NULL);
                         treated = true;
                     }
@@ -613,33 +602,33 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                         int height = widget->content_rect->size.height +
                                      (event->param.mouse.where.y - get_prev_mouse_pos().y);
                         // x-resize
-                        if (toplevel->min_size.width <= width && toplevel->resizable == ei_axis_x &&
-                            widget->placer_params->rw == NULL) {
-                            ei_place((ei_widget_t *) toplevel, NULL, NULL, NULL, &width, NULL, NULL, NULL,
+                        if (toplevel->min_size.width <= width && toplevel->resizable == ei_axis_x && widget->placer_params->rw == NULL) {
+                            ei_place(toplevel, NULL, NULL, NULL, &width, NULL, NULL, NULL,
                                      NULL, NULL);
+                            treated = true;
                         }
                             // y-resize
-                        else if (toplevel->min_size.height <= height && toplevel->resizable == ei_axis_y &&
-                                 widget->placer_params->rh == NULL) {
-                            ei_place(toplevel, NULL, NULL, NULL, NULL, &height, NULL, NULL, NULL, NULL);
+                        else if (toplevel->min_size.height <= height && toplevel->resizable == ei_axis_y && widget->placer_params->rh == NULL) {
+                            ei_place(toplevel, NULL, NULL, NULL, NULL, &height, NULL, NULL,
+                                     NULL, NULL);
+                            treated = true;
                         }
-
                             // x and y resize
                         else if (toplevel->min_size.height <= height && toplevel->min_size.width <= width &&
                                  toplevel->resizable == ei_axis_both) {
-                            ei_place((ei_widget_t *) toplevel, NULL, NULL, NULL, &width, &height, NULL, NULL,
-                                     NULL, NULL);
-                            if (widget->placer_params->rw == NULL && widget->placer_params->rh == NULL) {
+                            if (widget->placer_params->rw == NULL && widget->placer_params->rw == NULL){
                                 ei_place(toplevel, NULL, NULL, NULL, &width, &height, NULL, NULL,
                                          NULL, NULL);
-                            } else if (widget->placer_params->rw == NULL) {
+                                treated = true;
+                            } else if (widget->placer_params->rw == NULL){
                                 ei_place(toplevel, NULL, NULL, NULL, &width, NULL, NULL, NULL,
                                          NULL, NULL);
-                            } else if (widget->placer_params->rh == NULL) {
+                                treated = true;
+                            } else if (widget->placer_params->rh == NULL){
                                 ei_place(toplevel, NULL, NULL, NULL, NULL, &height, NULL, NULL,
                                          NULL, NULL);
+                                treated = true;
                             }
-                            treated = true;
                         }
 
 
@@ -675,11 +664,12 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                         treated = true;
                     }
             }
+
             break;
         case ei_ev_mouse_buttonup:
             ei_event_set_active_widget(NULL);
             toplevel->grab_event.grab_type = idle;
-            //toplevel->button->widget.wclass->handlefunc((ei_widget_t *) toplevel->button, event);
+            toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
             treated = true;
             break;
 
@@ -690,14 +680,14 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             }
             break;
     }
-            if (treated) {
-                ei_rect_t clipper;
-                intersection_rect(&widget->screen_location, get_clipper_window(), &clipper);
-                append_left_linked_rect(clipper, get_updated_rects());
-            }
+    if (treated) {
+        ei_rect_t clipper;
+        intersection_rect(&widget->screen_location, get_clipper_window(), &clipper);
+        append_left_linked_rect(clipper, get_updated_rects());
+    }
 
-            return treated;
-
+    // Button has to receive event
+    return treated || toplevel->button->widget.wclass->handlefunc(toplevel->button, event);
 }
 
 ei_bool_t radiobutton_handlefunc(ei_widget_t *widget, ei_event_t *event) {
