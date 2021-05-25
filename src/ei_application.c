@@ -18,14 +18,17 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     button_class = malloc(sizeof(ei_widgetclass_t));
     frame_class = malloc(sizeof(ei_widgetclass_t));
     toplevel_class = malloc(sizeof(ei_widgetclass_t));
+    radiobutton_class = malloc(sizeof(ei_widgetclass_t));
 
     strcpy(button_class->name, "button");
     strcpy(frame_class->name, "frame");
     strcpy(toplevel_class->name, "toplevel");
+    strcpy(radiobutton_class->name, "radio_button");
 
     ei_widgetclass_register(button_class);
     ei_widgetclass_register(frame_class);
     ei_widgetclass_register(toplevel_class);
+    ei_widgetclass_register(radiobutton_class);
 
     // Defaults init
     ei_default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, ei_font_default_size);
