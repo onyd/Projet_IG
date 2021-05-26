@@ -67,49 +67,9 @@ uint32_t remove_vector(vector *v, void *element) {
     return v->last_idx;
 }
 
-void concatenation(vector *a, vector *b) {
-    for (uint32_t i = 0; i < b->last_idx; i++) {
-        append_vector(a, get(b, i));
-    }
-}
-
-void copy(vector *a, vector *b) {
-    resize(b, a->size);
-    b->last_idx = a->last_idx;
-    b->size = a->size;
-    b->current_idx = a->current_idx;
-
-    for (uint32_t i = 0; i < b->last_idx; i++) {
-        b->data[i] = a->data[i];
-    }
-}
-
-void clear(vector *v, uint32_t *size) {
-    if (size != NULL) {
-        resize(v, *size);
-    }
-    for (uint32_t i = 0; i < v->last_idx; i++) {
-        v->data[i] = NULL;
-    }
-    v->last_idx = 0;
-    v->current_idx = 0;
-    v->size = *size;
-}
-
 void resize(vector *v, uint32_t size) {
     v->data = realloc(v->data, size * sizeof(void *));
     v->size = size;
-}
-
-void upsize(vector *v, uint32_t i) {
-    while (v->size <= i) {
-        v->size *= 2;
-        resize(v, v->size);
-    }
-}
-
-void downsize(vector *v) {
-
 }
 
 void free_vector(vector *v) {

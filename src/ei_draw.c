@@ -49,6 +49,7 @@ void ei_draw_polyline(ei_surface_t surface,
         int x = clipped1.x;
         int y = clipped1.y;
 
+
         /* Bresenham */
         int sign_dx = (dx > 0) ? 1 : -1;
         int sign_dy = (dy > 0) ? 1 : -1;
@@ -85,7 +86,6 @@ void ei_draw_polyline(ei_surface_t surface,
             swap(&x2, &y2);
         }
         int E = (int) (error * abs(dx));
-
         while (sign_dx * x < sign_dx * x2) {
             x += sign_dx;
             E += abs(dy);
@@ -94,6 +94,7 @@ void ei_draw_polyline(ei_surface_t surface,
                 y += sign_dy;
                 E -= abs(dx);
             }
+
             // Draw pixel in the buffer
             if (!swapped) {
                 pixels[x + size.width * y] = c;

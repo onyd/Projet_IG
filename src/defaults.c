@@ -21,15 +21,20 @@ static const ei_color_t _default_close_button_color = {200, 0, 0, 255};
 static const ei_color_t _default_text_color = {0, 0, 0, 255};
 static const ei_color_t _default_button_color = {200, 200, 200, 255};
 static const ei_color_t _default_selected_color = {255, 0, 0, 255};
+static const ei_color_t _default_outline_color = {180, 180, 180, 255};
 
 static const ei_size_t _default_size = {100, 100};
 static const ei_relief_t _default_relief = ei_relief_raised;
 static const ei_anchor_t _default_anchor = ei_anc_center;
 
 static const int _circle_button_radius = 10;
-static const int _resize_square_size = 10;
+static const int _resize_square_size = 20;
 
 // Getter
+ei_color_t *get_default_outline_color() {
+    return &_default_outline_color;
+}
+
 ei_color_t *get_default_close_button_color() {
     return &_default_close_button_color;
 }

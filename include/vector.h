@@ -34,18 +34,11 @@ uint32_t append_vector(vector *a, void *element);
  */
 uint32_t remove_vector(vector *a, void *element);
 
-void concatenation(vector *a, vector *b);
-
-void copy(vector *a, vector *b);
-
-void clear(vector *v, uint32_t *size);
 
 /**
  * @brief	Resize a vector if he is full or too empty.
  */
 void resize(vector *v, uint32_t size);
-
-void upsize(vector *v, uint32_t i);
 
 /**
  * @brief	Free a vector.

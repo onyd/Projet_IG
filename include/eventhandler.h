@@ -52,6 +52,12 @@ void close_toplevel_callback(ei_widget_t *widget,
 void check_radiobutton_callback(ei_widget_t *widget,
                                 ei_event_t *event,
                                 void *user_param);
+
+/** @brief destructor called to free user_data
+ * @param the widget of the event
+ */
+void destroy_user_data(ei_widget_t *widget);
+
 /**
  * @brief do a in-depth course and create a chained-list to make a reverse in-depth course
  * @param widget

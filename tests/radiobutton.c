@@ -63,6 +63,7 @@ int main(int argc, char **argv) {
                              NULL,
                              NULL,
                              NULL,
+                             NULL,
                              &button_color,
                              &selected_color,
                              &button_title,
@@ -77,6 +78,8 @@ int main(int argc, char **argv) {
     append_radiobutton(button, "Test 2", NULL);
     append_radiobutton(button, "Test 3", NULL);
     append_radiobutton(button, "Test 4", NULL);
+    append_radiobutton(button, "Test 5", NULL);
+    append_radiobutton(button, "Test 6", NULL);
 
     /* Run the application's main loop. */
     ei_app_run();

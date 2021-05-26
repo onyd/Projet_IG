@@ -101,6 +101,7 @@ typedef struct ei_radiobutton_t {
     // Specific field
     uint32_t margin;
     ei_color_t background_color;
+    ei_color_t outline_color;
     ei_color_t button_color;
     ei_color_t selected_color;
     char *title;
@@ -340,6 +341,7 @@ void ei_radiobutton_configure(ei_widget_t *widget,
                               ei_size_t *requested_size,
                               uint32_t *margin,
                               ei_color_t *background_color,
+                              ei_color_t *outline_color,
                               ei_color_t *button_color,
                               ei_color_t *selected_color,
                               char **title,

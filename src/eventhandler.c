@@ -95,6 +95,10 @@ ei_bool_t always_true(ei_event_t *event) {
     return true;
 }
 
+void destroy_user_data(ei_widget_t *widget) {
+    free(widget->user_data);
+}
+
 void inverse_depth_widget_list(ei_widget_t *widget, ei_widget_list_t *result) {
     // Add current
     append_left_linked_widget(widget, result);
