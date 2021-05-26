@@ -32,7 +32,7 @@ ei_linked_point_t *arc(ei_point_t c, float r, float start_angle, float end_angle
 
 
 ei_linked_point_t *rounded_frame(ei_rect_t button_rect, int radius, uint32_t N, direction dir) {
-    // if dir = both, generate all the boutton, if dir = up generate the top and dir = down the bottom
+    // if dir = both, generate all the boutton, if dir = up generate the top, and if dir = down the bottom
     int button_width = button_rect.size.width;
     int button_height = button_rect.size.height;
     int top_left_x = button_rect.top_left.x;
