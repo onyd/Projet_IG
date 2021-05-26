@@ -67,12 +67,10 @@ uint32_t remove_vector(vector *v, void *element) {
     return v->last_idx;
 }
 
-
 void resize(vector *v, uint32_t size) {
     v->data = realloc(v->data, size * sizeof(void *));
     v->size = size;
 }
-
 
 void free_vector(vector *v) {
     free(v->data);

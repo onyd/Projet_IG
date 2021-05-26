@@ -494,9 +494,10 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
     // Button geometry
     toplevel->button->widget.screen_location.top_left.x =
-            widget->screen_location.top_left.x + toplevel->border_width + toplevel->border_width;
+            widget->screen_location.top_left.x + 3 * toplevel->border_width;
     toplevel->button->widget.screen_location.top_left.y =
-            widget->screen_location.top_left.y + toplevel->border_width + toplevel->border_width + height;
+            widget->screen_location.top_left.y + 2 * toplevel->border_width + 6 * height / 4 -
+            toplevel->button->widget.screen_location.size.height / 2;
 
     // Resize square
     toplevel->grab_event.param.resize_square.top_left = ei_point(
@@ -863,8 +864,10 @@ void append_radiobutton(ei_radiobutton_t *radiobutton, char *text, ei_callback_t
                         NULL,
                         &check_callback,
                         &params);
-    int new_width = radiobutton->widget.content_rect->size.width>button->screen_location.size.width + width +3 * radiobutton->margin ?
-                    radiobutton->widget.content_rect->size.width : button->screen_location.size.width + width +3 * radiobutton->margin;
+    int new_width = radiobutton->widget.content_rect->size.width >
+                    button->screen_location.size.width + width + 3 * radiobutton->margin ?
+                    radiobutton->widget.content_rect->size.width : button->screen_location.size.width + width +
+                                                                   3 * radiobutton->margin;
     int new_height = radiobutton->widget.content_rect->size.height + height + 2 * radiobutton->margin;
     ei_place((ei_widget_t *) radiobutton, NULL, NULL, NULL, &new_width, &new_height, NULL, NULL, NULL, NULL);
     ei_placer_run((ei_widget_t *) radiobutton);
