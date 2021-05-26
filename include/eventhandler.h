@@ -57,7 +57,11 @@ void close_toplevel_callback(ei_widget_t *widget,
 void check_radiobutton_callback(ei_widget_t *widget,
                                 ei_event_t *event,
                                 void *user_param);
-
+/**
+ * @brief do a in-depth course and create a chained-list to make a reverse in-depth course
+ * @param widget
+ * @param result: the chained list
+ */
 void inverse_depth_widget_list(ei_widget_t *widget, struct ei_widget_list_t *result);
 
 #endif //PROJETC_IG_EVENTHANDLER_H
