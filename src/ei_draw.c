@@ -202,15 +202,17 @@ void ei_draw_polygon(ei_surface_t surface,
             current = current->next;
             int x2 = current->x_ymin;
             for (int k = x1; k < x2; k++) {
-                ei_color_t color_transparancy = ei_map_rgba_inverse(surface, pixels[k + size.width * y]);
-                color_transparancy.red = (color.alpha * color.red + (255 - color.alpha) * color_transparancy.red) / 255;
-                color_transparancy.green =
-                        (color.alpha * color.green + (255 - color.alpha) * color_transparancy.green) / 255;
-                color_transparancy.blue =
-                        (color.alpha * color.blue + (255 - color.alpha) * color_transparancy.blue) / 255;
-                color_transparancy.alpha = color.alpha;
-                pixels[k + size.width * y] = ei_map_rgba(surface, color_transparancy);
-                //pixels[k + size.width * y] = c;
+                if (color.alpha == 255) {
+                    pixels[k + size.width * y] = c;
+                }
+                else {
+                    ei_color_t color_transparancy = ei_map_rgba_inverse(surface, pixels[k + size.width * y]);
+                    color_transparancy.red = (color.alpha * color.red + (255 - color.alpha) * color_transparancy.red)/255;
+                    color_transparancy.green = (color.alpha * color.green + (255 - color.alpha) * color_transparancy.green)/255;
+                    color_transparancy.blue = (color.alpha * color.blue + (255 - color.alpha) * color_transparancy.blue)/255;
+                    color_transparancy.alpha = color.alpha;
+                    pixels[k + size.width * y] = ei_map_rgba(surface, color_transparancy);
+                }
             }
             current = current->next;
         }

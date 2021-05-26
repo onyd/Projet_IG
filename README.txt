@@ -9,7 +9,7 @@ sorting.c :
 Teste le bon fonctionnement de la fonction sorting_insert.
 
 vector_test.c :
-Teste le bon fonctionnement des fonctions relatives à la strucutre vector.
+Teste le bon fonctionnement des fonctions relatives à la structure vector.
 
 radiobutton.c :
 Nous testons le bon fonctionnement de l'extension radiobutton, notamment le bouton qui est séléctionné en cliquant dessus.

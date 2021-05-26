@@ -22,11 +22,14 @@ void ei_widget_destroy_rec(ei_widget_t *widget) {
         ei_widget_t *tmp = current;
         current = current->next_sibling;
         tmp->wclass->releasefunc(tmp);
+        free(tmp->pick_color);
+        free(tmp);
     }
     if (ei_event_get_active_widget() == widget) {
         ei_event_set_active_widget(NULL);
     }
 }
+
 
 ei_widget_t *search_for_toplevel(ei_widget_t *widget) {
     ei_widget_t *current = widget;
@@ -166,9 +169,9 @@ void button_drawfunc(ei_widget_t *widget,
     draw_picking_polygon(pick_surface, top, *(widget->pick_color), clipper);
     draw_picking_polygon(pick_surface, bot, *(widget->pick_color), clipper);
 
-    free(top);
-    free(bot);
-    free(points_button);
+    free_linked_point(top);
+    free_linked_point(bot);
+    free_linked_point(points_button);
 
     // Text eventually inside the button
     if (button->text != NULL) {
@@ -855,9 +858,8 @@ void append_radiobutton(ei_radiobutton_t *radiobutton, char *text, ei_callback_t
                         NULL,
                         &check_callback,
                         &params);
-    int new_width = max(radiobutton->widget.content_rect->size.width,
-                        button->screen_location.size.width + width +
-                        3 * radiobutton->margin);
+    int new_width = radiobutton->widget.content_rect->size.width>button->screen_location.size.width + width +3 * radiobutton->margin ?
+                    radiobutton->widget.content_rect->size.width : button->screen_location.size.width + width +3 * radiobutton->margin;
     int new_height = radiobutton->widget.content_rect->size.height + height + 2 * radiobutton->margin;
     ei_place((ei_widget_t *) radiobutton, NULL, NULL, NULL, &new_width, &new_height, NULL, NULL, NULL, NULL);
     ei_placer_run((ei_widget_t *) radiobutton);
