@@ -18,11 +18,6 @@ typedef struct toplevel_app_event_t {
     ei_toplevel_t *caller;
 } toplevel_app_event_t;
 
-typedef struct radiobutton_user_param_t {
-    uint32_t idx;
-    char *text;
-} radiobutton_user_param_t;
-
 extern ei_default_handle_func_t default_handle_func;
 extern ei_widget_t *active_widget;
 

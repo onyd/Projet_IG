@@ -21,6 +21,7 @@ static const ei_size_t _toplevel_default_size;
 static const ei_size_t _toplevel_default_min_size;
 static const int _toplevel_default_border_width;
 static const ei_color_t _default_color;
+static const ei_color_t _default_close_button_color;
 static const ei_color_t _default_text_color;
 static const ei_size_t _default_size;
 static const ei_relief_t _default_relief;
@@ -29,6 +30,20 @@ static const ei_color_t _default_button_color;
 static const ei_color_t _default_selected_color;
 
 // Getter
+/**
+ * @brief Return the color of close button used for toplevel
+ */
+ei_color_t *get_default_close_button_color() ;
+/**
+ * @brief Return the radius of circle button
+ */
+int *get_circle_button_radius();
+
+/**
+ * @brief Return the size of resize square for toplevel
+ */
+int *get_resize_square_size();
+
 /**
  * @brief Return the main_window surface
  */

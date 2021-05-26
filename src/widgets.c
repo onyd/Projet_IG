@@ -43,7 +43,6 @@ ei_widget_t *search_for_toplevel(ei_widget_t *widget) {
 }
 
 
-
 /* allocfunc */
 ei_widget_t *button_allocfunc() {
     ei_widget_t *widget = calloc(1, sizeof(ei_button_t));
@@ -117,6 +116,7 @@ void toplevel_releasefunc(ei_widget_t *widget) {
 
 void radiobutton_releasefunc(ei_widget_t *widget) {
     ei_radiobutton_t *to_release = (ei_radiobutton_t *) widget;
+    clear_radiobutton(to_release);
     if (to_release->title != NULL) {
         free(to_release->title);
     }
@@ -340,6 +340,7 @@ void radiobutton_drawfunc(ei_widget_t *widget,
                           ei_surface_t pick_surface,
                           ei_rect_t *clipper) {
     ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget;
+    draw_rectangle(surface, widget->screen_location, radiobutton->selected_color, NULL, true);
 
     // Outline
     int width, height;
@@ -347,15 +348,30 @@ void radiobutton_drawfunc(ei_widget_t *widget,
     ei_point_t text_pos = ei_point_add(widget->screen_location.top_left,
                                        ei_point(2 * radiobutton->margin, 0));
     ei_draw_text(surface, &text_pos, radiobutton->title, ei_default_font, radiobutton->text_color, clipper);
-    draw_blank_rect(surface, *(widget->content_rect), radiobutton->background_color, clipper, width, 5);
-    //draw_blank_rect(surface, widget->screen_location, radiobutton->selected_color, clipper, 0, 0);
-
-
+    draw_blank_rect(surface, *(widget->content_rect), radiobutton->background_color, clipper,
+                    width + radiobutton->margin, radiobutton->margin);
     // Buttons + texts
     for (uint32_t i = 0; i < radiobutton->button_list->last_idx; i++) {
         if (get(radiobutton->button_list, i) != NULL) {
-            button_drawfunc(get(radiobutton->button_list, i), surface, pick_surface, clipper);
+            ei_button_t *current = get(radiobutton->button_list, i);
+            button_drawfunc((ei_widget_t *) current, surface, pick_surface, clipper);
+            ei_point_t pos = ei_point(
+                    current->widget.screen_location.top_left.x + current->widget.screen_location.size.width +
+                    2 * radiobutton->margin,
+                    current->widget.screen_location.top_left.y + current->widget.screen_location.size.height / 2 -
+                    height / 2);
+            ei_draw_text(surface, &pos, ((radiobutton_user_data_t *) current->widget.user_data)->text,
+                         radiobutton->text_font, radiobutton->text_color, clipper);
         }
+    }
+
+    // Draw check
+    if (radiobutton->selected_id != -1) {
+        ei_widget_t *checked = (ei_widget_t *) get(radiobutton->button_list, radiobutton->selected_id);
+        draw_full_circle(surface,
+                         ei_point(checked->screen_location.top_left.x + checked->screen_location.size.width / 2,
+                                  checked->screen_location.top_left.y + checked->screen_location.size.height / 2),
+                         (float) *get_circle_button_radius() / 2, radiobutton->selected_color, clipper);
     }
 }
 
@@ -478,9 +494,10 @@ void toplevel_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
 
     // Resize square
     toplevel->grab_event.param.resize_square.top_left = ei_point(
-            widget->screen_location.top_left.x + widget->screen_location.size.width - 20 + toplevel->border_width,
-            widget->screen_location.top_left.y + widget->screen_location.size.height - 20 + toplevel->border_width +
-            height);
+            widget->screen_location.top_left.x + widget->screen_location.size.width - *get_resize_square_size() +
+            toplevel->border_width,
+            widget->screen_location.top_left.y + widget->screen_location.size.height - *get_resize_square_size() +
+            toplevel->border_width + height);
 
     // Translation
     widget->screen_location.top_left = ei_point_add(widget->screen_location.top_left,
@@ -512,7 +529,10 @@ void radiobutton_geomnotifyfunc(ei_widget_t *widget, ei_rect_t rect) {
     for (uint32_t i = 0; i < radiobutton->button_list->last_idx; i++) {
         if (get(radiobutton->button_list, i) != NULL) {
             ei_button_t *current = (ei_button_t *) get(radiobutton->button_list, i);
-            //ei_place(current)
+            radiobutton_user_data_t *params = current->widget.user_data;
+            ei_point_t topleft = ei_point(radiobutton->margin,
+                                          params->idx * (height + 2 * radiobutton->margin) + 4 * radiobutton->margin);
+            ei_place((ei_widget_t *) current, NULL, &topleft.x, &topleft.y, NULL, NULL, NULL, NULL, NULL, NULL);
         }
     }
 
@@ -560,7 +580,7 @@ ei_bool_t button_handlefunc(ei_widget_t *widget, ei_event_t *event) {
             button->relief = ei_relief_raised;
             if (button->callback != NULL && ei_event_get_active_widget() == widget &&
                 inside(event->param.mouse.where, button->widget.content_rect)) {
-                button->callback(widget->parent, event, button->widget.user_data);
+                button->callback(widget, event, button->widget.user_data);
             }
             ei_event_set_active_widget(NULL);
             treated = true;
@@ -611,8 +631,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
             ei_widget_t *toplevel = search_for_toplevel(widget);
             if (toplevel != widget) {
                 toplevel->wclass->handlefunc(toplevel, event);
-            }
-            else {
+            } else {
                 //The top level is at the first plan
                 ei_widget_t *current_child = widget->parent->children_head;
                 ei_widget_t *previous_child = current_child;
@@ -651,7 +670,7 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                                 widget->screen_location.top_left.y - widget->parent->content_rect->top_left.y +
                                 (event->param.mouse.where.y - get_prev_mouse_pos().y);
                         if (widget->placer_params->rx == NULL && widget->placer_params->ry == NULL) {
-                            ei_place((ei_widget_t *) toplevel, NULL, &topleft_x,&topleft_y, NULL, NULL, NULL, NULL,
+                            ei_place((ei_widget_t *) toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
                                      NULL, NULL);
                             treated = true;
                         } else if (widget->placer_params->rx == NULL) {
@@ -797,27 +816,35 @@ void ei_radiobutton_configure(ei_widget_t *widget,
         if (requested_size == NULL) {
             int width, height;
             hw_text_compute_size(radiobutton->title, radiobutton->text_font, &width, &height);
-            widget->requested_size = ei_size(width, height);
+            *widget->content_rect = ei_rect(widget->content_rect->top_left,
+                                            ei_size(width + 2 * radiobutton->margin, height + 2 * radiobutton->margin));
+            widget->screen_location = ei_rect(ei_point(widget->content_rect->top_left.x - radiobutton->margin,
+                                                       widget->content_rect->top_left.y - radiobutton->margin -
+                                                       height / 2),
+                                              ei_size(widget->content_rect->size.width + 2 * radiobutton->margin,
+                                                      widget->content_rect->size.height + 2 * radiobutton->margin +
+                                                      height / 2));
         }
     }
-
-    radiobutton_geomnotifyfunc(widget, ei_rect(ei_point_zero(), widget->requested_size));
 }
 
 void append_radiobutton(ei_radiobutton_t *radiobutton, char *text, ei_callback_t *callback) {
     ei_widget_t *button = ei_widget_create("button", (ei_widget_t *) radiobutton, NULL, NULL);
 
     uint32_t i = append_vector(radiobutton->button_list, button);
-    ei_size_t size = ei_size(20, 20);
-    radiobutton_user_param_t *params = malloc(sizeof(radiobutton_user_param_t));
+    ei_size_t size = ei_size(*get_circle_button_radius() * 2, *get_circle_button_radius() * 2);
+    ei_callback_t *check_callback = &check_radiobutton_callback;
+    radiobutton_user_data_t *params = malloc(sizeof(radiobutton_user_data_t));
     params->idx = i;
     params->text = text;
-
+    params->callback = callback;
+    int width, height;
+    hw_text_compute_size(text, radiobutton->text_font, &width, &height);
     ei_button_configure(button,
                         &size,
                         &radiobutton->button_color,
-                        2,
-                        10,
+                        get_default_button_border_width(),
+                        get_circle_button_radius(),
                         NULL,
                         NULL,
                         NULL,
@@ -826,11 +853,24 @@ void append_radiobutton(ei_radiobutton_t *radiobutton, char *text, ei_callback_t
                         NULL,
                         NULL,
                         NULL,
-                        &check_radiobutton_callback,
-                        params);
+                        &check_callback,
+                        &params);
+    int new_width = max(radiobutton->widget.content_rect->size.width,
+                        button->screen_location.size.width + width +
+                        3 * radiobutton->margin);
+    int new_height = radiobutton->widget.content_rect->size.height + height + 2 * radiobutton->margin;
+    ei_place((ei_widget_t *) radiobutton, NULL, NULL, NULL, &new_width, &new_height, NULL, NULL, NULL, NULL);
+    ei_placer_run((ei_widget_t *) radiobutton);
 }
 
 void clear_radiobutton(ei_radiobutton_t *radiobutton) {
+    for (uint32_t i = 0; i < radiobutton->button_list->last_idx; i++) {
+        if (get(radiobutton->button_list, i) != NULL) {
+            ei_button_t *current = get(radiobutton->button_list, i);
+            free(current->widget.user_data);
+            current->widget.wclass->releasefunc((ei_widget_t *) current);
+        }
+    }
     free_vector(radiobutton->button_list);
     radiobutton->button_list = create_vector(1);
     radiobutton->selected_id = -1;

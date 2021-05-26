@@ -47,7 +47,7 @@ void ei_widget_destroy(ei_widget_t *widget) {
     }
     ei_placer_forget(widget);
     widget->wclass->releasefunc(widget);
-    if (ei_event_get_active_widget() == widget){
+    if (ei_event_get_active_widget() == widget) {
         ei_event_set_active_widget(NULL);
     }
     free(widget->pick_color);
@@ -148,6 +148,7 @@ void ei_button_configure(ei_widget_t *widget,
     button->widget.user_data = (user_param != NULL) ? *user_param : button->widget.user_data;
 
     // Auto-size image
+    button->img_anchor = (img_anchor != NULL) ? *img_anchor : button->img_anchor;
     if (img != NULL) {
         button->img = hw_surface_create(*img, hw_surface_get_size(*img), EI_TRUE);
         ei_copy_surface(button->img, NULL, *img, NULL, EI_TRUE);
@@ -163,9 +164,11 @@ void ei_button_configure(ei_widget_t *widget,
         button->img_rect = malloc(sizeof(ei_rect_t));
         *button->img_rect = **img_rect;
     }
-    button->img_anchor = (img_anchor != NULL) ? *img_anchor : button->img_anchor;
 
     // Auto-size text
+    button->text_font = (text_font != NULL) ? *text_font : button->text_font;
+    button->text_color = (text_color != NULL) ? *text_color : button->text_color;
+    button->text_anchor = (text_anchor != NULL) ? *text_anchor : button->text_anchor;
     if (text != NULL) {
         free(button->text);
         button->text = calloc(strlen(*text) + 1, sizeof(char));
@@ -181,10 +184,6 @@ void ei_button_configure(ei_widget_t *widget,
     ei_rect_t rect = ei_rect(widget->parent->screen_location.top_left, widget->requested_size);
     intersection_rect(&rect, &widget->parent->screen_location, &widget->screen_location);
     widget->content_rect = &widget->screen_location;
-
-    button->text_font = (text_font != NULL) ? *text_font : button->text_font;
-    button->text_color = (text_color != NULL) ? *text_color : button->text_color;
-    button->text_anchor = (text_anchor != NULL) ? *text_anchor : button->text_anchor;
 }
 
 
@@ -216,7 +215,6 @@ void ei_toplevel_configure(ei_widget_t *widget,
     widget->screen_location = ei_rect(widget->parent->screen_location.top_left,
                                       ei_size(widget->content_rect->size.width + 2 * toplevel->border_width,
                                               widget->content_rect->size.height + 2 * toplevel->border_width + height));
-
     toplevel->closable = (closable != NULL) ? *closable : toplevel->closable;
     toplevel->resizable = (resizable != NULL) ? *resizable : toplevel->resizable;
     if (min_size != NULL) {
@@ -228,19 +226,19 @@ void ei_toplevel_configure(ei_widget_t *widget,
     }
 
     // Toplevel's button default settings
-    int button_width = 2;
-    ei_size_t size = ei_size(20, 20);
-    int corner_size = 10;
-    ei_color_t color_button = {200, 0, 0, 255};
+    ei_size_t size = ei_size(*get_circle_button_radius() * 2, *get_circle_button_radius() * 2);
     ei_callback_t close_callback = close_toplevel_callback;
-    ei_button_configure((ei_widget_t *) toplevel->button, &size, &color_button, &button_width,
-                        &corner_size, NULL, NULL, NULL, NULL,
+    ei_button_configure((ei_widget_t *) toplevel->button, &size, get_default_close_button_color(),
+                        get_default_button_border_width(),
+                        get_circle_button_radius(), NULL, NULL, NULL, NULL,
                         NULL, NULL, NULL, NULL, &close_callback, NULL);
     ei_point_t point_button = ei_point(widget->screen_location.top_left.x + toplevel->border_width,
                                        widget->screen_location.top_left.y + toplevel->border_width);
     toplevel->button->widget.screen_location.top_left = point_button;
-    toplevel->grab_event.param.resize_square = ei_rect(ei_point_add(widget->screen_location.top_left,
-                                                                      ei_point(widget->screen_location.size.width - 20,
-                                                                               widget->screen_location.size.height -
-                                                                               20)), ei_size(20, 20));
+    toplevel->grab_event.param.resize_square = ei_rect(
+            ei_point_add(widget->screen_location.top_left,
+                         ei_point(widget->screen_location.size.width -
+                                  *get_circle_button_radius() * 2,
+                                  widget->screen_location.size.height -
+                                  *get_circle_button_radius() * 2)), size);
 }

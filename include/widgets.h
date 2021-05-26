@@ -85,6 +85,15 @@ typedef struct ei_toplevel_t {
 } ei_toplevel_t;
 
 /**
+ * @brief The radio button struct to retrieve button's parameters
+ */
+typedef struct radiobutton_user_data_t {
+    uint32_t idx;
+    char *text;
+    ei_callback_t callback;
+} radiobutton_user_data_t;
+
+/**
  * @brief The radio button widget struct
  */
 typedef struct ei_radiobutton_t {
