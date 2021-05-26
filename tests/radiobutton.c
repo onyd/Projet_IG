@@ -63,6 +63,7 @@ int main(int argc, char **argv) {
                              NULL,
                              NULL,
                              NULL,
+                             NULL,
                              &button_color,
                              &selected_color,
                              &button_title,

@@ -28,12 +28,19 @@ static const ei_relief_t _default_relief;
 static const ei_anchor_t _default_anchor;
 static const ei_color_t _default_button_color;
 static const ei_color_t _default_selected_color;
+static const ei_color_t _default_outline_color;
 
 // Getter
 /**
+ * @brief Return the color of outline of radio button
+ */
+ei_color_t *get_default_outline_color();
+
+/**
  * @brief Return the color of close button used for toplevel
  */
-ei_color_t *get_default_close_button_color() ;
+ei_color_t *get_default_close_button_color();
+
 /**
  * @brief Return the radius of circle button
  */
