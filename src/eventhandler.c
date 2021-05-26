@@ -77,17 +77,18 @@ void handle_event(ei_event_t *event) {
 void close_toplevel_callback(ei_widget_t *widget,
                              struct ei_event_t *event,
                              void *user_param) {
-    ei_widget_destroy(widget);
+    ei_widget_destroy(widget->parent);
 }
 
 void check_radiobutton_callback(ei_widget_t *widget,
                                 ei_event_t *event,
                                 void *user_param) {
     ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget->parent;
-    radiobutton_user_param_t *params = (radiobutton_user_param_t *) user_param;
+    radiobutton_user_data_t *params = (radiobutton_user_data_t *) user_param;
     radiobutton->selected_id = params->idx;
-
-    free(params);
+    if (params->callback != NULL) {
+        params->callback(widget, event, user_param);
+    }
 }
 
 ei_bool_t always_true(ei_event_t *event) {

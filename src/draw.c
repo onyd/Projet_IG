@@ -41,6 +41,12 @@ void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_r
     }
 }
 
+void draw_full_circle(ei_surface_t surface, ei_point_t center, float radius, ei_color_t color, ei_rect_t *clipper) {
+    ei_linked_point_t *pts = arc(center, radius, 0, 360, 20);
+    ei_draw_polygon(surface, pts, color, clipper);
+    free_linked_point(pts);
+}
+
 void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, direction dir, ei_bool_t for_screen) {
     ei_linked_point_t first_point[4];
     ei_linked_point_t *current = first_point;
