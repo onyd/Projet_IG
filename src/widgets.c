@@ -637,9 +637,20 @@ ei_bool_t toplevel_handlefunc(ei_widget_t *widget, struct ei_event_t *event) {
                         int topleft_y =
                                 widget->screen_location.top_left.y - widget->parent->content_rect->top_left.y +
                                 (event->param.mouse.where.y - get_prev_mouse_pos().y);
-                        ei_place((ei_widget_t *) toplevel, NULL, &topleft_x, &topleft_y, NULL, NULL, NULL, NULL,
-                                 NULL, NULL);
-                        treated = true;
+                        if (widget->placer_params->rx == NULL && widget->placer_params->ry == NULL) {
+                            ei_place((ei_widget_t *) toplevel, NULL, &topleft_x,&topleft_y, NULL, NULL, NULL, NULL,
+                                     NULL, NULL);
+                            treated = true;
+                        } else if (widget->placer_params->rx == NULL) {
+                            ei_place((ei_widget_t *) toplevel, NULL, &topleft_x, NULL, NULL, NULL, NULL, NULL,
+                                     NULL, NULL);
+                            treated = true;
+                        } else if (widget->placer_params->ry == NULL) {
+                            ei_place((ei_widget_t *) toplevel, NULL, NULL, &topleft_y, NULL, NULL, NULL, NULL,
+                                     NULL, NULL);
+                            treated = true;
+                        }
+
                     }
                     break;
                 case resized: {
