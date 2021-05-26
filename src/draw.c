@@ -500,3 +500,145 @@ void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t 
     free_linked_point(input.head);
     free_linked_error(input_errors.head);
 }
+
+void draw_polygon(ei_surface_t surface,
+                     const ei_linked_point_t *first_point,
+                     ei_color_t color,
+                     const ei_rect_t *clipper) {
+    uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
+    ei_size_t size = hw_surface_get_size(surface);
+    uint32_t c = ei_map_rgba(surface, color);
+
+    //transparancy
+    int ir, ig, ib, ia;
+    hw_surface_get_channel_indices(surface, &ir, &ig, &ib, &ia);
+    ia = 6 - ir - ig - ib;
+    int c_r = (uint8_t) (c >> (8 * ir));
+    int c_g = (uint8_t) (c >> (8 * ig));
+    int c_b = (uint8_t) (c >> (8 * ib));
+    int c_a = (uint8_t) (c >> (8 * ia));
+
+    // Clipping
+    ei_point_list_t clipped;
+    ei_error_list_t errors;
+    if (clipper == NULL) {
+        clipped.head = (ei_linked_point_t *) first_point;
+    } else {
+        polygon_analytic_clipping(first_point, &clipped, &errors, clipper);
+        if (clipped.head == NULL) {
+            return; // Totally out, we skip it
+        }
+    }
+
+    // Find ymax and ymin to initialize size
+    int ymax = clipped.head->point.y;
+    int ymin = clipped.head->point.y;
+
+    ei_linked_point_t *current = clipped.head;
+    while (current != NULL) {
+        if (ymax < current->point.y) {
+            ymax = current->point.y;
+        } else if (ymin > current->point.y) {
+            ymin = current->point.y;
+        }
+        current = current->next;
+    }
+
+    // TC/TCA initialization
+    linked_edges **TC = calloc(ymax - ymin, sizeof(linked_edges *));
+    linked_acive_edges *TCA = malloc(sizeof(linked_acive_edges));
+    TCA->head = NULL;
+
+    // Build TC
+    ei_linked_point_t *first = clipped.head;
+    ei_linked_point_t *second = first->next;
+    ei_linked_error_t *error = errors.head;
+
+    while (second != NULL) {
+        ei_linked_point_t *p_min = y_argmin(first, second);
+        ei_linked_point_t *p_max = y_argmax(first, second);
+
+        int dx = p_max->point.x - p_min->point.x;
+        int dy = p_max->point.y - p_min->point.y;
+        // Ignore horizontal edges
+        if (dy != 0) {
+            linked_edges *edge = malloc(sizeof(linked_edges));
+            edge->ymax = p_max->point.y;
+            edge->x_ymin = p_min->point.x;
+            edge->x_ymax = p_max->point.x;
+            edge->dx = dx;
+            edge->dy = dy;
+            edge->E = (int) (error->error * abs(dx));
+            edge->sign_dx = (dx > 0) ? 1 : -1;
+            edge->next = TC[p_min->point.y - ymin];
+            TC[p_min->point.y - ymin] = edge;
+        }
+        first = second;
+        second = second->next;
+        error = error->next;
+    }
+
+    /* Fill polygon for every scanline */
+    int y = ymin;
+    while (y < ymax) {
+        uint32_t i = y - ymin;
+
+        // Delete TCA edges such that y = ymax
+        delete_y(y, TCA);
+
+        // Add current scanline starting edges while keeping TCA sorted
+        while (TC[i] != NULL) {
+            linked_edges *tc = TC[i];
+            TC[i] = tc->next;
+            tc->next = NULL;
+            sorting_insert(tc, TCA);
+        }
+
+        // Draw pixels
+        linked_edges *current = TCA->head;
+        while (current != NULL && current->next != NULL) {
+            int x1 = current->x_ymin;
+            current = current->next;
+            int x2 = current->x_ymin;
+            for (int k = x1; k < x2; k++) {
+                //if (inside(ei_point(k, y), clipper)) {
+                uint32_t c_transparancy = (((c_a * c_r + (255 - c_a) * (pixels[k + size.width * y] >> (8*ir))) / 255) << (8 * ir)) +
+                                          (((c_a * c_g + (255 - c_a) * (pixels[k + size.width * y] >> (8*ig))) / 255) << (8 * ig)) +
+                                          (((c_a * c_b + (255 - c_a) * (pixels[k + size.width * y] >> (8*ib))) / 255) << (8 * ib));
+                pixels[k + size.width * y] = c_transparancy;
+                //}
+            }
+            current = current->next;
+        }
+
+        y++;
+
+        // Bresenham iterations for next intersection
+        current = TCA->head;
+        while (current != NULL) {
+            // y-directed
+            if (abs(current->dx) <= current->dy) {
+                current->E += abs(current->dx);
+                if (2 * current->E > current->dy) {
+                    current->x_ymin += current->sign_dx;
+                    current->E -= current->dy;
+                }
+            } else {                 // x-directed
+                while (true) {
+                    current->E += current->dy;
+                    current->x_ymin += current->sign_dx;
+                    if (2 * current->E > abs(current->dx)) {
+                        current->E -= abs(current->dx);
+                        break; // Stop when we change of scanline
+                    }
+                }
+            }
+            current = current->next;
+        }
+    }
+    free_linked_point(clipped.head);
+    free_linked_error(errors.head);
+    lae_free(TCA);
+    free(TC);
+}
+

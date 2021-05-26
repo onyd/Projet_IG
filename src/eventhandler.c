@@ -76,7 +76,7 @@ void handle_event(ei_event_t *event) {
 void close_toplevel_callback(ei_widget_t *widget,
                              struct ei_event_t *event,
                              void *user_param) {
-        ei_widget_destroy(widget);
+    ei_widget_destroy(widget);
 }
 void check_radiobutton_callback(ei_widget_t *widget,
                                 ei_event_t *event,
