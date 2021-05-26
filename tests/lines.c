@@ -242,7 +242,7 @@ void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
 void test_draw_rect(ei_surface_t surface, ei_rect_t *clipper) {
     ei_color_t color = {83, 200, 150, 255};
     ei_rect_t rect = ei_rect(ei_point(100, 100), ei_size(200, 100));
-    draw_rect_triangle(surface, rect, color, clipper, 0);
+    draw_rectangle(surface, rect, color, clipper, 0);
 }
 
 void test_draw_blank_rect(ei_surface_t surface, ei_rect_t *clipper) {
