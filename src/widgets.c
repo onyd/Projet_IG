@@ -858,8 +858,8 @@ void append_radiobutton(ei_radiobutton_t *radiobutton, char *text, ei_callback_t
                         NULL,
                         &check_callback,
                         &params);
-    int new_width = radiobutton->widget.content_rect->size.width>button->screen_location.size.width + width +3 * radiobutton->margin ?
-                    radiobutton->widget.content_rect->size.width : button->screen_location.size.width + width +3 * radiobutton->margin;
+    int new_width = radiobutton->widget.content_rect->size.width>button->screen_location.size.width + width + 3 * radiobutton->margin ?
+                    radiobutton->widget.content_rect->size.width : button->screen_location.size.width + width + 3 * radiobutton->margin;
     int new_height = radiobutton->widget.content_rect->size.height + height + 2 * radiobutton->margin;
     ei_place((ei_widget_t *) radiobutton, NULL, NULL, NULL, &new_width, &new_height, NULL, NULL, NULL, NULL);
     ei_placer_run((ei_widget_t *) radiobutton);

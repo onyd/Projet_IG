@@ -348,8 +348,14 @@ void ei_radiobutton_configure(ei_widget_t *widget,
                               ei_anchor_t *text_anchor
 );
 
+/**
+ * \brief	Add a new button to the radiobutton with the text and the callback.
+ */
 void append_radiobutton(ei_radiobutton_t *radiobutton, char *text, ei_callback_t *callback);
 
+/**
+ * \brief	Free the radiobutton.
+ */
 void clear_radiobutton(ei_radiobutton_t *radiobutton);
 
 #endif //PROJETC_IG_WIDGETS_H
