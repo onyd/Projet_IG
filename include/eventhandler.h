@@ -6,7 +6,6 @@
 #include "utils.h"
 
 typedef enum {
-    user_param = 0,
     toplevel_param,
 } user_param_type_t;
 

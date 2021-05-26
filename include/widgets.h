@@ -62,9 +62,9 @@ typedef enum {
 typedef struct grab_event_t {
     grab_event_type grab_type; // Tells what the user do with toplevel
     struct param {
-        ei_rect_t minimize_square; // The ei_rect_t of minimize square for resizing
-        ei_bool_t show_minimize_square;
-        ei_bool_t unshow_minimize_square_event_sent;
+        ei_rect_t resize_square; // The ei_rect_t of minimize square for resizing
+        ei_bool_t show_resize_square;
+        ei_bool_t unshow_resize_square_event_sent;
     } param;
 } grab_event_t;
 
@@ -94,7 +94,7 @@ typedef struct ei_radiobutton_t {
     ei_color_t background_color;
     ei_color_t button_color;
     ei_color_t selected_color;
-    char *text;
+    char *title;
     ei_font_t text_font;
     ei_color_t text_color;
     ei_anchor_t text_anchor;
@@ -333,7 +333,7 @@ void ei_radiobutton_configure(ei_widget_t *widget,
                               ei_color_t *background_color,
                               ei_color_t *button_color,
                               ei_color_t *selected_color,
-                              char **text,
+                              char **title,
                               ei_font_t *text_font,
                               ei_color_t *text_color,
                               ei_anchor_t *text_anchor

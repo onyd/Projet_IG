@@ -28,7 +28,6 @@ ei_widget_t *ei_widget_create(ei_widgetclass_name_t class_name, ei_widget_t *par
         }
 
         // Picking params
-
         new_widget->pick_id = append_vector(get_pick_vector(), new_widget);
         ei_color_t pick_color = ei_map_rgba_inverse(get_pick_surface(), new_widget->pick_id);
         *(new_widget->pick_color) = pick_color;
@@ -240,7 +239,7 @@ void ei_toplevel_configure(ei_widget_t *widget,
     ei_point_t point_button = ei_point(widget->screen_location.top_left.x + toplevel->border_width,
                                        widget->screen_location.top_left.y + toplevel->border_width);
     toplevel->button->widget.screen_location.top_left = point_button;
-    toplevel->grab_event.param.minimize_square = ei_rect(ei_point_add(widget->screen_location.top_left,
+    toplevel->grab_event.param.resize_square = ei_rect(ei_point_add(widget->screen_location.top_left,
                                                                       ei_point(widget->screen_location.size.width - 20,
                                                                                widget->screen_location.size.height -
                                                                                20)), ei_size(20, 20));

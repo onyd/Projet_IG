@@ -145,27 +145,34 @@ void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_
 }
 
 void draw_blank_rect(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t w, int32_t d) {
-    ei_linked_point_t first_point[7];
+    ei_linked_point_t first_point[6];
     ei_linked_point_t *current = first_point;
-    current->point.x = rect.top_left.x;
-    current->point.y = rect.top_left.y;
-    current->next = &first_point[1];
-    current->point.x = rect.top_left.x + d;
-    current->point.y = rect.top_left.y;
-    current->next = &first_point[2];
     current->point.x = rect.top_left.x + d + w;
     current->point.y = rect.top_left.y;
-    current->next = &first_point[3];
+    current->next = &first_point[1];
+    current = current->next;
+
     current->point.x = rect.top_left.x + rect.size.width;
     current->point.y = rect.top_left.y;
-    current->next = &first_point[4];
+    current->next = &first_point[2];
+    current = current->next;
+
     current->point.x = rect.top_left.x + rect.size.width;
     current->point.y = rect.top_left.y + rect.size.height;
-    current->next = &first_point[5];
+    current->next = &first_point[3];
+    current = current->next;
+
     current->point.x = rect.top_left.x;
     current->point.y = rect.top_left.y + rect.size.height;
-    current->next = &first_point[6];
+    current->next = &first_point[4];
+    current = current->next;
+
     current->point.x = rect.top_left.x;
+    current->point.y = rect.top_left.y;
+    current->next = &first_point[5];
+    current = current->next;
+
+    current->point.x = rect.top_left.x + d;
     current->point.y = rect.top_left.y;
     current->next = NULL;
 

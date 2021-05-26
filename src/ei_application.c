@@ -23,7 +23,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     strcpy(button_class->name, "button");
     strcpy(frame_class->name, "frame");
     strcpy(toplevel_class->name, "toplevel");
-    strcpy(radiobutton_class->name, "radio_button");
+    strcpy(radiobutton_class->name, "radiobutton");
 
     ei_widgetclass_register(button_class);
     ei_widgetclass_register(frame_class);
@@ -58,7 +58,7 @@ void ei_app_create(ei_size_t main_window_size, ei_bool_t fullscreen) {
     ei_rect_t root_rect = ei_rect(ei_point(0, 0), main_window_size);
     get_root_widget()->widget.screen_location = root_rect;
     get_root_widget()->widget.content_rect = &get_root_widget()->widget.screen_location;
-    get_root_widget()->widget.pick_id = 0;
+    get_root_widget()->widget.pick_id = append_vector(get_pick_vector(), get_root_widget());
     get_root_widget()->widget.pick_color = malloc(sizeof(ei_color_t));
     *(get_root_widget()->widget.pick_color) = (ei_color_t) {0, 0, 0, 0};
 

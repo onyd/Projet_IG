@@ -50,23 +50,24 @@ void handle_event(ei_event_t *event) {
             break;
         case ei_ev_app:
             switch (((user_param_t *) event->param.application.user_param)->app_event_type) {
-                // Used for minimize_square unshow
+                // Used for resize_square unshow
                 case toplevel_param: {
                     user_param_t *user_params = event->param.application.user_param;
                     toplevel_app_event_t *toplevel_params = ((user_param_t *) event->param.application.user_param)->data;
                     ei_toplevel_t *toplevel = toplevel_params->caller;
-                    if (!inside(get_mouse_pos(), &toplevel->grab_event.param.minimize_square)) {
-                        toplevel->grab_event.param.show_minimize_square = false;
+                    if (!inside(get_mouse_pos(), &toplevel->grab_event.param.resize_square)) {
+                        toplevel->grab_event.param.show_resize_square = false;
                         ei_rect_t inter_rect;
                         intersection_rect(get_clipper_window(), &(toplevel->widget.screen_location), &inter_rect);
                         append_left_linked_rect(inter_rect, get_updated_rects());
                         free(user_params->data);
                         free(user_params);
                     }
-                    toplevel->grab_event.param.unshow_minimize_square_event_sent = false;
+                    toplevel->grab_event.param.unshow_resize_square_event_sent = false;
                     break;
                 }
-                case user_param:
+                default:
+                    (*ei_event_get_default_handle_func())(event);
                     break;
             }
             break;
@@ -78,11 +79,12 @@ void close_toplevel_callback(ei_widget_t *widget,
                              void *user_param) {
     ei_widget_destroy(widget);
 }
+
 void check_radiobutton_callback(ei_widget_t *widget,
                                 ei_event_t *event,
                                 void *user_param) {
-    ei_radiobutton_t *radiobutton = (ei_radiobutton_t *)widget->parent;
-    radiobutton_user_param_t *params = (radiobutton_user_param_t*)user_param;
+    ei_radiobutton_t *radiobutton = (ei_radiobutton_t *) widget->parent;
+    radiobutton_user_param_t *params = (radiobutton_user_param_t *) user_param;
     radiobutton->selected_id = params->idx;
 
     free(params);
