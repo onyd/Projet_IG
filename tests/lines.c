@@ -47,8 +47,8 @@ void test_octogone(ei_surface_t surface, ei_color_t color, ei_rect_t *clipper) {
     int i, xdiff, ydiff;
 
     /* Initialisation */
-    pts[0].point.x = 400;
-    pts[0].point.y = 90;
+    pts[0].point.x = 300;
+    pts[0].point.y = 40;
 
     /* Draw the octogone */
     for (i = 1; i <= 8; i++) {
@@ -76,8 +76,8 @@ void test_polygone(ei_surface_t surface, ei_color_t color, ei_rect_t *clipper) {
     int i, xdiff, ydiff;
 
     /* Initialisation */
-    pts[0].point.x = 400;
-    pts[0].point.y = 90;
+    pts[0].point.x = 100;
+    pts[0].point.y = 350;
 
     /* Draw the polygone */
     for (i = 1; i <= 8; i++) {
@@ -104,9 +104,9 @@ void test_polygone(ei_surface_t surface, ei_color_t color, ei_rect_t *clipper) {
 
 }
 
-/* test_square --
+/* test_rect --
  *
- *	Draws a square in the middle of the screen. This is meant to test the
+ *	Draws a rect. This is meant to test the
  *	algorithm for the special cases of horizontal and vertical lines, where
  *	dx or dy are zero
  */
@@ -166,12 +166,12 @@ void test_dot(ei_surface_t surface, ei_rect_t *clipper) {
  */
 void test_ei_draw_text(ei_surface_t surface, ei_rect_t *clipper) {
     ei_point_t where;
-    where.x = 400;
-    where.y = 400;
-    char *text = "afflict";
+    where.x = 30;
+    where.y = 550;
+    char *text = "L'affichage du texte fonctionne";
     ei_color_t color = {255, 0, 255, 255};
     ei_font_t default_font;
-    default_font = hw_text_font_create(ei_default_font_filename, ei_style_normal, ei_font_default_size);
+    default_font = hw_text_font_create(ei_default_font_filename, ei_style_bold, 28);
     ei_draw_text(surface, &where, text, default_font, color, clipper);
 }
 
@@ -183,11 +183,11 @@ void test_ei_draw_text(ei_surface_t surface, ei_rect_t *clipper) {
 void test_rounded_frame(ei_surface_t surface, ei_rect_t *clipper) {
     ei_color_t color = {0, 100, 255, 255};
     ei_color_t color2 = {0, 100, 0, 255};
-    ei_rect_t rect = ei_rect(ei_point(200, 200), ei_size(450, 350));
+    ei_rect_t rect = ei_rect(ei_point(500, 30), ei_size(270, 150));
     ei_linked_point_t *pts = rounded_frame(rect, 50, 30, 0);
 
     ei_draw_polygon(surface, pts, color, clipper);
-    ei_draw_polyline(surface, pts, color2, clipper);
+    //ei_draw_polyline(surface, pts, color2, clipper);
 }
 
 
@@ -242,7 +242,7 @@ void test_random_polygon(ei_surface_t surface, uint32_t N, ei_rect_t *clipper) {
 void test_draw_rect(ei_surface_t surface, ei_rect_t *clipper) {
     ei_color_t color = {83, 200, 150, 255};
     ei_rect_t rect = ei_rect(ei_point(100, 100), ei_size(200, 100));
-    draw_rectangle(surface, rect, color, clipper, 0);
+    test_rect(surface, &rect);
 }
 
 void test_draw_blank_rect(ei_surface_t surface, ei_rect_t *clipper) {
@@ -265,7 +265,7 @@ int main(int argc, char **argv) {
 
     ei_rect_t clipper_test;
     clipper_test.top_left.x = 50;
-    clipper_test.top_left.y = 0;
+    clipper_test.top_left.y = 10;
     clipper_test.size.width = 200;
     clipper_test.size.height = 400;
 
@@ -284,22 +284,19 @@ int main(int argc, char **argv) {
     test_rect(main_window, &clipper_test);
     test_line(main_window, &clipper_test);
 
-    //test_octogone(main_window, (ei_color_t) {255, 0, 0, 255}, clipper_ptr);
-    test_octogone(main_window, (ei_color_t) {50, 60, 100, 255}, &clipper_test);
-//	    test_square	(main_window, clipper_ptr);
-//	    test_dot	(main_window, clipper_ptr);
+    test_octogone(main_window, (ei_color_t) {50, 60, 100, 255}, clipper_ptr);
+    test_dot(main_window, clipper_ptr);
 //    test_polygone(main_window, (ei_color_t) {255, 0, 0, 255}, clipper_ptr);
-//    test_polygone(main_window, (ei_color_t) {50, 60, 100, 255}, &clipper_test);
-//      test_random_polygon(main_window, 10, clipper_ptr);
+    test_polygone(main_window, (ei_color_t) {60, 200, 60, 255}, &clipper_test);
     test_draw_blank_rect(main_window, NULL);
     /* Rounded polygon */
-//    test_rounded_frame(main_window, clipper_ptr);
+    test_rounded_frame(main_window, clipper_ptr);
 
     /* Draw text. */
-    //test_ei_draw_text(main_window, clipper_ptr);
+    test_ei_draw_text(main_window, clipper_ptr);
 
     /* Draw rectangle */
-//      test_draw_rect(main_window, clipper_ptr);
+    //test_draw_rect(main_window, clipper_ptr);
 
     /* Unlock and update the surface. */
     hw_surface_unlock(main_window);
