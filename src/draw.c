@@ -9,7 +9,7 @@ void draw_window() {
     root->wclass->drawfunc(root, get_main_window(), get_pick_surface(), get_clipper_window());
 }
 
-void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper) {
+void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, ei_bool_t for_screen) {
     ei_linked_point_t first_point[5];
     ei_linked_point_t *current = first_point;
 
@@ -33,10 +33,15 @@ void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_r
     current->point.y = rect.top_left.y;
     current->next = NULL;
 
-    ei_draw_polygon(surface, first_point, color, clipper);
+    if (for_screen) {
+        ei_draw_polygon(surface, first_point, color, clipper);
+    }
+    else {
+        draw_picking_polygon(surface, first_point, color, clipper);
+    }
 }
 
-void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, direction dir) {
+void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, direction dir, ei_bool_t for_screen) {
     ei_linked_point_t first_point[4];
     ei_linked_point_t *current = first_point;
 
@@ -73,7 +78,12 @@ void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, 
     }
     current->next = NULL;
 
-    ei_draw_polygon(surface, first_point, color, clipper);
+    if (for_screen) {
+        ei_draw_polygon(surface, first_point, color, clipper);
+    }
+    else {
+        draw_picking_polygon(surface, first_point, color, clipper);
+    }
 }
 
 void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect_t *img_rect, ei_rect_t *clipper) {
@@ -142,6 +152,42 @@ void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_
 
     ei_draw_polygon(surface, first_point_1, color, clipper);
     ei_draw_polygon(surface, first_point_2, color, clipper);
+}
+
+void draw_topbar(ei_surface_t surface, ei_widget_t *widget, ei_color_t color, ei_rect_t *clipper) {
+    ei_rect_t topbar = ei_rect(widget->screen_location.top_left, ei_size(widget->screen_location.size.width,
+                                                                widget->screen_location.size.height - widget->content_rect->size.height));
+    draw_rectangle(surface, topbar, color, clipper, EI_TRUE);
+}
+
+void draw_border_toplevel(ei_surface_t surface, ei_widget_t *widget, ei_color_t color, ei_rect_t *clipper) {
+    ei_linked_point_t *points = calloc(9, sizeof(ei_linked_point_t));
+    points[0].point = ei_point(widget->screen_location.top_left.x, widget->content_rect->top_left.y);
+    points[0].next = &points[1];
+    points[1].point = ei_point(widget->screen_location.top_left.x,
+                               widget->screen_location.top_left.y + widget->screen_location.size.height);
+    points[1].next = &points[2];
+    points[2].point = ei_point(widget->screen_location.top_left.x + widget->screen_location.size.width,
+                               widget->screen_location.top_left.y + widget->screen_location.size.height);
+    points[2].next = &points[3];
+    points[3].point = ei_point(widget->screen_location.top_left.x + widget->screen_location.size.width,
+                               widget->content_rect->top_left.y);
+    points[3].next = &points[4];
+    points[4].point = ei_point(widget->content_rect->top_left.x + widget->content_rect->size.width,
+                               widget->content_rect->top_left.y);
+    points[4].next = &points[5];
+    points[5].point = ei_point(widget->content_rect->top_left.x + widget->content_rect->size.width,
+                               widget->content_rect->top_left.y + widget->content_rect->size.height);
+    points[5].next = &points[6];
+    points[6].point = ei_point(widget->content_rect->top_left.x,
+                               widget->content_rect->top_left.y + widget->content_rect->size.height);
+    points[6].next = &points[7];
+    points[7].point = ei_point(widget->content_rect->top_left.x,widget->content_rect->top_left.y);
+    points[7].next = &points[8];
+    points[8].point = ei_point(widget->screen_location.top_left.x, widget->content_rect->top_left.y);
+    points[8].next = NULL;
+    ei_draw_polygon(surface, points, color, clipper);
+    free(points);
 }
 
 void draw_blank_rect(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, int32_t w, int32_t d) {
@@ -508,22 +554,13 @@ void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t 
     free_linked_error(input_errors.head);
 }
 
-void draw_polygon(ei_surface_t surface,
+void draw_picking_polygon(ei_surface_t surface,
                      const ei_linked_point_t *first_point,
                      ei_color_t color,
                      const ei_rect_t *clipper) {
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, color);
-
-    //transparancy
-    int ir, ig, ib, ia;
-    hw_surface_get_channel_indices(surface, &ir, &ig, &ib, &ia);
-    ia = 6 - ir - ig - ib;
-    int c_r = (uint8_t) (c >> (8 * ir));
-    int c_g = (uint8_t) (c >> (8 * ig));
-    int c_b = (uint8_t) (c >> (8 * ib));
-    int c_a = (uint8_t) (c >> (8 * ia));
 
     // Clipping
     ei_point_list_t clipped;
@@ -608,12 +645,7 @@ void draw_polygon(ei_surface_t surface,
             current = current->next;
             int x2 = current->x_ymin;
             for (int k = x1; k < x2; k++) {
-                //if (inside(ei_point(k, y), clipper)) {
-                uint32_t c_transparancy = (((c_a * c_r + (255 - c_a) * (pixels[k + size.width * y] >> (8*ir))) / 255) << (8 * ir)) +
-                                          (((c_a * c_g + (255 - c_a) * (pixels[k + size.width * y] >> (8*ig))) / 255) << (8 * ig)) +
-                                          (((c_a * c_b + (255 - c_a) * (pixels[k + size.width * y] >> (8*ib))) / 255) << (8 * ib));
-                pixels[k + size.width * y] = c_transparancy;
-                //}
+                pixels[k + size.width * y] = c;
             }
             current = current->next;
         }

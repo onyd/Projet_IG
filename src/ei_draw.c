@@ -110,16 +110,16 @@ void ei_draw_polyline(ei_surface_t surface,
 
 
 void ei_draw_polygon(ei_surface_t surface,
-                     const ei_linked_point_t *first_point,
-                     ei_color_t color,
-                     const ei_rect_t *clipper) {
+                  const ei_linked_point_t *first_point,
+                  ei_color_t color,
+                  const ei_rect_t *clipper) {
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, color);
 
     // Clipping
-    ei_point_list_t clipped = {NULL, NULL};
-    ei_error_list_t errors = {NULL, NULL};
+    ei_point_list_t clipped;
+    ei_error_list_t errors;
     if (clipper == NULL) {
         clipped.head = (ei_linked_point_t *) first_point;
     } else {
@@ -167,14 +167,14 @@ void ei_draw_polygon(ei_surface_t surface,
             edge->x_ymax = p_max->point.x;
             edge->dx = dx;
             edge->dy = dy;
-            edge->E = (error != NULL) ? (int) (error->error * abs(dx)) : 0;
+            edge->E = (int) (error->error * abs(dx));
             edge->sign_dx = (dx > 0) ? 1 : -1;
             edge->next = TC[p_min->point.y - ymin];
             TC[p_min->point.y - ymin] = edge;
         }
         first = second;
         second = second->next;
-        error = (error != NULL) ? error->next : NULL;
+        error = error->next;
     }
 
     /* Fill polygon for every scanline */
@@ -200,9 +200,13 @@ void ei_draw_polygon(ei_surface_t surface,
             current = current->next;
             int x2 = current->x_ymin;
             for (int k = x1; k < x2; k++) {
-                //if (inside(ei_point(k, y), clipper)) {
-                pixels[k + size.width * y] = c;
-                //}
+                ei_color_t color_transparancy = ei_map_rgba_inverse(surface, pixels[k + size.width * y]);
+                color_transparancy.red = (color.alpha * color.red + (255 - color.alpha) * color_transparancy.red)/255;
+                color_transparancy.green = (color.alpha * color.green + (255 - color.alpha) * color_transparancy.green)/255;
+                color_transparancy.blue = (color.alpha * color.blue + (255 - color.alpha) * color_transparancy.blue)/255;
+                color_transparancy.alpha = color.alpha;
+                pixels[k + size.width * y] = ei_map_rgba(surface, color_transparancy);
+                //pixels[k + size.width * y] = c;
             }
             current = current->next;
         }
@@ -232,11 +236,8 @@ void ei_draw_polygon(ei_surface_t surface,
             current = current->next;
         }
     }
-
-    if (clipper != NULL) {
-        free_linked_point(clipped.head);
-        free_linked_error(errors.head);
-    }
+    free_linked_point(clipped.head);
+    free_linked_error(errors.head);
     lae_free(TCA);
     free(TC);
 }
