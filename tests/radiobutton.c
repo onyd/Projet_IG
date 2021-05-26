@@ -43,7 +43,6 @@ int main(int argc, char **argv) {
 
     ei_widget_t *button;
     ei_size_t button_size = {300, 200};
-    int button_corner_radius = 40;
     int button_x = 150;
     int button_y = 200;
     ei_color_t button_color = {0x88, 0x88, 0x88, 0xff};
@@ -51,10 +50,7 @@ int main(int argc, char **argv) {
 
     char *button_title = "Bouton Radio !";
     ei_color_t button_text_color = {0x00, 0x00, 0x00, 0xff};
-    ei_relief_t button_relief = ei_relief_raised;
-    int button_border_width = 6;
     ei_anchor_t text_anchor = ei_anc_northwest;
-    ei_callback_t button_callback = button_press;
 
     /* Create the application and change the color of the background. */
     ei_app_create(screen_size, EI_FALSE);
@@ -64,7 +60,7 @@ int main(int argc, char **argv) {
     /* Create, configure and place the button on screen. */
     button = ei_widget_create("radiobutton", ei_app_root_widget(), NULL, NULL);
     ei_radiobutton_configure(button,
-                             &button_size,
+                             NULL,
                              NULL,
                              NULL,
                              &button_color,
@@ -77,6 +73,10 @@ int main(int argc, char **argv) {
 
     /* Hook the keypress callback to the event. */
     ei_frame_configure(ei_app_root_widget(), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    append_radiobutton(button, "Test 1", NULL);
+    append_radiobutton(button, "Test 2", NULL);
+    append_radiobutton(button, "Test 3", NULL);
+    append_radiobutton(button, "Test 4", NULL);
 
     /* Run the application's main loop. */
     ei_app_run();

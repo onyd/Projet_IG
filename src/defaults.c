@@ -17,6 +17,7 @@ static const ei_size_t _toplevel_default_min_size = {160, 120};
 static const int _toplevel_default_border_width = 4;
 
 static const ei_color_t _default_color = {100, 100, 100, 255};
+static const ei_color_t _default_close_button_color = {200, 0, 0, 255};
 static const ei_color_t _default_text_color = {0, 0, 0, 255};
 static const ei_color_t _default_button_color = {200, 200, 200, 255};
 static const ei_color_t _default_selected_color = {255, 0, 0, 255};
@@ -25,7 +26,22 @@ static const ei_size_t _default_size = {100, 100};
 static const ei_relief_t _default_relief = ei_relief_raised;
 static const ei_anchor_t _default_anchor = ei_anc_center;
 
+static const int _circle_button_radius = 10;
+static const int _resize_square_size = 10;
+
 // Getter
+ei_color_t *get_default_close_button_color() {
+    return &_default_close_button_color;
+}
+
+int *get_circle_button_radius() {
+    return &_circle_button_radius;
+}
+
+int *get_resize_square_size() {
+    return &_resize_square_size;
+}
+
 ei_surface_t get_main_window() {
     return _main_window;
 }

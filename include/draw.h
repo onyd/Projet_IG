@@ -34,6 +34,15 @@ typedef enum clipping_type {
  */
 void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, ei_bool_t for_screen);
 
+/** @brief Allows to draw a full circle
+ * @param surface       the surface on which we want to draw
+ * @param center        the center of the circle
+ * @param radius        the radius of the circle
+ * @param color         the color
+ * @param clipper       the rect that clip the drawing
+ */
+void draw_full_circle(ei_surface_t surface, ei_point_t center, float radius, ei_color_t color, ei_rect_t *clipper);
+
 
 /** @brief Allows to draw a triangle from a rectangle
  * @param surface       the surface on which we want to draw

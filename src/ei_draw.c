@@ -110,16 +110,16 @@ void ei_draw_polyline(ei_surface_t surface,
 
 
 void ei_draw_polygon(ei_surface_t surface,
-                  const ei_linked_point_t *first_point,
-                  ei_color_t color,
-                  const ei_rect_t *clipper) {
+                     const ei_linked_point_t *first_point,
+                     ei_color_t color,
+                     const ei_rect_t *clipper) {
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, color);
 
     // Clipping
-    ei_point_list_t clipped;
-    ei_error_list_t errors;
+    ei_point_list_t clipped = {NULL, NULL};
+    ei_error_list_t errors = {NULL, NULL};
     if (clipper == NULL) {
         clipped.head = (ei_linked_point_t *) first_point;
     } else {
@@ -167,14 +167,16 @@ void ei_draw_polygon(ei_surface_t surface,
             edge->x_ymax = p_max->point.x;
             edge->dx = dx;
             edge->dy = dy;
-            edge->E = (int) (error->error * abs(dx));
+            edge->E = (error != NULL) ? (int) (error->error * abs(dx)) : 0;
             edge->sign_dx = (dx > 0) ? 1 : -1;
             edge->next = TC[p_min->point.y - ymin];
             TC[p_min->point.y - ymin] = edge;
         }
         first = second;
         second = second->next;
-        error = error->next;
+        if (error != NULL) {
+            error = error->next;
+        }
     }
 
     /* Fill polygon for every scanline */
@@ -240,7 +242,9 @@ void ei_draw_polygon(ei_surface_t surface,
             current = current->next;
         }
     }
-    free_linked_point(clipped.head);
+    if (clipper != NULL) {
+        free_linked_point(clipped.head);
+    }
     free_linked_error(errors.head);
     lae_free(TCA);
     free(TC);
