@@ -123,6 +123,7 @@ void radiobutton_releasefunc(ei_widget_t *widget) {
     if (to_release->title != NULL) {
         free(to_release->title);
     }
+    free_vector(to_release->button_list);
 }
 
 /* drawfunc */
@@ -873,7 +874,6 @@ void clear_radiobutton(ei_radiobutton_t *radiobutton) {
             current->widget.wclass->releasefunc((ei_widget_t *) current);
         }
     }
-    free_vector(radiobutton->button_list);
-    radiobutton->button_list = create_vector(1);
+    clear(radiobutton->button_list, 1);
     radiobutton->selected_id = -1;
 }

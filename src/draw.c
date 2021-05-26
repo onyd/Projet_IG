@@ -35,8 +35,7 @@ void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_r
 
     if (for_screen) {
         ei_draw_polygon(surface, first_point, color, clipper);
-    }
-    else {
+    } else {
         draw_picking_polygon(surface, first_point, color, clipper);
     }
 }
@@ -47,7 +46,8 @@ void draw_full_circle(ei_surface_t surface, ei_point_t center, float radius, ei_
     free_linked_point(pts);
 }
 
-void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, direction dir, ei_bool_t for_screen) {
+void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, direction dir,
+                        ei_bool_t for_screen) {
     ei_linked_point_t first_point[4];
     ei_linked_point_t *current = first_point;
 
@@ -86,8 +86,7 @@ void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, 
 
     if (for_screen) {
         ei_draw_polygon(surface, first_point, color, clipper);
-    }
-    else {
+    } else {
         draw_picking_polygon(surface, first_point, color, clipper);
     }
 }
@@ -162,7 +161,8 @@ void draw_cross(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_
 
 void draw_topbar(ei_surface_t surface, ei_widget_t *widget, ei_color_t color, ei_rect_t *clipper) {
     ei_rect_t topbar = ei_rect(widget->screen_location.top_left, ei_size(widget->screen_location.size.width,
-                                                                widget->screen_location.size.height - widget->content_rect->size.height));
+                                                                         widget->screen_location.size.height -
+                                                                         widget->content_rect->size.height));
     draw_rectangle(surface, topbar, color, clipper, EI_TRUE);
 }
 
@@ -188,7 +188,7 @@ void draw_border_toplevel(ei_surface_t surface, ei_widget_t *widget, ei_color_t 
     points[6].point = ei_point(widget->content_rect->top_left.x,
                                widget->content_rect->top_left.y + widget->content_rect->size.height);
     points[6].next = &points[7];
-    points[7].point = ei_point(widget->content_rect->top_left.x,widget->content_rect->top_left.y);
+    points[7].point = ei_point(widget->content_rect->top_left.x, widget->content_rect->top_left.y);
     points[7].next = &points[8];
     points[8].point = ei_point(widget->screen_location.top_left.x, widget->content_rect->top_left.y);
     points[8].next = NULL;
@@ -292,8 +292,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
     float x_max = (float) clipper->top_left.x + (float) clipper->size.width;
     float y_min = (float) clipper->top_left.y;
     float y_max = (float) clipper->top_left.y + (float) clipper->size.height;
-    float clipped1_x_f = (float) clipped1->x;
-    float clipped2_x_f = (float) clipped2->x;
+    *clipped2 = p2;
 
     switch (get_clipping_type(c1)) {
         case center_reject:
@@ -304,7 +303,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
             *error = horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped1_x_f < x_min || clipped1_x_f > x_max) {
+            if ((float) clipped1->x < x_min || (float) clipped1->x > x_max) {
                 *error = vertical_line_intersection_rect(p1, p2, x_max, clipped1);
             }
             return true; // Corner implies other point is in the clipper
@@ -313,7 +312,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
             *error = horizontal_line_intersection_rect(p1, p2, y_min, clipped1);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped1_x_f < x_min || clipped1_x_f > x_max) {
+            if ((float) clipped1->x < x_min || (float) clipped1->x > x_max) {
                 *error = vertical_line_intersection_rect(p1, p2, x_min, clipped1);
             }
             return true; // Corner implies other point is in the clipper
@@ -322,7 +321,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
             *error = horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped1_x_f < x_min || clipped1_x_f > x_max) {
+            if ((float) clipped1->x < x_min || (float) clipped1->x > x_max) {
                 *error = vertical_line_intersection_rect(p1, p2, x_max, clipped1);
             }
             return true; // Corner implies other point is in the clipper
@@ -331,7 +330,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
             *error = horizontal_line_intersection_rect(p1, p2, y_max, clipped1);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped1_x_f < x_min || clipped1_x_f > x_max) {
+            if ((float) clipped1->x < x_min || (float) clipped1->x > x_max) {
                 *error = vertical_line_intersection_rect(p1, p2, x_min, clipped1);
             }
             return true; // Corner implies other point is in the clipper
@@ -357,7 +356,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
             horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped2_x_f < x_min || clipped2_x_f > x_max) {
+            if ((float) clipped2->x < x_min || (float) clipped2->x > x_max) {
                 vertical_line_intersection_rect(p1, p2, x_max, clipped2);
             }
             break;
@@ -366,7 +365,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
             horizontal_line_intersection_rect(p1, p2, y_min, clipped2);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped2_x_f < x_min || clipped2_x_f > x_max) {
+            if ((float) clipped2->x < x_min || (float) clipped2->x > x_max) {
                 vertical_line_intersection_rect(p1, p2, x_min, clipped2);
             }
             break;
@@ -375,7 +374,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
             horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped2_x_f < x_min || clipped2_x_f > x_max) {
+            if ((float) clipped2->x < x_min || (float) clipped2->x > x_max) {
                 vertical_line_intersection_rect(p1, p2, x_min, clipped2);
             }
             break;
@@ -384,7 +383,7 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
             horizontal_line_intersection_rect(p1, p2, y_max, clipped2);
 
             // Bad horizontal intersection_rect => vertical intersection_rect
-            if (clipped2_x_f < x_min || clipped2_x_f > x_max) {
+            if ((float) clipped2->x < x_min || (float) clipped2->x > x_max) {
                 vertical_line_intersection_rect(p1, p2, x_max, clipped2);
             }
             break;
@@ -561,9 +560,9 @@ void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t 
 }
 
 void draw_picking_polygon(ei_surface_t surface,
-                     const ei_linked_point_t *first_point,
-                     ei_color_t color,
-                     const ei_rect_t *clipper) {
+                          const ei_linked_point_t *first_point,
+                          ei_color_t color,
+                          const ei_rect_t *clipper) {
     uint32_t *pixels = (uint32_t *) hw_surface_get_buffer(surface);
     ei_size_t size = hw_surface_get_size(surface);
     uint32_t c = ei_map_rgba(surface, color);
