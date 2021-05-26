@@ -245,6 +245,11 @@ void test_draw_rect(ei_surface_t surface, ei_rect_t *clipper) {
     draw_rect_triangle(surface, rect, color, clipper, 0);
 }
 
+void test_draw_blank_rect(ei_surface_t surface, ei_rect_t *clipper) {
+    ei_color_t color = {83, 200, 150, 255};
+    draw_blank_rect(surface, ei_rect(ei_point(100, 100), ei_size(200, 200)), color, clipper, 30, 5);
+}
+
 /*
  * ei_main --
  *
@@ -276,17 +281,17 @@ int main(int argc, char **argv) {
     hw_surface_lock(main_window);
     ei_fill(main_window, &white, clipper_ptr);
     /* Draw polylines and plygon. */
-    test_rect(main_window, &clipper_test);
+//    test_rect(main_window, &clipper_test);
 //    test_line(main_window, &clipper_test);
 
-    test_octogone(main_window, (ei_color_t) {255, 0, 0, 255}, clipper_ptr);
-    test_octogone(main_window, (ei_color_t) {50, 60, 100, 255}, &clipper_test);
+//    test_octogone(main_window, (ei_color_t) {255, 0, 0, 255}, clipper_ptr);
+//    test_octogone(main_window, (ei_color_t) {50, 60, 100, 255}, &clipper_test);
 //	    test_square	(main_window, clipper_ptr);
 //	    test_dot	(main_window, clipper_ptr);
 //    test_polygone(main_window, (ei_color_t) {255, 0, 0, 255}, clipper_ptr);
 //    test_polygone(main_window, (ei_color_t) {50, 60, 100, 255}, &clipper_test);
 //      test_random_polygon(main_window, 10, clipper_ptr);
-
+    test_draw_blank_rect(main_window, NULL);
     /* Rounded polygon */
 //    test_rounded_frame(main_window, clipper_ptr);
 
