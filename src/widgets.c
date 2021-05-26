@@ -162,9 +162,9 @@ void button_drawfunc(ei_widget_t *widget,
     }
     ei_draw_polygon(surface, points_button, color, clipper);
 
-    ei_draw_polygon(pick_surface, points_button, *(widget->pick_color), clipper);
-    ei_draw_polygon(pick_surface, top, *(widget->pick_color), clipper);
-    ei_draw_polygon(pick_surface, bot, *(widget->pick_color), clipper);
+    draw_picking_polygon(pick_surface, points_button, *(widget->pick_color), clipper);
+    draw_picking_polygon(pick_surface, top, *(widget->pick_color), clipper);
+    draw_picking_polygon(pick_surface, bot, *(widget->pick_color), clipper);
 
     free(top);
     free(bot);
@@ -225,19 +225,19 @@ void frame_drawfunc(ei_widget_t *widget,
     inside_frame.size.width = widget->screen_location.size.width - 2 * border_size;
     inside_frame.size.height = widget->screen_location.size.height - 2 * border_size;
     if (frame->relief == ei_relief_none) {
-        draw_rectangle(surface, widget->screen_location, color, clipper);
+        draw_rectangle(surface, widget->screen_location, color, clipper, EI_TRUE);
     } else {
         if (frame->relief == ei_relief_raised) {
-            draw_rect_triangle(surface, widget->screen_location, lighter, clipper, up);
-            draw_rect_triangle(surface, widget->screen_location, darker, clipper, down);
+            draw_rect_triangle(surface, widget->screen_location, lighter, clipper, up, EI_TRUE);
+            draw_rect_triangle(surface, widget->screen_location, darker, clipper, down, EI_TRUE);
         } else {
-            draw_rect_triangle(surface, widget->screen_location, lighter, clipper, down);
-            draw_rect_triangle(surface, widget->screen_location, darker, clipper, up);
+            draw_rect_triangle(surface, widget->screen_location, lighter, clipper, down, EI_TRUE);
+            draw_rect_triangle(surface, widget->screen_location, darker, clipper, up, EI_TRUE);
         }
-        draw_rectangle(surface, inside_frame, color, clipper);
+        draw_rectangle(surface, inside_frame, color, clipper, EI_TRUE);
     }
 
-    draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper);
+    draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper, EI_FALSE);
     // Text eventually inside the frame
     if (frame->text != NULL) {
         int width, height;
@@ -285,10 +285,11 @@ void toplevel_drawfunc(ei_widget_t *widget,
     char *title = toplevel->title;
 
     //Draw all the top level
-    draw_rectangle(surface, widget->screen_location, *get_default_color(), clipper);
-    draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper);
+    draw_topbar(surface, widget, *get_default_color(), clipper);
+    draw_border_toplevel(surface, widget, *get_default_color(), clipper);
+    draw_rectangle(pick_surface, widget->screen_location, *(widget->pick_color), clipper, EI_FALSE);
     //Draw the toplevel without border and top bar
-    draw_rectangle(surface, *widget->content_rect, color, clipper);
+    draw_rectangle(surface, *widget->content_rect, color, clipper, EI_TRUE);
 
 
     ei_rect_t clipper_text;
@@ -327,10 +328,10 @@ void toplevel_drawfunc(ei_widget_t *widget,
     intersection_rect(get_clipper_window(), toplevel->widget.content_rect, &clipping_square);
     if (toplevel->grab_event.param.show_resize_square) {
         draw_rectangle(get_main_window(), toplevel->grab_event.param.resize_square, *get_default_color(),
-                       &clipping_square);
+                       &clipping_square, EI_FALSE);
     }
     draw_rectangle(pick_surface, toplevel->grab_event.param.resize_square, *toplevel->widget.pick_color,
-                   &clipping_square);
+                   &clipping_square, EI_FALSE);
 
 }
 

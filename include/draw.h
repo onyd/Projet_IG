@@ -32,7 +32,7 @@ void draw_window();
  * @param color         the color
  * @param clipper       the rect that clip the drawing
  */
-void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper);
+void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, ei_bool_t for_screen);
 
 
 /** @brief Allows to draw a triangle from a rectangle
@@ -42,7 +42,7 @@ void draw_rectangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_r
  * @param clipper       the rect that clip the drawing
  * @param dir           dir = up for top triangle | dir = down for bottom triangle
  */
-void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, direction dir);
+void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, ei_rect_t *clipper, direction dir, ei_bool_t for_screen);
 
 
 /** @brief Allows to draw an image on a surface
@@ -53,6 +53,10 @@ void draw_rect_triangle(ei_surface_t surface, ei_rect_t rect, ei_color_t color, 
  * @param clipper       the rect that clip the drawing
  */
 void draw_image(ei_surface_t surface, ei_surface_t img, ei_point_t *pos, ei_rect_t *img_rect, ei_rect_t *clipper);
+
+void draw_topbar(ei_surface_t surface, ei_widget_t *widget, ei_color_t color, ei_rect_t *clipper);
+
+void draw_border_toplevel(ei_surface_t surface, ei_widget_t *widget, ei_color_t color, ei_rect_t *clipper);
 
 /** @brief Allows to draw a cross on a surface
  * @param surface       the surface on which we want to draw
@@ -102,5 +106,10 @@ ei_bool_t line_analytic_clipping(ei_point_t p1, ei_point_t p2, ei_point_t *clipp
  * @param clipper       the clipper
  */
 void polygon_analytic_clipping(const ei_linked_point_t *points, ei_point_list_t *clipped, ei_error_list_t *errors, const ei_rect_t *clipper);
+
+void draw_picking_polygon(ei_surface_t surface,
+                  const ei_linked_point_t *first_point,
+                  ei_color_t color,
+                  const ei_rect_t *clipper);
 
 #endif //PROJETC_IG_DRAW_H
